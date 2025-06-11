@@ -54,7 +54,7 @@ export const LandingHeader = () => {
                 Admin
               </Button>
             </Link>
-            <Link to="/dashboard">
+            <Link to="/user-login">
               <Button variant="outline" size="sm" className="text-gray-600 hover:text-gray-900">
                 Application
               </Button>

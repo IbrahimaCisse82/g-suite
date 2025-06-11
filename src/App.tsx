@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -29,6 +30,7 @@ import TrainingSupport from "./pages/TrainingSupport";
 import TrainingSupportStandalone from "./pages/TrainingSupportStandalone";
 import ProductDocumentation from "./pages/ProductDocumentation";
 import TrialActivation from "./pages/TrialActivation";
+import UserLogin from "./pages/UserLogin";
 
 const queryClient = new QueryClient();
 
@@ -57,6 +59,9 @@ const App = () => (
           <Route path="/company-registration" element={<CompanyRegistration />} />
           <Route path="/quote-request" element={<QuoteRequest />} />
           <Route path="/subscription-settings" element={<SubscriptionSettings />} />
+          
+          {/* User Login Route */}
+          <Route path="/user-login" element={<UserLogin />} />
           
           {/* Admin Routes */}
           <Route path="/admin-login" element={<AdminLogin />} />

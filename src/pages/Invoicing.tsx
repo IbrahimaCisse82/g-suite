@@ -1,12 +1,36 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Plus, FileText, DollarSign, Clock } from 'lucide-react';
 import { InvoicesTable } from '@/components/invoices/InvoicesTable';
-import { useInvoices } from '@/hooks/useInvoices';
+import { InvoiceForm } from '@/components/invoices/InvoiceForm';
+import { useInvoices, useCreateInvoice } from '@/hooks/useInvoices';
+import { useToast } from '@/hooks/use-toast';
 
 export const Invoicing = () => {
   const { data: invoices = [], isLoading } = useInvoices();
+  const createInvoice = useCreateInvoice();
+  const { toast } = useToast();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const handleCreateInvoice = async (invoiceData: any) => {
+    try {
+      await createInvoice.mutateAsync(invoiceData);
+      toast({
+        title: 'Facture créée',
+        description: 'La facture a été créée avec succès',
+      });
+      setIsDialogOpen(false);
+    } catch (error) {
+      toast({
+        title: 'Erreur',
+        description: 'Impossible de créer la facture',
+        variant: 'destructive',
+      });
+    }
+  };
 
   const handleView = (invoice: any) => {
     console.log('View invoice:', invoice);
@@ -42,7 +66,7 @@ export const Invoicing = () => {
           <h1 className="text-3xl font-bold text-gray-900">Facturation</h1>
           <p className="text-gray-600 mt-2">Gérez vos factures et devis</p>
         </div>
-        <Button>
+        <Button onClick={() => setIsDialogOpen(true)}>
           <Plus className="w-4 h-4 mr-2" />
           Nouvelle facture
         </Button>
@@ -111,13 +135,29 @@ export const Invoicing = () => {
             <div className="text-center py-8">
               <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
               <p className="text-gray-500">Aucune facture trouvée</p>
-              <Button className="mt-4">
+              <Button 
+                onClick={() => setIsDialogOpen(true)} 
+                className="mt-4"
+              >
                 Créer votre première facture
               </Button>
             </div>
           )}
         </CardContent>
       </Card>
+
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="max-w-4xl">
+          <DialogHeader>
+            <DialogTitle>Nouvelle facture</DialogTitle>
+          </DialogHeader>
+          <InvoiceForm 
+            onSubmit={handleCreateInvoice}
+            onCancel={() => setIsDialogOpen(false)}
+            loading={createInvoice.isPending}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

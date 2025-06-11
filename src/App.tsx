@@ -14,6 +14,11 @@ import QuoteRequest from "./pages/QuoteRequest";
 import NotFound from "./pages/NotFound";
 import { Contacts } from "./pages/Contacts";
 import { Invoicing } from "./pages/Invoicing";
+import { Purchases } from "./pages/Purchases";
+import { Treasury } from "./pages/Treasury";
+import { Reports } from "./pages/Reports";
+import { Analytics } from "./pages/Analytics";
+import { Settings } from "./pages/Settings";
 
 const queryClient = new QueryClient();
 
@@ -49,42 +54,27 @@ const App = () => (
           } />
           <Route path="/purchases" element={
             <Layout>
-              <div className="p-8">
-                <h1 className="text-2xl font-bold">Module Achats</h1>
-                <p className="text-gray-600 mt-2">En cours de développement...</p>
-              </div>
+              <Purchases />
             </Layout>
           } />
           <Route path="/treasury" element={
             <Layout>
-              <div className="p-8">
-                <h1 className="text-2xl font-bold">Module Trésorerie</h1>
-                <p className="text-gray-600 mt-2">En cours de développement...</p>
-              </div>
+              <Treasury />
             </Layout>
           } />
           <Route path="/reports" element={
             <Layout>
-              <div className="p-8">
-                <h1 className="text-2xl font-bold">Module Rapports</h1>
-                <p className="text-gray-600 mt-2">En cours de développement...</p>
-              </div>
+              <Reports />
             </Layout>
           } />
           <Route path="/analytics" element={
             <Layout>
-              <div className="p-8">
-                <h1 className="text-2xl font-bold">Module Analyse</h1>
-                <p className="text-gray-600 mt-2">En cours de développement...</p>
-              </div>
+              <Analytics />
             </Layout>
           } />
           <Route path="/settings" element={
             <Layout>
-              <div className="p-8">
-                <h1 className="text-2xl font-bold">Paramètres</h1>
-                <p className="text-gray-600 mt-2">En cours de développement...</p>
-              </div>
+              <Settings />
             </Layout>
           } />
           <Route path="*" element={<NotFound />} />

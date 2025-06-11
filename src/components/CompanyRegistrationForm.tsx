@@ -33,6 +33,17 @@ const businessSectors: { value: BusinessSector; label: string }[] = [
   { value: 'autres_services', label: 'Autres Services' },
 ];
 
+const currencies = [
+  { value: 'XOF', label: 'Franc CFA (XOF)' },
+  { value: 'EUR', label: 'Euro (EUR)' },
+  { value: 'USD', label: 'Dollar américain (USD)' },
+  { value: 'GBP', label: 'Livre sterling (GBP)' },
+  { value: 'CHF', label: 'Franc suisse (CHF)' },
+  { value: 'MAD', label: 'Dirham marocain (MAD)' },
+  { value: 'TND', label: 'Dinar tunisien (TND)' },
+  { value: 'DZD', label: 'Dinar algérien (DZD)' },
+];
+
 const companySchema = z.object({
   name: z.string().min(2, 'Le nom de l\'entreprise doit contenir au moins 2 caractères'),
   address: z.string().min(5, 'L\'adresse doit contenir au moins 5 caractères'),
@@ -46,6 +57,7 @@ const companySchema = z.object({
     'immobilier', 'activites_specialisees', 'administration_publique',
     'enseignement', 'sante_action_sociale', 'arts_spectacles', 'autres_services'
   ]),
+  currency: z.string().min(1, 'Veuillez sélectionner une devise'),
   representative_first_name: z.string().min(2, 'Le prénom doit contenir au moins 2 caractères'),
   representative_last_name: z.string().min(2, 'Le nom doit contenir au moins 2 caractères'),
   ninea: z.string().optional(),
@@ -70,6 +82,7 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
     defaultValues: {
       country: 'France',
       website: '',
+      currency: 'XOF',
     },
   });
 
@@ -147,7 +160,18 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
       const { data: companyData, error: companyError } = await supabase
         .from('companies')
         .insert({
-          ...data,
+          name: data.name,
+          address: data.address,
+          city: data.city,
+          country: data.country,
+          phone: data.phone,
+          email: data.email,
+          business_sector: data.business_sector,
+          currency: data.currency,
+          representative_first_name: data.representative_first_name,
+          representative_last_name: data.representative_last_name,
+          ninea: data.ninea,
+          rccm: data.rccm,
           website: data.website || null,
         })
         .select()
@@ -237,7 +261,7 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
       </CardHeader>
       <CardContent>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          {/* Logo Upload */}
+          {/* Logo Upload - En premier */}
           <div className="space-y-2">
             <Label htmlFor="logo">Logo de l'entreprise (optionnel)</Label>
             <div className="flex items-center gap-4">
@@ -357,30 +381,24 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
             )}
           </div>
 
-          {/* Representative */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="representative_first_name">Prénom du représentant *</Label>
-              <Input
-                id="representative_first_name"
-                {...form.register('representative_first_name')}
-                placeholder="Prénom"
-              />
-              {form.formState.errors.representative_first_name && (
-                <p className="text-sm text-destructive">{form.formState.errors.representative_first_name.message}</p>
-              )}
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="representative_last_name">Nom du représentant *</Label>
-              <Input
-                id="representative_last_name"
-                {...form.register('representative_last_name')}
-                placeholder="Nom"
-              />
-              {form.formState.errors.representative_last_name && (
-                <p className="text-sm text-destructive">{form.formState.errors.representative_last_name.message}</p>
-              )}
-            </div>
+          {/* Currency Selection */}
+          <div className="space-y-2">
+            <Label htmlFor="currency">Devise *</Label>
+            <Select onValueChange={(value) => form.setValue('currency', value)} defaultValue="XOF">
+              <SelectTrigger>
+                <SelectValue placeholder="Sélectionnez votre devise" />
+              </SelectTrigger>
+              <SelectContent>
+                {currencies.map((currency) => (
+                  <SelectItem key={currency.value} value={currency.value}>
+                    {currency.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {form.formState.errors.currency && (
+              <p className="text-sm text-destructive">{form.formState.errors.currency.message}</p>
+            )}
           </div>
 
           {/* NINEA and RCCM */}
@@ -415,6 +433,32 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
             {form.formState.errors.website && (
               <p className="text-sm text-destructive">{form.formState.errors.website.message}</p>
             )}
+          </div>
+
+          {/* Representative - En dernier */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="representative_first_name">Prénom du représentant *</Label>
+              <Input
+                id="representative_first_name"
+                {...form.register('representative_first_name')}
+                placeholder="Prénom"
+              />
+              {form.formState.errors.representative_first_name && (
+                <p className="text-sm text-destructive">{form.formState.errors.representative_first_name.message}</p>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="representative_last_name">Nom du représentant *</Label>
+              <Input
+                id="representative_last_name"
+                {...form.register('representative_last_name')}
+                placeholder="Nom"
+              />
+              {form.formState.errors.representative_last_name && (
+                <p className="text-sm text-destructive">{form.formState.errors.representative_last_name.message}</p>
+              )}
+            </div>
           </div>
 
           <Button type="submit" className="w-full" disabled={isLoading}>

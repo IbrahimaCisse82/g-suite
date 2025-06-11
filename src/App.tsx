@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -11,6 +10,8 @@ import Landing from "./pages/Landing";
 import CompanyRegistration from "./pages/CompanyRegistration";
 import QuoteRequest from "./pages/QuoteRequest";
 import NotFound from "./pages/NotFound";
+import { Contacts } from "./pages/Contacts";
+import { Invoicing } from "./pages/Invoicing";
 
 const queryClient = new QueryClient();
 
@@ -36,18 +37,12 @@ const App = () => (
           } />
           <Route path="/contacts" element={
             <Layout>
-              <div className="p-8">
-                <h1 className="text-2xl font-bold">Module Clients & Fournisseurs</h1>
-                <p className="text-gray-600 mt-2">En cours de développement...</p>
-              </div>
+              <Contacts />
             </Layout>
           } />
           <Route path="/invoicing" element={
             <Layout>
-              <div className="p-8">
-                <h1 className="text-2xl font-bold">Module Facturation</h1>
-                <p className="text-gray-600 mt-2">En cours de développement...</p>
-              </div>
+              <Invoicing />
             </Layout>
           } />
           <Route path="/purchases" element={

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
@@ -15,7 +14,7 @@ import {
 } from 'lucide-react';
 
 const menuItems = [
-  { icon: LayoutDashboard, label: 'Tableau de bord', path: '/' },
+  { icon: LayoutDashboard, label: 'Tableau de bord', path: '/dashboard' },
   { icon: Calculator, label: 'Comptabilité générale', path: '/accounting' },
   { icon: Users, label: 'Clients & Fournisseurs', path: '/contacts' },
   { icon: FileText, label: 'Facturation', path: '/invoicing' },

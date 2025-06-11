@@ -1135,7 +1135,18 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_user_company_id: {
+        Args: { user_id: string }
+        Returns: string
+      }
+      is_company_admin: {
+        Args: { user_id: string }
+        Returns: boolean
+      }
+      is_system_admin: {
+        Args: { user_email: string }
+        Returns: boolean
+      }
     }
     Enums: {
       business_sector:

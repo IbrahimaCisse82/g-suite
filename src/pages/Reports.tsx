@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { FileText, Download, Calendar, TrendingUp, PieChart, BarChart3 } from 'lucide-react';
 import { FinancialChart } from '@/components/FinancialChart';
+import { StockReport } from '@/components/reports/StockReport';
 
 export const Reports = () => {
   const [selectedPeriod, setSelectedPeriod] = useState('month');
@@ -99,6 +100,11 @@ export const Reports = () => {
             </Card>
           );
         })}
+      </div>
+
+      {/* Rapport de Stock - Nouveau */}
+      <div className="mb-8">
+        <StockReport />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

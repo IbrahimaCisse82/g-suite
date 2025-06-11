@@ -58,22 +58,36 @@ export const useCompanyRegistration = (onSuccess?: () => void) => {
     setIsLoading(true);
     
     try {
-      // Get current user
-      const { data: { user }, error: userError } = await supabase.auth.getUser();
-      
-      if (userError || !user) {
-        console.error('Erreur utilisateur:', userError);
+      // Créer d'abord un compte utilisateur avec l'email du représentant
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email: data.email,
+        password: 'TempPassword123!', // Mot de passe temporaire
+        options: {
+          emailRedirectTo: `${window.location.origin}/dashboard`,
+          data: {
+            first_name: data.representative_first_name,
+            last_name: data.representative_last_name,
+          },
+        },
+      });
+
+      if (authError) {
+        console.error('Erreur création utilisateur:', authError);
         toast({
           title: 'Erreur',
-          description: 'Vous devez être connecté pour créer une entreprise',
+          description: 'Erreur lors de la création du compte utilisateur: ' + authError.message,
           variant: 'destructive',
         });
         return;
       }
 
-      console.log('Utilisateur connecté:', user.id);
+      console.log('Utilisateur créé:', authData.user?.id);
 
-      // Create company first
+      if (!authData.user) {
+        throw new Error('Aucun utilisateur créé');
+      }
+
+      // Créer l'entreprise
       const { data: companyData, error: companyError } = await supabase
         .from('companies')
         .insert({
@@ -106,12 +120,12 @@ export const useCompanyRegistration = (onSuccess?: () => void) => {
 
       console.log('Entreprise créée:', companyData);
 
-      // Upload logo if provided
+      // Upload logo si fourni
       let logoUrl = null;
       if (logoFile) {
         logoUrl = await uploadLogo(companyData.id, logoFile);
         if (logoUrl) {
-          // Update company with logo URL
+          // Mettre à jour l'entreprise avec l'URL du logo
           const { error: logoUpdateError } = await supabase
             .from('companies')
             .update({ logo_url: logoUrl })
@@ -123,20 +137,20 @@ export const useCompanyRegistration = (onSuccess?: () => void) => {
         }
       }
 
-      // Update user profile to link to company and make them admin
+      // Mettre à jour le profil utilisateur pour le lier à l'entreprise
       const { error: profileError } = await supabase
         .from('profiles')
         .update({
           company_id: companyData.id,
           is_company_admin: true,
         })
-        .eq('id', user.id);
+        .eq('id', authData.user.id);
 
       if (profileError) {
         console.error('Erreur mise à jour profil:', profileError);
         toast({
           title: 'Attention',
-          description: 'L\'entreprise a été créée mais votre profil n\'a pas pu être mis à jour',
+          description: 'L\'entreprise a été créée mais le profil n\'a pas pu être mis à jour',
           variant: 'destructive',
         });
       }
@@ -145,8 +159,11 @@ export const useCompanyRegistration = (onSuccess?: () => void) => {
 
       toast({
         title: 'Succès',
-        description: 'Votre entreprise a été créée avec succès !',
+        description: 'Votre entreprise a été créée avec succès ! Veuillez vérifier votre email pour valider votre compte.',
       });
+
+      // Se déconnecter pour que l'utilisateur puisse se connecter avec ses propres identifiants
+      await supabase.auth.signOut();
 
       onSuccess?.();
       

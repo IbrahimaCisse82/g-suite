@@ -63,18 +63,30 @@ export const useSecureAdminAuth = () => {
 
   const login = async (email: string, name: string) => {
     try {
+      console.log(`Attempting admin login for: ${email} with name: ${name}`);
+      
       // Verify admin credentials with the server
       const { data, error } = await supabase.functions.invoke('verify-admin-credentials', {
         body: { email, name }
       });
 
-      if (error || !data?.valid) {
-        toast({
-          title: "Échec de la connexion",
-          description: "Identifiants administrateur invalides",
-          variant: "destructive"
-        });
-        return false;
+      console.log('Login response:', { data, error });
+
+      if (error) {
+        console.error('Supabase function error:', error);
+        throw new Error(error.message || 'Erreur de connexion au serveur');
+      }
+
+      if (!data?.valid) {
+        const errorMessage = data?.error || 'Identifiants administrateur invalides';
+        console.log('Login failed:', errorMessage);
+        
+        // If there's an expected name, include it in the error
+        if (data?.expectedName) {
+          throw new Error(`Nom incorrect. Nom attendu: "${data.expectedName}"`);
+        }
+        
+        throw new Error(errorMessage);
       }
 
       // Create secure session
@@ -93,14 +105,11 @@ export const useSecureAdminAuth = () => {
       });
 
       return true;
-    } catch (error) {
+    } catch (error: any) {
       console.error('Admin login error:', error);
-      toast({
-        title: "Erreur de connexion",
-        description: "Une erreur est survenue lors de la connexion",
-        variant: "destructive"
-      });
-      return false;
+      
+      // Re-throw the error so the component can handle it
+      throw error;
     }
   };
 

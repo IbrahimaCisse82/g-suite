@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Shield, AlertTriangle } from 'lucide-react';
+import { Shield, AlertTriangle, Info } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useSecureAdminAuth } from '@/hooks/useSecureAdminAuth';
 import { SecurityValidator } from '@/utils/securityValidation';
@@ -17,6 +17,7 @@ export const SecureAdminLoginForm = () => {
   });
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
+  const [expectedName, setExpectedName] = useState<string>('');
   const navigate = useNavigate();
   const { login } = useSecureAdminAuth();
   const { toast } = useToast();
@@ -56,6 +57,7 @@ export const SecureAdminLoginForm = () => {
 
     setLoading(true);
     setErrors([]);
+    setExpectedName('');
 
     try {
       const sanitizedEmail = SecurityValidator.sanitizeHtml(formData.email.trim());
@@ -66,13 +68,21 @@ export const SecureAdminLoginForm = () => {
       if (success) {
         navigate('/admin');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Login error:', error);
-      toast({
-        title: "Erreur de connexion",
-        description: "Une erreur est survenue lors de la connexion",
-        variant: "destructive"
-      });
+      
+      // Parse error response to show specific error messages
+      if (error.message && error.message.includes('Nom incorrect')) {
+        const match = error.message.match(/Nom attendu: "([^"]+)"/);
+        if (match) {
+          setExpectedName(match[1]);
+          setErrors([`Nom incorrect. Le nom attendu pour cet email est: "${match[1]}"`]);
+        } else {
+          setErrors([error.message]);
+        }
+      } else {
+        setErrors([error.message || 'Une erreur est survenue lors de la connexion']);
+      }
     } finally {
       setLoading(false);
     }
@@ -106,6 +116,18 @@ export const SecureAdminLoginForm = () => {
               </div>
             )}
 
+            {expectedName && (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                <div className="flex items-center mb-2">
+                  <Info className="w-4 h-4 text-blue-600 mr-2" />
+                  <span className="text-sm font-medium text-blue-800">Information :</span>
+                </div>
+                <p className="text-sm text-blue-700">
+                  Pour l'email <strong>{formData.email}</strong>, utilisez le nom: <strong>{expectedName}</strong>
+                </p>
+              </div>
+            )}
+
             <div className="space-y-2">
               <Label htmlFor="email">Email administrateur</Label>
               <Input
@@ -127,11 +149,14 @@ export const SecureAdminLoginForm = () => {
                 type="text"
                 value={formData.name}
                 onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                placeholder="Nom Prénom"
+                placeholder={expectedName || "Nom Prénom"}
                 required
                 maxLength={100}
                 autoComplete="name"
               />
+              <p className="text-xs text-gray-500">
+                Utilisez exactement le nom associé à votre email (sensible à la casse)
+              </p>
             </div>
 
             <Button 
@@ -151,6 +176,14 @@ export const SecureAdminLoginForm = () => {
             >
               Retour à l'accueil
             </Button>
+          </div>
+
+          <div className="mt-4 p-3 bg-gray-50 border border-gray-200 rounded-lg">
+            <p className="text-xs text-gray-600">
+              <strong>Comptes administrateurs disponibles :</strong><br />
+              • i.cisse@growhubsenegal.com → Ibrahim Cisse<br />
+              • h.ndiaye@growhubsenegal.com → Hawa Ndiaye
+            </p>
           </div>
         </CardContent>
       </Card>

@@ -7,6 +7,7 @@ import { PurchasesKPICards } from '@/components/purchases/PurchasesKPICards';
 import { PurchasesListCard } from '@/components/purchases/PurchasesListCard';
 import { PurchasesViewDialog } from '@/components/purchases/PurchasesViewDialog';
 import { PurchasesDeleteDialog } from '@/components/purchases/PurchasesDeleteDialog';
+import { PurchaseReceiptDialog } from '@/components/purchases/PurchaseReceiptDialog';
 import { useToast } from '@/hooks/use-toast';
 
 const mockPurchases = [
@@ -17,6 +18,22 @@ const mockPurchases = [
     purchase_date: '2024-06-01',
     status: 'received',
     total_amount: 125000,
+    lines: [
+      {
+        id: '1',
+        description: 'Produit A',
+        quantity: 10,
+        unit_price: 5000,
+        quantity_received: 10
+      },
+      {
+        id: '2',
+        description: 'Produit B',
+        quantity: 5,
+        unit_price: 15000,
+        quantity_received: 5
+      }
+    ]
   },
   {
     id: '2',
@@ -25,6 +42,15 @@ const mockPurchases = [
     purchase_date: '2024-06-05',
     status: 'pending',
     total_amount: 75000,
+    lines: [
+      {
+        id: '3',
+        description: 'Produit C',
+        quantity: 8,
+        unit_price: 9375,
+        quantity_received: 0
+      }
+    ]
   },
 ];
 
@@ -33,6 +59,7 @@ export const Purchases = () => {
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isReceiptDialogOpen, setIsReceiptDialogOpen] = useState(false);
   const [selectedPurchase, setSelectedPurchase] = useState<any>(null);
   const [purchases, setPurchases] = useState(mockPurchases);
   const { toast } = useToast();
@@ -87,6 +114,54 @@ export const Purchases = () => {
     setSelectedPurchase(null);
   };
 
+  const handleReceive = (purchase: any) => {
+    setSelectedPurchase(purchase);
+    setIsReceiptDialogOpen(true);
+  };
+
+  const handleReceiptConfirm = (receiptData: any) => {
+    console.log('Receipt data:', receiptData);
+    
+    // Simuler la mise à jour des quantités reçues
+    setPurchases(prev => prev.map(purchase => {
+      if (purchase.id === receiptData.purchase_id) {
+        const updatedLines = purchase.lines.map((line: any) => {
+          const receivedLine = receiptData.lines.find((rl: any) => rl.id === line.id);
+          if (receivedLine) {
+            return {
+              ...line,
+              quantity_received: (line.quantity_received || 0) + receivedLine.quantity_received
+            };
+          }
+          return line;
+        });
+
+        // Déterminer le nouveau statut
+        const allReceived = updatedLines.every((line: any) => line.quantity_received >= line.quantity);
+        const someReceived = updatedLines.some((line: any) => line.quantity_received > 0);
+        
+        let newStatus = purchase.status;
+        if (allReceived) {
+          newStatus = 'received';
+        } else if (someReceived) {
+          newStatus = 'partial';
+        }
+
+        return {
+          ...purchase,
+          lines: updatedLines,
+          status: newStatus
+        };
+      }
+      return purchase;
+    }));
+
+    toast({
+      title: "Réception confirmée",
+      description: "Les articles ont été marqués comme reçus.",
+    });
+  };
+
   return (
     <div className="p-8">
       <PurchasesHeader onCreatePurchase={() => setIsDialogOpen(true)} />
@@ -99,6 +174,7 @@ export const Purchases = () => {
         onEdit={handleEdit}
         onDelete={handleDelete}
         onCreatePurchase={() => setIsDialogOpen(true)}
+        onReceive={handleReceive}
       />
 
       {/* Dialogue de création */}
@@ -147,6 +223,14 @@ export const Purchases = () => {
         onOpenChange={setIsDeleteDialogOpen}
         purchase={selectedPurchase}
         onConfirm={confirmDelete}
+      />
+
+      {/* Dialogue de réception partielle */}
+      <PurchaseReceiptDialog 
+        isOpen={isReceiptDialogOpen}
+        onOpenChange={setIsReceiptDialogOpen}
+        purchase={selectedPurchase}
+        onConfirm={handleReceiptConfirm}
       />
     </div>
   );

@@ -11,9 +11,10 @@ interface PurchasesListCardProps {
   onEdit: (purchase: any) => void;
   onDelete: (id: string) => void;
   onCreatePurchase: () => void;
+  onReceive?: (purchase: any) => void;
 }
 
-export const PurchasesListCard = ({ purchases, onView, onEdit, onDelete, onCreatePurchase }: PurchasesListCardProps) => {
+export const PurchasesListCard = ({ purchases, onView, onEdit, onDelete, onCreatePurchase, onReceive }: PurchasesListCardProps) => {
   return (
     <Card>
       <CardHeader>
@@ -26,6 +27,7 @@ export const PurchasesListCard = ({ purchases, onView, onEdit, onDelete, onCreat
             onView={onView}
             onEdit={onEdit}
             onDelete={onDelete}
+            onReceive={onReceive}
           />
         ) : (
           <div className="text-center py-8">

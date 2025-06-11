@@ -340,6 +340,7 @@ export type Database = {
           invoice_id: string
           line_total: number
           quantity: number
+          quantity_delivered: number | null
           tax_rate: number | null
           unit_price: number
         }
@@ -350,6 +351,7 @@ export type Database = {
           invoice_id: string
           line_total: number
           quantity?: number
+          quantity_delivered?: number | null
           tax_rate?: number | null
           unit_price: number
         }
@@ -360,6 +362,7 @@ export type Database = {
           invoice_id?: string
           line_total?: number
           quantity?: number
+          quantity_delivered?: number | null
           tax_rate?: number | null
           unit_price?: number
         }
@@ -729,6 +732,7 @@ export type Database = {
           line_total: number
           purchase_id: string
           quantity: number
+          quantity_received: number | null
           tax_rate: number | null
           unit_price: number
         }
@@ -739,6 +743,7 @@ export type Database = {
           line_total: number
           purchase_id: string
           quantity?: number
+          quantity_received?: number | null
           tax_rate?: number | null
           unit_price: number
         }
@@ -749,6 +754,7 @@ export type Database = {
           line_total?: number
           purchase_id?: string
           quantity?: number
+          quantity_received?: number | null
           tax_rate?: number | null
           unit_price?: number
         }

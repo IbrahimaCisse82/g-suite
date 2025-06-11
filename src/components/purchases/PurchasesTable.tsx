@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { 
   Table, 
@@ -10,7 +9,7 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Edit, Eye, Download, Trash2 } from 'lucide-react';
+import { Edit, Eye, Download, Trash2, Package } from 'lucide-react';
 import { useCompanyProfile } from '@/hooks/useCompanyData';
 
 interface PurchasesTableProps {
@@ -18,20 +17,23 @@ interface PurchasesTableProps {
   onView: (purchase: any) => void;
   onEdit: (purchase: any) => void;
   onDelete: (id: string) => void;
+  onReceive?: (purchase: any) => void;
 }
 
-export const PurchasesTable = ({ purchases, onView, onEdit, onDelete }: PurchasesTableProps) => {
+export const PurchasesTable = ({ purchases, onView, onEdit, onDelete, onReceive }: PurchasesTableProps) => {
   const { data: profile } = useCompanyProfile();
 
   const getStatusBadge = (status: string) => {
     const variants = {
       pending: 'secondary',
+      partial: 'default',
       received: 'default',
       cancelled: 'destructive'
     } as const;
     
     const labels = {
       pending: 'En attente',
+      partial: 'Partiellement reçu',
       received: 'Reçu',
       cancelled: 'Annulé'
     };
@@ -240,6 +242,11 @@ export const PurchasesTable = ({ purchases, onView, onEdit, onDelete }: Purchase
                   <Button variant="outline" size="sm" onClick={() => onEdit(purchase)}>
                     <Edit className="w-4 h-4" />
                   </Button>
+                  {onReceive && purchase.status !== 'received' && purchase.status !== 'cancelled' && (
+                    <Button variant="outline" size="sm" onClick={() => onReceive(purchase)}>
+                      <Package className="w-4 h-4" />
+                    </Button>
+                  )}
                   <Button variant="outline" size="sm" onClick={() => generatePurchasePDF(purchase)}>
                     <Download className="w-4 h-4" />
                   </Button>

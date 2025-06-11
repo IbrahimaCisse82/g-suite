@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
@@ -10,7 +11,9 @@ import {
   Calculator,
   PieChart,
   CreditCard,
-  Building
+  Building,
+  Package,
+  Warehouse
 } from 'lucide-react';
 
 const menuItems = [
@@ -19,6 +22,8 @@ const menuItems = [
   { icon: Users, label: 'Clients & Fournisseurs', path: '/contacts' },
   { icon: FileText, label: 'Facturation', path: '/invoicing' },
   { icon: ShoppingCart, label: 'Achats', path: '/purchases' },
+  { icon: Package, label: 'Produits', path: '/products' },
+  { icon: Warehouse, label: 'Stock', path: '/stock' },
   { icon: CreditCard, label: 'Trésorerie', path: '/treasury' },
   { icon: PieChart, label: 'Rapports', path: '/reports' },
   { icon: TrendingUp, label: 'Analyse', path: '/analytics' },
@@ -34,7 +39,7 @@ export const Sidebar = () => {
         <div className="flex items-center space-x-3">
           <Building className="w-8 h-8 text-blue-400" />
           <div>
-            <h1 className="text-xl font-bold">G-Compta</h1>
+            <h1 className="text-xl font-bold">G-Suite</h1>
             <p className="text-sm text-slate-400">Gestion d'entreprise</p>
           </div>
         </div>
@@ -64,7 +69,7 @@ export const Sidebar = () => {
       
       <div className="p-4 border-t border-slate-700">
         <div className="text-xs text-slate-400">
-          © 2024 G-Compta v1.0
+          © 2024 G-Suite v1.0
         </div>
       </div>
     </div>

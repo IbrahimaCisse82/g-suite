@@ -1,8 +1,11 @@
 
 import React from 'react';
 import { Building, Mail, Phone, MapPin, Facebook, Twitter, Linkedin } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const LandingFooter = () => {
+  const navigate = useNavigate();
+
   const handleNavClick = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -29,6 +32,14 @@ const LandingFooter = () => {
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleDocumentationClick = () => {
+    navigate('/training');
+  };
+
+  const handleFormationClick = () => {
+    navigate('/training');
   };
 
   return (
@@ -135,7 +146,7 @@ const LandingFooter = () => {
               </li>
               <li>
                 <button 
-                  onClick={() => alert('Documentation en construction')} 
+                  onClick={handleDocumentationClick} 
                   className="text-slate-300 hover:text-green-400 transition-colors"
                 >
                   Documentation
@@ -143,7 +154,7 @@ const LandingFooter = () => {
               </li>
               <li>
                 <button 
-                  onClick={() => alert('Formation disponible après inscription')} 
+                  onClick={handleFormationClick} 
                   className="text-slate-300 hover:text-green-400 transition-colors"
                 >
                   Formation
@@ -155,14 +166,6 @@ const LandingFooter = () => {
                   className="text-slate-300 hover:text-green-400 transition-colors"
                 >
                   Contact
-                </button>
-              </li>
-              <li>
-                <button 
-                  onClick={() => alert('Statut système: Tous les services opérationnels')} 
-                  className="text-slate-300 hover:text-green-400 transition-colors"
-                >
-                  Status
                 </button>
               </li>
             </ul>

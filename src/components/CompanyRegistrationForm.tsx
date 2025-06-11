@@ -73,8 +73,6 @@ interface CompanyRegistrationFormProps {
 
 export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormProps) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [logoFile, setLogoFile] = useState<File | null>(null);
-  const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const { toast } = useToast();
 
   const form = useForm<CompanyFormData>({
@@ -83,38 +81,9 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
       country: 'France',
       website: '',
       currency: 'XOF',
+      business_sector: 'commerce',
     },
   });
-
-  const handleLogoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      if (file.size > 5 * 1024 * 1024) { // 5MB limit
-        toast({
-          title: 'Erreur',
-          description: 'Le fichier ne doit pas dépasser 5MB',
-          variant: 'destructive',
-        });
-        return;
-      }
-
-      if (!file.type.startsWith('image/')) {
-        toast({
-          title: 'Erreur',
-          description: 'Veuillez sélectionner un fichier image',
-          variant: 'destructive',
-        });
-        return;
-      }
-
-      setLogoFile(file);
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setLogoPreview(e.target?.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
 
   const onSubmit = async (data: CompanyFormData) => {
     console.log('Début de la soumission du formulaire:', data);
@@ -221,34 +190,6 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
       </CardHeader>
       <CardContent>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          {/* Logo Upload */}
-          <div className="space-y-2">
-            <Label htmlFor="logo">Logo de l'entreprise (optionnel)</Label>
-            <div className="flex items-center gap-4">
-              <div className="flex-1">
-                <Input
-                  id="logo"
-                  type="file"
-                  accept="image/*"
-                  onChange={handleLogoChange}
-                  className="cursor-pointer"
-                />
-              </div>
-              {logoPreview && (
-                <div className="w-16 h-16 border rounded-lg overflow-hidden">
-                  <img
-                    src={logoPreview}
-                    alt="Aperçu du logo"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              )}
-            </div>
-            <p className="text-sm text-muted-foreground">
-              Formats acceptés: JPG, PNG, GIF (max 5MB)
-            </p>
-          </div>
-
           {/* Company Name */}
           <div className="space-y-2">
             <Label htmlFor="name">Nom de l'entreprise *</Label>
@@ -324,7 +265,10 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
           {/* Business Sector */}
           <div className="space-y-2">
             <Label htmlFor="business_sector">Secteur d'activité *</Label>
-            <Select onValueChange={(value) => form.setValue('business_sector', value as BusinessSector)}>
+            <Select 
+              value={form.watch('business_sector')} 
+              onValueChange={(value) => form.setValue('business_sector', value as BusinessSector)}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Sélectionnez votre secteur d'activité" />
               </SelectTrigger>
@@ -344,7 +288,10 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
           {/* Currency Selection */}
           <div className="space-y-2">
             <Label htmlFor="currency">Devise *</Label>
-            <Select onValueChange={(value) => form.setValue('currency', value)} defaultValue="XOF">
+            <Select 
+              value={form.watch('currency')} 
+              onValueChange={(value) => form.setValue('currency', value)}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Sélectionnez votre devise" />
               </SelectTrigger>

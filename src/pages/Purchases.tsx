@@ -3,9 +3,11 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Plus, ShoppingCart, TrendingUp, AlertCircle } from 'lucide-react';
 import { PurchasesTable } from '@/components/purchases/PurchasesTable';
 import { PurchaseForm } from '@/components/purchases/PurchaseForm';
+import { useToast } from '@/hooks/use-toast';
 
 const mockPurchases = [
   {
@@ -28,23 +30,61 @@ const mockPurchases = [
 
 export const Purchases = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [purchases] = useState(mockPurchases);
+  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [selectedPurchase, setSelectedPurchase] = useState<any>(null);
+  const [purchases, setPurchases] = useState(mockPurchases);
+  const { toast } = useToast();
 
   const handleCreatePurchase = async (purchaseData: any) => {
     console.log('Create purchase:', purchaseData);
+    toast({
+      title: "Achat créé",
+      description: "Le nouvel achat a été créé avec succès.",
+    });
     setIsDialogOpen(false);
   };
 
   const handleView = (purchase: any) => {
     console.log('View purchase:', purchase);
+    setSelectedPurchase(purchase);
+    setIsViewDialogOpen(true);
   };
 
   const handleEdit = (purchase: any) => {
     console.log('Edit purchase:', purchase);
+    setSelectedPurchase(purchase);
+    setIsEditDialogOpen(true);
+  };
+
+  const handleEditSubmit = async (purchaseData: any) => {
+    console.log('Update purchase:', purchaseData);
+    toast({
+      title: "Achat modifié",
+      description: "L'achat a été modifié avec succès.",
+    });
+    setIsEditDialogOpen(false);
+    setSelectedPurchase(null);
   };
 
   const handleDelete = (id: string) => {
-    console.log('Delete purchase:', id);
+    const purchase = purchases.find(p => p.id === id);
+    setSelectedPurchase(purchase);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (selectedPurchase) {
+      setPurchases(purchases.filter(p => p.id !== selectedPurchase.id));
+      toast({
+        title: "Achat supprimé",
+        description: "L'achat a été supprimé avec succès.",
+        variant: "destructive",
+      });
+    }
+    setIsDeleteDialogOpen(false);
+    setSelectedPurchase(null);
   };
 
   const totalAmount = purchases.reduce((sum, purchase) => sum + purchase.total_amount, 0);
@@ -138,6 +178,7 @@ export const Purchases = () => {
         </CardContent>
       </Card>
 
+      {/* Dialogue de création */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="max-w-4xl">
           <DialogHeader>
@@ -149,6 +190,92 @@ export const Purchases = () => {
           />
         </DialogContent>
       </Dialog>
+
+      {/* Dialogue de visualisation */}
+      <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Détails de l'achat</DialogTitle>
+          </DialogHeader>
+          {selectedPurchase && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Numéro d'achat</label>
+                  <p className="mt-1 text-sm text-gray-900">{selectedPurchase.purchase_number}</p>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Fournisseur</label>
+                  <p className="mt-1 text-sm text-gray-900">{selectedPurchase.supplier}</p>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Date d'achat</label>
+                  <p className="mt-1 text-sm text-gray-900">
+                    {new Date(selectedPurchase.purchase_date).toLocaleDateString('fr-FR')}
+                  </p>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Statut</label>
+                  <p className="mt-1 text-sm text-gray-900">{selectedPurchase.status}</p>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Montant total</label>
+                  <p className="mt-1 text-sm text-gray-900">
+                    {new Intl.NumberFormat('fr-FR', {
+                      style: 'currency',
+                      currency: 'XOF'
+                    }).format(selectedPurchase.total_amount)}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialogue d'édition */}
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent className="max-w-4xl">
+          <DialogHeader>
+            <DialogTitle>Modifier l'achat</DialogTitle>
+          </DialogHeader>
+          {selectedPurchase && (
+            <PurchaseForm 
+              initialData={selectedPurchase}
+              onSubmit={handleEditSubmit}
+              onCancel={() => {
+                setIsEditDialogOpen(false);
+                setSelectedPurchase(null);
+              }}
+              loading={false}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialogue de confirmation de suppression */}
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Supprimer l'achat</AlertDialogTitle>
+            <AlertDialogDescription>
+              Êtes-vous sûr de vouloir supprimer l'achat {selectedPurchase?.purchase_number} ? 
+              Cette action est irréversible.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => {
+              setIsDeleteDialogOpen(false);
+              setSelectedPurchase(null);
+            }}>
+              Annuler
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete}>
+              Supprimer
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

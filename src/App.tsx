@@ -22,7 +22,7 @@ import QuoteRequest from "./pages/QuoteRequest";
 import NotFound from "./pages/NotFound";
 import { AdminLogin } from "./pages/AdminLogin";
 import { AdminSetup } from "./pages/AdminSetup";
-import { AdminPanel } from "./pages/AdminPanel";
+import { AdminBackend } from "./pages/AdminBackend";
 import { SubscriptionSettings } from "./pages/SubscriptionSettings";
 import CompanyAdminSetup from "./pages/CompanyAdminSetup";
 import AdminSetupSuccess from "./pages/AdminSetupSuccess";
@@ -42,6 +42,8 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/index" element={<Index />} />
+          
+          {/* Enterprise Application Routes */}
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/contacts" element={<Contacts />} />
           <Route path="/invoicing" element={<Invoicing />} />
@@ -56,17 +58,17 @@ const App = () => (
           <Route path="/formation" element={<TrainingSupportStandalone />} />
           <Route path="/product-documentation" element={<ProductDocumentation />} />
           <Route path="/settings" element={<Settings />} />
-          <Route path="/company-registration" element={<CompanyRegistration />} />
-          <Route path="/quote-request" element={<QuoteRequest />} />
           <Route path="/subscription-settings" element={<SubscriptionSettings />} />
           
-          {/* User Login Route */}
+          {/* Company Registration and User Login */}
+          <Route path="/company-registration" element={<CompanyRegistration />} />
+          <Route path="/quote-request" element={<QuoteRequest />} />
           <Route path="/user-login" element={<UserLogin />} />
           
-          {/* Admin Routes */}
+          {/* Admin Backend Routes (License Management Only) */}
           <Route path="/admin-login" element={<AdminLogin />} />
           <Route path="/admin-setup" element={<AdminSetup />} />
-          <Route path="/admin" element={<AdminPanel />} />
+          <Route path="/admin" element={<AdminBackend />} />
           
           {/* Company Admin Setup Routes */}
           <Route path="/company-admin-setup" element={<CompanyAdminSetup />} />

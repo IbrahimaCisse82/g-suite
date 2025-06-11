@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Building, Shield } from 'lucide-react';
+import { Building } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export const LandingHeader = () => {
@@ -48,15 +48,9 @@ export const LandingHeader = () => {
           </nav>
           
           <div className="flex items-center space-x-4">
-            <Link to="/admin-login">
-              <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-900">
-                <Shield className="w-4 h-4 mr-2" />
-                Admin
-              </Button>
-            </Link>
             <Link to="/user-login">
               <Button variant="outline" size="sm" className="text-gray-600 hover:text-gray-900">
-                Application
+                Connexion Entreprise
               </Button>
             </Link>
             <Link to="/company-registration">

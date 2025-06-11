@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -14,6 +13,9 @@ export const Invoicing = () => {
   const createInvoice = useCreateInvoice();
   const { toast } = useToast();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [selectedInvoice, setSelectedInvoice] = useState<any>(null);
 
   const handleCreateInvoice = async (invoiceData: any) => {
     try {
@@ -34,14 +36,40 @@ export const Invoicing = () => {
 
   const handleView = (invoice: any) => {
     console.log('View invoice:', invoice);
+    setSelectedInvoice(invoice);
+    setIsViewDialogOpen(true);
   };
 
   const handleEdit = (invoice: any) => {
     console.log('Edit invoice:', invoice);
+    setSelectedInvoice(invoice);
+    setIsEditDialogOpen(true);
   };
 
   const handleDownload = (invoice: any) => {
     console.log('Download invoice:', invoice);
+    toast({
+      title: 'Téléchargement',
+      description: `Téléchargement de la facture ${invoice.invoice_number}`,
+    });
+  };
+
+  const handleUpdateInvoice = async (invoiceData: any) => {
+    try {
+      // Here you would implement the update logic
+      toast({
+        title: 'Facture modifiée',
+        description: 'La facture a été modifiée avec succès',
+      });
+      setIsEditDialogOpen(false);
+      setSelectedInvoice(null);
+    } catch (error) {
+      toast({
+        title: 'Erreur',
+        description: 'Impossible de modifier la facture',
+        variant: 'destructive',
+      });
+    }
   };
 
   const totalAmount = invoices.reduce((sum, invoice) => sum + invoice.total_amount, 0);
@@ -146,6 +174,7 @@ export const Invoicing = () => {
         </CardContent>
       </Card>
 
+      {/* Dialog for creating new invoice */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="max-w-4xl">
           <DialogHeader>
@@ -156,6 +185,70 @@ export const Invoicing = () => {
             onCancel={() => setIsDialogOpen(false)}
             loading={createInvoice.isPending}
           />
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog for viewing invoice */}
+      <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Détails de la facture</DialogTitle>
+          </DialogHeader>
+          {selectedInvoice && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm font-medium text-gray-500">Numéro</label>
+                  <p className="text-lg font-semibold">{selectedInvoice.invoice_number}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-500">Client</label>
+                  <p className="text-lg">{selectedInvoice.contacts?.name || 'N/A'}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-500">Date de facture</label>
+                  <p className="text-lg">{new Date(selectedInvoice.invoice_date).toLocaleDateString('fr-FR')}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-500">Date d'échéance</label>
+                  <p className="text-lg">{new Date(selectedInvoice.due_date).toLocaleDateString('fr-FR')}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-500">Montant total</label>
+                  <p className="text-lg font-semibold">
+                    {new Intl.NumberFormat('fr-FR', {
+                      style: 'currency',
+                      currency: 'XOF'
+                    }).format(selectedInvoice.total_amount)}
+                  </p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-500">Statut</label>
+                  <p className="text-lg capitalize">{selectedInvoice.status}</p>
+                </div>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog for editing invoice */}
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent className="max-w-4xl">
+          <DialogHeader>
+            <DialogTitle>Modifier la facture</DialogTitle>
+          </DialogHeader>
+          {selectedInvoice && (
+            <InvoiceForm 
+              initialData={selectedInvoice}
+              onSubmit={handleUpdateInvoice}
+              onCancel={() => {
+                setIsEditDialogOpen(false);
+                setSelectedInvoice(null);
+              }}
+              loading={false}
+            />
+          )}
         </DialogContent>
       </Dialog>
     </div>

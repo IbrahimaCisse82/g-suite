@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -26,6 +25,7 @@ import { AdminPanel } from "./pages/AdminPanel";
 import { SubscriptionSettings } from "./pages/SubscriptionSettings";
 import CompanyAdminSetup from "./pages/CompanyAdminSetup";
 import AdminSetupSuccess from "./pages/AdminSetupSuccess";
+import TrainingSupport from "./pages/TrainingSupport";
 
 const queryClient = new QueryClient();
 

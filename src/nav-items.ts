@@ -11,7 +11,8 @@ import {
   CreditCard,
   Building,
   Package,
-  Warehouse
+  Warehouse,
+  GraduationCap
 } from 'lucide-react';
 
 export const navItems = [
@@ -25,5 +26,6 @@ export const navItems = [
   { icon: CreditCard, label: 'Trésorerie', path: '/treasury' },
   { icon: PieChart, label: 'Rapports', path: '/reports' },
   { icon: TrendingUp, label: 'Analyse', path: '/analytics' },
+  { icon: GraduationCap, label: 'Formation', path: '/training' },
   { icon: Settings, label: 'Paramètres', path: '/settings' },
 ];

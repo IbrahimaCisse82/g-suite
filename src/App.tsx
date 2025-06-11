@@ -9,6 +9,7 @@ import { Dashboard } from "./pages/Dashboard";
 import { Accounting } from "./pages/Accounting";
 import Landing from "./pages/Landing";
 import CompanyRegistration from "./pages/CompanyRegistration";
+import QuoteRequest from "./pages/QuoteRequest";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -22,6 +23,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/register" element={<CompanyRegistration />} />
+          <Route path="/quote" element={<QuoteRequest />} />
           <Route path="/dashboard" element={
             <Layout>
               <Dashboard />

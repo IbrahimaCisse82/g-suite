@@ -179,11 +179,11 @@ const Landing = () => {
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
             </Link>
-            <Button size="lg" variant="outline" className="text-lg px-8 py-3" onClick={() => {
-              document.getElementById('quote-section')?.scrollIntoView({ behavior: 'smooth' });
-            }}>
-              Demander un devis
-            </Button>
+            <Link to="/quote">
+              <Button size="lg" variant="outline" className="text-lg px-8 py-3">
+                Demander un devis
+              </Button>
+            </Link>
           </div>
           <p className="text-sm text-gray-500 mt-4">
             ✓ Aucune carte bancaire requise ✓ Configuration en 5 minutes
@@ -331,11 +331,11 @@ const Landing = () => {
                     <span>Accompagnement dédié</span>
                   </li>
                 </ul>
-                <Button variant="outline" className="w-full text-lg py-3 border-2" onClick={() => {
-                  document.getElementById('quote-section')?.scrollIntoView({ behavior: 'smooth' });
-                }}>
-                  Demander un devis
-                </Button>
+                <Link to="/quote">
+                  <Button variant="outline" className="w-full text-lg py-3 border-2">
+                    Demander un devis
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
           </div>
@@ -467,11 +467,11 @@ const Landing = () => {
                 Commencer l'essai gratuit
               </Button>
             </Link>
-            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600 text-lg px-8 py-3" onClick={() => {
-              document.getElementById('quote-section')?.scrollIntoView({ behavior: 'smooth' });
-            }}>
-              Parler à un expert
-            </Button>
+            <Link to="/quote">
+              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600 text-lg px-8 py-3">
+                Parler à un expert
+              </Button>
+            </Link>
           </div>
         </div>
       </section>

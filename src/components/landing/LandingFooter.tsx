@@ -42,6 +42,10 @@ const LandingFooter = () => {
     navigate('/formation');
   };
 
+  const handleAdminClick = () => {
+    navigate('/admin-login');
+  };
+
   return (
     <footer className="bg-slate-900 text-white">
       <div className="container mx-auto px-4 py-16">
@@ -226,6 +230,12 @@ const LandingFooter = () => {
               className="hover:text-green-400 transition-colors"
             >
               Cookies
+            </button>
+            <button 
+              onClick={handleAdminClick} 
+              className="hover:text-green-400 transition-colors text-xs opacity-50 hover:opacity-100"
+            >
+              Admin
             </button>
           </div>
         </div>

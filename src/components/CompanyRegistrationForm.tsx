@@ -10,7 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { Building } from 'lucide-react';
+import { Building, Upload } from 'lucide-react';
 import type { Database } from '@/integrations/supabase/types';
 
 type BusinessSector = Database['public']['Enums']['business_sector'];
@@ -73,6 +73,8 @@ interface CompanyRegistrationFormProps {
 
 export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormProps) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [logoPreview, setLogoPreview] = useState<string>('');
   const { toast } = useToast();
 
   const form = useForm<CompanyFormData>({
@@ -84,6 +86,45 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
       business_sector: 'commerce',
     },
   });
+
+  const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setLogoFile(file);
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setLogoPreview(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const uploadLogo = async (companyId: string, file: File): Promise<string | null> => {
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${companyId}/logo.${fileExt}`;
+      
+      const { error: uploadError } = await supabase.storage
+        .from('company-logos')
+        .upload(fileName, file, {
+          upsert: true
+        });
+
+      if (uploadError) {
+        console.error('Erreur upload logo:', uploadError);
+        return null;
+      }
+
+      const { data } = supabase.storage
+        .from('company-logos')
+        .getPublicUrl(fileName);
+
+      return data.publicUrl;
+    } catch (error) {
+      console.error('Erreur inattendue upload logo:', error);
+      return null;
+    }
+  };
 
   const onSubmit = async (data: CompanyFormData) => {
     console.log('Début de la soumission du formulaire:', data);
@@ -105,7 +146,7 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
 
       console.log('Utilisateur connecté:', user.id);
 
-      // Create company
+      // Create company first
       const { data: companyData, error: companyError } = await supabase
         .from('companies')
         .insert({
@@ -137,6 +178,23 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
       }
 
       console.log('Entreprise créée:', companyData);
+
+      // Upload logo if provided
+      let logoUrl = null;
+      if (logoFile) {
+        logoUrl = await uploadLogo(companyData.id, logoFile);
+        if (logoUrl) {
+          // Update company with logo URL
+          const { error: logoUpdateError } = await supabase
+            .from('companies')
+            .update({ logo_url: logoUrl })
+            .eq('id', companyData.id);
+
+          if (logoUpdateError) {
+            console.error('Erreur mise à jour logo:', logoUpdateError);
+          }
+        }
+      }
 
       // Update user profile to link to company and make them admin
       const { error: profileError } = await supabase
@@ -190,6 +248,30 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
       </CardHeader>
       <CardContent>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          {/* Logo Upload */}
+          <div className="space-y-2">
+            <Label htmlFor="logo">Logo de l'entreprise</Label>
+            <div className="flex items-center gap-4">
+              {logoPreview && (
+                <div className="w-20 h-20 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden">
+                  <img src={logoPreview} alt="Logo preview" className="w-full h-full object-cover" />
+                </div>
+              )}
+              <div className="flex-1">
+                <Input
+                  id="logo"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleLogoChange}
+                  className="cursor-pointer"
+                />
+                <p className="text-sm text-gray-500 mt-1">
+                  Formats acceptés: JPG, PNG, GIF. Taille max: 5MB
+                </p>
+              </div>
+            </div>
+          </div>
+
           {/* Company Name */}
           <div className="space-y-2">
             <Label htmlFor="name">Nom de l'entreprise *</Label>

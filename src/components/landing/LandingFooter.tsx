@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Building, Mail } from 'lucide-react';
 
@@ -20,7 +19,7 @@ const LandingFooter = () => {
             </p>
             <div className="flex items-center space-x-2 text-gray-400">
               <Mail className="w-4 h-4" />
-              <span className="text-sm">facturation@growhubsenegal.com</span>
+              <span className="text-sm">contact@growhubsenegal.com</span>
             </div>
           </div>
           <div>

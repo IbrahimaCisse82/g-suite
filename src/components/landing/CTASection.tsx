@@ -4,6 +4,13 @@ import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 
 const CTASection = () => {
+  const handleExpertContact = () => {
+    const subject = encodeURIComponent('Demande de consultation - G-Compta');
+    const body = encodeURIComponent('Bonjour,\n\nJe souhaiterais obtenir plus d\'informations sur G-Compta et discuter de mes besoins en gestion d\'entreprise.\n\nCordialement,');
+    const mailto = `mailto:ict@growhubsenegal.com?cc=h.ndiaye@growhubsenegal.com&subject=${subject}&body=${body}`;
+    window.location.href = mailto;
+  };
+
   return (
     <section className="py-20 bg-blue-600">
       <div className="container mx-auto px-4 text-center">
@@ -19,11 +26,14 @@ const CTASection = () => {
               Commencer l'essai gratuit
             </Button>
           </Link>
-          <Link to="/quote">
-            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600 text-lg px-8 py-3">
-              Parler à un expert
-            </Button>
-          </Link>
+          <Button 
+            size="lg" 
+            variant="outline" 
+            className="border-white text-white hover:bg-white hover:text-blue-600 text-lg px-8 py-3"
+            onClick={handleExpertContact}
+          >
+            Parler à un expert
+          </Button>
         </div>
       </div>
     </section>

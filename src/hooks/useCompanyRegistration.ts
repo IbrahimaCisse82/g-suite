@@ -61,24 +61,7 @@ export const useCompanyRegistration = (onSuccess?: () => void) => {
       if (accountType === 'demo') {
         // Processus pour compte démo - accès immédiat
         
-        // Créer un compte utilisateur
-        const { data: authData, error: authError } = await supabase.auth.signUp({
-          email: data.email,
-          password: 'TempDemo123!', // Mot de passe temporaire pour démo
-          options: {
-            emailRedirectTo: `${window.location.origin}/dashboard`,
-            data: {
-              first_name: data.representative_first_name,
-              last_name: data.representative_last_name,
-            },
-          },
-        });
-
-        if (authError || !authData.user) {
-          throw new Error('Erreur lors de la création du compte utilisateur: ' + authError?.message);
-        }
-
-        // Créer l'entreprise
+        // Créer l'entreprise d'abord
         const { data: companyData, error: companyError } = await supabase
           .from('companies')
           .insert({
@@ -112,6 +95,23 @@ export const useCompanyRegistration = (onSuccess?: () => void) => {
               .update({ logo_url: logoUrl })
               .eq('id', companyData.id);
           }
+        }
+
+        // Créer un compte utilisateur pour l'accès démo
+        const { data: authData, error: authError } = await supabase.auth.signUp({
+          email: data.email,
+          password: 'TempDemo123!', // Mot de passe temporaire pour démo
+          options: {
+            emailRedirectTo: `${window.location.origin}/dashboard`,
+            data: {
+              first_name: data.representative_first_name,
+              last_name: data.representative_last_name,
+            },
+          },
+        });
+
+        if (authError || !authData.user) {
+          throw new Error('Erreur lors de la création du compte utilisateur: ' + authError?.message);
         }
 
         // Mettre à jour le profil utilisateur
@@ -159,7 +159,7 @@ export const useCompanyRegistration = (onSuccess?: () => void) => {
 
         toast({
           title: 'Compte démo créé',
-          description: 'Votre compte démo a été créé avec succès ! Vous allez être redirigé pour créer votre mot de passe et accéder à l\'application.',
+          description: 'Votre compte démo a été créé avec succès ! Vous allez recevoir un email pour créer votre mot de passe et accéder à l\'application.',
         });
 
       } else {

@@ -25,14 +25,14 @@ const handler = async (req: Request): Promise<Response> => {
     const { email, companyName, planName, planPrice }: RequestConfirmationEmail = await req.json()
 
     const emailResponse = await resend.emails.send({
-      from: "GrowHub SARL <noreply@growhub.com>",
+      from: "GrowHub Sénégal <contact@growhubsenegal.com>",
       to: [email],
-      subject: "Confirmation de votre demande de compte payant - GrowHub",
+      subject: "Confirmation de votre demande de compte payant - G-Compta",
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="background-color: #1e293b; color: white; padding: 20px; border-radius: 8px 8px 0 0;">
-            <h1 style="margin: 0; color: white;">GrowHub SARL</h1>
-            <p style="margin: 10px 0 0 0; color: #e2e8f0;">Votre solution de gestion d'entreprise</p>
+            <h1 style="margin: 0; color: white;">GrowHub Sénégal</h1>
+            <p style="margin: 10px 0 0 0; color: #e2e8f0;">Votre solution de gestion d'entreprise G-Compta</p>
           </div>
           
           <div style="background-color: #f8fafc; padding: 30px; border-radius: 0 0 8px 8px;">
@@ -56,7 +56,8 @@ const handler = async (req: Request): Promise<Response> => {
             <div style="background-color: #fef3c7; padding: 15px; border-radius: 8px; margin: 20px 0;">
               <p style="color: #92400e; margin: 0;">
                 <strong>⏰ Prochaines étapes :</strong><br>
-                Votre demande sera traitée dans les <strong>24 heures</strong> suivant la réception de votre paiement.
+                Votre demande sera traitée dans les <strong>24 heures</strong> suivant la réception de votre paiement. 
+                Vous recevrez un email de notification pour le traitement de votre demande et une autre notification après validation de votre licence.
               </p>
             </div>
             
@@ -73,18 +74,18 @@ const handler = async (req: Request): Promise<Response> => {
                 📞 <strong>Téléphone :</strong> +221 78 475 28 58
               </p>
               <p style="color: #475569; margin: 5px 0;">
-                📧 <strong>Email :</strong> contact@growhub.com
+                📧 <strong>Email :</strong> contact@growhubsenegal.com
               </p>
             </div>
             
             <p style="color: #475569;">
-              Merci de votre confiance et à bientôt sur GrowHub !
+              Merci de votre confiance et à bientôt sur G-Compta !
             </p>
             
             <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 30px 0;">
             
             <p style="color: #94a3b8; font-size: 14px; text-align: center;">
-              GrowHub SARL - Votre partenaire pour la croissance de votre entreprise<br>
+              GrowHub Sénégal - Votre partenaire pour la croissance de votre entreprise<br>
               Cet email a été envoyé automatiquement, merci de ne pas y répondre.
             </p>
           </div>

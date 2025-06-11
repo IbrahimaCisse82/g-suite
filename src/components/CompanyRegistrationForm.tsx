@@ -10,7 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { Upload, Building } from 'lucide-react';
+import { Building } from 'lucide-react';
 import type { Database } from '@/integrations/supabase/types';
 
 type BusinessSector = Database['public']['Enums']['business_sector'];
@@ -116,31 +116,8 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
     }
   };
 
-  const uploadLogo = async (companyId: string): Promise<string | null> => {
-    if (!logoFile) return null;
-
-    const fileExt = logoFile.name.split('.').pop();
-    const fileName = `${companyId}/logo.${fileExt}`;
-
-    const { error: uploadError } = await supabase.storage
-      .from('company-logos')
-      .upload(fileName, logoFile, {
-        upsert: true,
-      });
-
-    if (uploadError) {
-      console.error('Upload error:', uploadError);
-      throw new Error('Erreur lors de l\'upload du logo');
-    }
-
-    const { data } = supabase.storage
-      .from('company-logos')
-      .getPublicUrl(fileName);
-
-    return data.publicUrl;
-  };
-
   const onSubmit = async (data: CompanyFormData) => {
+    console.log('Début de la soumission du formulaire:', data);
     setIsLoading(true);
     
     try {
@@ -148,6 +125,7 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
       const { data: { user }, error: userError } = await supabase.auth.getUser();
       
       if (userError || !user) {
+        console.error('Erreur utilisateur:', userError);
         toast({
           title: 'Erreur',
           description: 'Vous devez être connecté pour créer une entreprise',
@@ -155,6 +133,8 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
         });
         return;
       }
+
+      console.log('Utilisateur connecté:', user.id);
 
       // Create company
       const { data: companyData, error: companyError } = await supabase
@@ -178,38 +158,16 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
         .single();
 
       if (companyError) {
-        console.error('Company creation error:', companyError);
+        console.error('Erreur création entreprise:', companyError);
         toast({
           title: 'Erreur',
-          description: 'Erreur lors de la création de l\'entreprise',
+          description: 'Erreur lors de la création de l\'entreprise: ' + companyError.message,
           variant: 'destructive',
         });
         return;
       }
 
-      // Upload logo if provided
-      let logoUrl = null;
-      if (logoFile) {
-        try {
-          logoUrl = await uploadLogo(companyData.id);
-          
-          // Update company with logo URL
-          if (logoUrl) {
-            await supabase
-              .from('companies')
-              .update({ logo_url: logoUrl })
-              .eq('id', companyData.id);
-          }
-        } catch (logoError) {
-          console.error('Logo upload error:', logoError);
-          // Don't fail the whole process if logo upload fails
-          toast({
-            title: 'Attention',
-            description: 'L\'entreprise a été créée mais l\'upload du logo a échoué',
-            variant: 'destructive',
-          });
-        }
-      }
+      console.log('Entreprise créée:', companyData);
 
       // Update user profile to link to company and make them admin
       const { error: profileError } = await supabase
@@ -221,13 +179,15 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
         .eq('id', user.id);
 
       if (profileError) {
-        console.error('Profile update error:', profileError);
+        console.error('Erreur mise à jour profil:', profileError);
         toast({
           title: 'Attention',
           description: 'L\'entreprise a été créée mais votre profil n\'a pas pu être mis à jour',
           variant: 'destructive',
         });
       }
+
+      console.log('Profil mis à jour avec succès');
 
       toast({
         title: 'Succès',
@@ -237,7 +197,7 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
       onSuccess?.();
       
     } catch (error) {
-      console.error('Unexpected error:', error);
+      console.error('Erreur inattendue:', error);
       toast({
         title: 'Erreur',
         description: 'Une erreur inattendue s\'est produite',
@@ -261,7 +221,7 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
       </CardHeader>
       <CardContent>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          {/* Logo Upload - En premier */}
+          {/* Logo Upload */}
           <div className="space-y-2">
             <Label htmlFor="logo">Logo de l'entreprise (optionnel)</Label>
             <div className="flex items-center gap-4">
@@ -435,7 +395,7 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
             )}
           </div>
 
-          {/* Representative - En dernier */}
+          {/* Representative */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="representative_first_name">Prénom du représentant *</Label>

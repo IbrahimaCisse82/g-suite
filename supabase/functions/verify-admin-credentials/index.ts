@@ -12,6 +12,11 @@ interface CredentialRequest {
   password: string
 }
 
+interface PasswordUpdateRequest {
+  email: string
+  newPassword: string
+}
+
 const handler = async (req: Request): Promise<Response> => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders })
@@ -23,7 +28,45 @@ const handler = async (req: Request): Promise<Response> => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
-    const { email, password }: CredentialRequest = await req.json()
+    const body = await req.json()
+
+    // Handle password update request
+    if (body.action === 'update_password') {
+      const { email, newPassword }: PasswordUpdateRequest = body
+
+      if (!email || !newPassword) {
+        return new Response(
+          JSON.stringify({ error: 'Email et nouveau mot de passe requis', success: false }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        )
+      }
+
+      // Update password and mark as not first login
+      const { error: updateError } = await supabaseClient
+        .from('system_admins')
+        .update({ 
+          password: newPassword.trim(), 
+          is_first_login: false 
+        })
+        .eq('email', email.trim().toLowerCase())
+
+      if (updateError) {
+        console.log(`Password update failed for ${email}:`, updateError)
+        return new Response(
+          JSON.stringify({ error: 'Erreur lors de la mise à jour du mot de passe', success: false }),
+          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        )
+      }
+
+      console.log(`Password updated successfully for ${email}`)
+      return new Response(
+        JSON.stringify({ success: true, message: 'Mot de passe mis à jour avec succès' }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+
+    // Handle login verification
+    const { email, password }: CredentialRequest = body
 
     // Input validation
     if (!email || !password) {

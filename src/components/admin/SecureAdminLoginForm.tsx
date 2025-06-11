@@ -24,7 +24,7 @@ export const SecureAdminLoginForm = () => {
     confirmPassword: ''
   });
   const navigate = useNavigate();
-  const { login } = useSecureAdminAuth();
+  const { login, updatePassword } = useSecureAdminAuth();
   const { toast } = useToast();
 
   const validateForm = (): boolean => {
@@ -101,13 +101,8 @@ export const SecureAdminLoginForm = () => {
     setErrors([]);
 
     try {
-      // Ici on simule la mise à jour du mot de passe
-      // Dans un vrai système, cela irait mettre à jour la base de données
-      toast({
-        title: "Mot de passe mis à jour",
-        description: "Votre mot de passe a été changé avec succès"
-      });
-      
+      const sanitizedEmail = SecurityValidator.sanitizeHtml(formData.email.trim());
+      await updatePassword(sanitizedEmail, newPasswordData.newPassword);
       navigate('/admin');
     } catch (error: any) {
       setErrors([error.message || 'Erreur lors de la création du mot de passe']);

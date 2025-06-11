@@ -113,6 +113,37 @@ export const useSecureAdminAuth = () => {
     }
   };
 
+  const updatePassword = async (email: string, newPassword: string): Promise<boolean> => {
+    try {
+      const { data, error } = await supabase.functions.invoke('verify-admin-credentials', {
+        body: { 
+          action: 'update_password',
+          email, 
+          newPassword 
+        }
+      });
+
+      if (error) {
+        console.error('Password update error:', error);
+        throw new Error(error.message || 'Erreur lors de la mise à jour du mot de passe');
+      }
+
+      if (!data?.success) {
+        throw new Error(data?.error || 'Erreur lors de la mise à jour du mot de passe');
+      }
+
+      toast({
+        title: "Mot de passe mis à jour",
+        description: "Votre mot de passe a été changé avec succès"
+      });
+
+      return true;
+    } catch (error: any) {
+      console.error('Password update error:', error);
+      throw error;
+    }
+  };
+
   const logout = () => {
     clearAdminSession();
     setSession({ isAuthenticated: false, adminEmail: null, loading: false });
@@ -132,6 +163,7 @@ export const useSecureAdminAuth = () => {
     ...session,
     login,
     logout,
+    updatePassword,
     refreshSession: checkAdminSession
   };
 };

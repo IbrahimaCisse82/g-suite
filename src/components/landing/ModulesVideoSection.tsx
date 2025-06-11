@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { 
   FileText, 
   Users, 
@@ -28,7 +29,7 @@ const modules = [
     icon: FileText,
     color: 'from-green-500 to-green-600',
     features: ['Devis automatiques', 'Facturation récurrente', 'Relances clients'],
-    screenshot: 'photo-1554224155-6726b3ff858f' // Invoice screenshot
+    screenshot: 'photo-1488590528505-98d2b5aba04b' // Invoice screenshot
   },
   {
     id: 'contacts',
@@ -37,7 +38,7 @@ const modules = [
     icon: Users,
     color: 'from-purple-500 to-purple-600',
     features: ['Fiche client complète', 'Historique des échanges', 'Segmentation avancée'],
-    screenshot: 'photo-1552664730-d307ca884978' // CRM screenshot
+    screenshot: 'photo-1461749280684-dccba630e2f6' // CRM screenshot
   },
   {
     id: 'stock',
@@ -46,7 +47,7 @@ const modules = [
     icon: Package,
     color: 'from-orange-500 to-orange-600',
     features: ['Suivi en temps réel', 'Alertes de rupture', 'Inventaire automatisé'],
-    screenshot: 'photo-1586528116311-ad8dd3c8310d' // Inventory screenshot
+    screenshot: 'photo-1486312338219-ce68d2c6f44d' // Inventory screenshot
   },
   {
     id: 'purchases',
@@ -55,7 +56,7 @@ const modules = [
     icon: ShoppingCart,
     color: 'from-red-500 to-red-600',
     features: ['Commandes fournisseurs', 'Suivi des livraisons', 'Analyse des coûts'],
-    screenshot: 'photo-1460925895917-afdab827c52f' // Purchase management screenshot
+    screenshot: 'photo-1498050108023-c5249f4df085' // Purchase management screenshot
   },
   {
     id: 'treasury',
@@ -64,7 +65,7 @@ const modules = [
     icon: PiggyBank,
     color: 'from-teal-500 to-teal-600',
     features: ['Prévisions de trésorerie', 'Rapprochement bancaire', 'Budgets prévisionnels'],
-    screenshot: 'photo-1611974789855-9c2a0a7236a3' // Financial dashboard screenshot
+    screenshot: 'photo-1488590528505-98d2b5aba04b' // Financial dashboard screenshot
   },
   {
     id: 'accounting',
@@ -73,12 +74,20 @@ const modules = [
     icon: Calculator,
     color: 'from-indigo-500 to-indigo-600',
     features: ['Écritures automatiques', 'Bilan en temps réel', 'Déclarations fiscales'],
-    screenshot: 'photo-1554224154-26032fced8bd' // Accounting screenshot
+    screenshot: 'photo-1461749280684-dccba630e2f6' // Accounting screenshot
   }
 ];
 
 export const ModulesVideoSection = () => {
   const [currentModule, setCurrentModule] = useState(0);
+
+  const handlePrevious = () => {
+    setCurrentModule((prev) => (prev - 1 + modules.length) % modules.length);
+  };
+
+  const handleNext = () => {
+    setCurrentModule((prev) => (prev + 1) % modules.length);
+  };
 
   const currentModuleData = modules[currentModule];
   const IconComponent = currentModuleData.icon;
@@ -146,51 +155,39 @@ export const ModulesVideoSection = () => {
                 </div>
               </div>
             </div>
+
+            {/* Boutons de navigation */}
+            <button
+              onClick={handlePrevious}
+              className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/80 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition-all duration-200"
+            >
+              <ChevronLeft className="w-6 h-6 text-gray-800" />
+            </button>
+            
+            <button
+              onClick={handleNext}
+              className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/80 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition-all duration-200"
+            >
+              <ChevronRight className="w-6 h-6 text-gray-800" />
+            </button>
           </div>
         </div>
 
-        {/* Indicateur et contrôles */}
-        <div className="flex justify-center items-center space-x-4 mt-6">
-          <div className="flex items-center space-x-2 text-sm text-gray-600">
-            <span>{currentModule + 1} / {modules.length}</span>
+        {/* Informations du module actuel */}
+        <div className="mt-8 text-center">
+          <div className="inline-flex items-center space-x-4 bg-white rounded-lg shadow-md p-4">
+            <div className={`w-12 h-12 rounded-lg bg-gradient-to-r ${currentModuleData.color} flex items-center justify-center`}>
+              <IconComponent className="w-6 h-6 text-white" />
+            </div>
+            <div className="text-left">
+              <h4 className="text-lg font-semibold text-gray-900">
+                {currentModuleData.title}
+              </h4>
+              <p className="text-sm text-gray-600">
+                Module {currentModule + 1} sur {modules.length}
+              </p>
+            </div>
           </div>
-          
-          <div className="flex space-x-2">
-            {modules.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentModule(index)}
-                className={`w-3 h-3 rounded-full transition-all duration-200 ${
-                  index === currentModule
-                    ? 'bg-green-600 scale-125'
-                    : 'bg-gray-300 hover:bg-gray-400'
-                }`}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* Navigation par modules */}
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2 mt-8">
-          {modules.map((module, index) => {
-            const ModuleIcon = module.icon;
-            return (
-              <button
-                key={module.id}
-                onClick={() => setCurrentModule(index)}
-                className={`p-4 rounded-lg border transition-all duration-200 ${
-                  index === currentModule
-                    ? 'bg-green-600 text-white border-green-600 shadow-lg'
-                    : 'bg-white hover:bg-gray-50 border-gray-200 hover:border-gray-300'
-                }`}
-              >
-                <ModuleIcon className="w-6 h-6 mx-auto mb-2" />
-                <div className="text-xs font-medium truncate">
-                  {module.title}
-                </div>
-              </button>
-            );
-          })}
         </div>
       </div>
     </div>

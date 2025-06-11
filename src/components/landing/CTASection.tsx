@@ -32,9 +32,9 @@ const CTASection = () => {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link to="/register">
+            <Link to="/dashboard">
               <Button size="lg" className="bg-white text-green-600 hover:bg-gray-100 text-lg px-8 py-4 rounded-lg shadow-lg hover:shadow-xl transition-all">
-                <span>Commencer gratuitement</span>
+                <span>Accéder à l'application</span>
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
             </Link>

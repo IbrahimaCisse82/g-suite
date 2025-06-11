@@ -57,9 +57,9 @@ const HeroSection = () => {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link to="/register">
+              <Link to="/dashboard">
                 <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 text-lg rounded-lg shadow-lg hover:shadow-xl transition-all">
-                  <span>Essai gratuit 14 jours</span>
+                  <span>Accéder à l'application</span>
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
               </Link>

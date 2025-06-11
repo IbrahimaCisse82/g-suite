@@ -5,6 +5,13 @@ import { Building, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export const LandingHeader = () => {
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <header className="bg-white shadow-sm border-b">
       <div className="container mx-auto px-4 py-4">
@@ -20,9 +27,24 @@ export const LandingHeader = () => {
           </Link>
           
           <nav className="hidden md:flex items-center space-x-6">
-            <Link to="/#features" className="text-gray-600 hover:text-gray-900">Fonctionnalités</Link>
-            <Link to="/#pricing" className="text-gray-600 hover:text-gray-900">Tarifs</Link>
-            <Link to="/#contact" className="text-gray-600 hover:text-gray-900">Contact</Link>
+            <button 
+              onClick={() => scrollToSection('features')} 
+              className="text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              Fonctionnalités
+            </button>
+            <button 
+              onClick={() => scrollToSection('pricing')} 
+              className="text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              Tarifs
+            </button>
+            <button 
+              onClick={() => scrollToSection('contact')} 
+              className="text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              Contact
+            </button>
           </nav>
           
           <div className="flex items-center space-x-4">
@@ -30,6 +52,11 @@ export const LandingHeader = () => {
               <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-900">
                 <Shield className="w-4 h-4 mr-2" />
                 Admin
+              </Button>
+            </Link>
+            <Link to="/dashboard">
+              <Button variant="outline" size="sm" className="text-gray-600 hover:text-gray-900">
+                Application
               </Button>
             </Link>
             <Link to="/company-registration">

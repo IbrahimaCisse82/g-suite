@@ -3,13 +3,41 @@ import React from 'react';
 import { Building, Mail, Phone, MapPin, Facebook, Twitter, Linkedin } from 'lucide-react';
 
 const LandingFooter = () => {
+  const handleNavClick = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const handleEmailClick = () => {
+    window.location.href = 'mailto:contact@growhubsenegal.com';
+  };
+
+  const handlePhoneClick = () => {
+    window.location.href = 'tel:+221770000000';
+  };
+
+  const handleSocialClick = (platform: string) => {
+    const urls = {
+      facebook: 'https://facebook.com/growhubsenegal',
+      twitter: 'https://twitter.com/growhubsenegal',
+      linkedin: 'https://linkedin.com/company/growhubsenegal'
+    };
+    window.open(urls[platform as keyof typeof urls], '_blank');
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <footer className="bg-slate-900 text-white">
       <div className="container mx-auto px-4 py-16">
         <div className="grid md:grid-cols-4 gap-8">
           {/* Company info */}
           <div className="md:col-span-2">
-            <div className="flex items-center space-x-3 mb-6">
+            <div className="flex items-center space-x-3 mb-6 cursor-pointer" onClick={scrollToTop}>
               <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center">
                 <Building className="w-6 h-6 text-white" />
               </div>
@@ -25,14 +53,20 @@ const LandingFooter = () => {
             </p>
             
             <div className="space-y-3">
-              <div className="flex items-center space-x-3 text-slate-300">
+              <button 
+                onClick={handleEmailClick}
+                className="flex items-center space-x-3 text-slate-300 hover:text-green-400 transition-colors"
+              >
                 <Mail className="w-4 h-4 flex-shrink-0" />
                 <span className="text-sm">contact@growhubsenegal.com</span>
-              </div>
-              <div className="flex items-center space-x-3 text-slate-300">
+              </button>
+              <button 
+                onClick={handlePhoneClick}
+                className="flex items-center space-x-3 text-slate-300 hover:text-green-400 transition-colors"
+              >
                 <Phone className="w-4 h-4 flex-shrink-0" />
                 <span className="text-sm">+221 77 XXX XX XX</span>
-              </div>
+              </button>
               <div className="flex items-center space-x-3 text-slate-300">
                 <MapPin className="w-4 h-4 flex-shrink-0" />
                 <span className="text-sm">Dakar, Sénégal</span>
@@ -44,11 +78,46 @@ const LandingFooter = () => {
           <div>
             <h4 className="font-semibold mb-6 text-white">Produit</h4>
             <ul className="space-y-3">
-              <li><a href="#features" className="text-slate-300 hover:text-green-400 transition-colors">Fonctionnalités</a></li>
-              <li><a href="#pricing" className="text-slate-300 hover:text-green-400 transition-colors">Tarifs</a></li>
-              <li><a href="#" className="text-slate-300 hover:text-green-400 transition-colors">Sécurité</a></li>
-              <li><a href="#" className="text-slate-300 hover:text-green-400 transition-colors">Intégrations</a></li>
-              <li><a href="#" className="text-slate-300 hover:text-green-400 transition-colors">Mobile</a></li>
+              <li>
+                <button 
+                  onClick={() => handleNavClick('features')} 
+                  className="text-slate-300 hover:text-green-400 transition-colors"
+                >
+                  Fonctionnalités
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={() => handleNavClick('pricing')} 
+                  className="text-slate-300 hover:text-green-400 transition-colors"
+                >
+                  Tarifs
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={() => alert('Page Sécurité en construction')} 
+                  className="text-slate-300 hover:text-green-400 transition-colors"
+                >
+                  Sécurité
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={() => alert('Page Intégrations en construction')} 
+                  className="text-slate-300 hover:text-green-400 transition-colors"
+                >
+                  Intégrations
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={() => alert('Application mobile bientôt disponible')} 
+                  className="text-slate-300 hover:text-green-400 transition-colors"
+                >
+                  Mobile
+                </button>
+              </li>
             </ul>
           </div>
 
@@ -56,11 +125,46 @@ const LandingFooter = () => {
           <div>
             <h4 className="font-semibold mb-6 text-white">Support</h4>
             <ul className="space-y-3">
-              <li><a href="#" className="text-slate-300 hover:text-green-400 transition-colors">Centre d'aide</a></li>
-              <li><a href="#" className="text-slate-300 hover:text-green-400 transition-colors">Documentation</a></li>
-              <li><a href="#" className="text-slate-300 hover:text-green-400 transition-colors">Formation</a></li>
-              <li><a href="#" className="text-slate-300 hover:text-green-400 transition-colors">Contact</a></li>
-              <li><a href="#" className="text-slate-300 hover:text-green-400 transition-colors">Status</a></li>
+              <li>
+                <button 
+                  onClick={() => alert('Centre d\'aide en construction')} 
+                  className="text-slate-300 hover:text-green-400 transition-colors"
+                >
+                  Centre d'aide
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={() => alert('Documentation en construction')} 
+                  className="text-slate-300 hover:text-green-400 transition-colors"
+                >
+                  Documentation
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={() => alert('Formation disponible après inscription')} 
+                  className="text-slate-300 hover:text-green-400 transition-colors"
+                >
+                  Formation
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={handleEmailClick} 
+                  className="text-slate-300 hover:text-green-400 transition-colors"
+                >
+                  Contact
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={() => alert('Statut système: Tous les services opérationnels')} 
+                  className="text-slate-300 hover:text-green-400 transition-colors"
+                >
+                  Status
+                </button>
+              </li>
             </ul>
           </div>
         </div>
@@ -74,23 +178,52 @@ const LandingFooter = () => {
             
             {/* Social links */}
             <div className="flex space-x-4">
-              <a href="#" className="text-slate-400 hover:text-green-400 transition-colors">
+              <button 
+                onClick={() => handleSocialClick('facebook')} 
+                className="text-slate-400 hover:text-green-400 transition-colors"
+              >
                 <Facebook className="w-5 h-5" />
-              </a>
-              <a href="#" className="text-slate-400 hover:text-green-400 transition-colors">
+              </button>
+              <button 
+                onClick={() => handleSocialClick('twitter')} 
+                className="text-slate-400 hover:text-green-400 transition-colors"
+              >
                 <Twitter className="w-5 h-5" />
-              </a>
-              <a href="#" className="text-slate-400 hover:text-green-400 transition-colors">
+              </button>
+              <button 
+                onClick={() => handleSocialClick('linkedin')} 
+                className="text-slate-400 hover:text-green-400 transition-colors"
+              >
                 <Linkedin className="w-5 h-5" />
-              </a>
+              </button>
             </div>
           </div>
           
           <div className="flex flex-wrap justify-center md:justify-start space-x-6 mt-4 text-sm text-slate-400">
-            <a href="#" className="hover:text-green-400 transition-colors">Mentions légales</a>
-            <a href="#" className="hover:text-green-400 transition-colors">Politique de confidentialité</a>
-            <a href="#" className="hover:text-green-400 transition-colors">CGU</a>
-            <a href="#" className="hover:text-green-400 transition-colors">Cookies</a>
+            <button 
+              onClick={() => alert('Mentions légales en construction')} 
+              className="hover:text-green-400 transition-colors"
+            >
+              Mentions légales
+            </button>
+            <button 
+              onClick={() => alert('Politique de confidentialité en construction')} 
+              className="hover:text-green-400 transition-colors"
+            >
+              Politique de confidentialité
+            </button>
+            <button 
+              onClick={() => alert('CGU en construction')} 
+              className="hover:text-green-400 transition-colors"
+            >
+              CGU
+            </button>
+            <button 
+              onClick={() => alert('Politique de cookies en construction')} 
+              className="hover:text-green-400 transition-colors"
+            >
+              Cookies
+            </button>
           </div>
         </div>
       </div>

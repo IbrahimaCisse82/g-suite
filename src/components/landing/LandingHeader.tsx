@@ -7,12 +7,24 @@ import { Link } from 'react-router-dom';
 const LandingHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
+  const handleNavClick = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+    setIsMenuOpen(false);
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <header className="bg-slate-900 border-b border-slate-700 sticky top-0 z-50">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3 cursor-pointer" onClick={scrollToTop}>
             <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center">
               <Building className="w-6 h-6 text-white" />
             </div>
@@ -24,18 +36,30 @@ const LandingHeader = () => {
 
           {/* Navigation Desktop */}
           <nav className="hidden md:flex items-center space-x-8">
-            <a href="#features" className="text-slate-300 hover:text-green-400 transition-colors">
+            <button 
+              onClick={() => handleNavClick('features')} 
+              className="text-slate-300 hover:text-green-400 transition-colors"
+            >
               Fonctionnalités
-            </a>
-            <a href="#advantages" className="text-slate-300 hover:text-green-400 transition-colors">
+            </button>
+            <button 
+              onClick={() => handleNavClick('advantages')} 
+              className="text-slate-300 hover:text-green-400 transition-colors"
+            >
               Avantages
-            </a>
-            <a href="#pricing" className="text-slate-300 hover:text-green-400 transition-colors">
+            </button>
+            <button 
+              onClick={() => handleNavClick('pricing')} 
+              className="text-slate-300 hover:text-green-400 transition-colors"
+            >
               Tarifs
-            </a>
-            <a href="#testimonials" className="text-slate-300 hover:text-green-400 transition-colors">
+            </button>
+            <button 
+              onClick={() => handleNavClick('testimonials')} 
+              className="text-slate-300 hover:text-green-400 transition-colors"
+            >
               Témoignages
-            </a>
+            </button>
           </nav>
 
           {/* CTA Buttons Desktop */}
@@ -69,18 +93,30 @@ const LandingHeader = () => {
         {isMenuOpen && (
           <div className="md:hidden py-4 border-t border-slate-700">
             <nav className="flex flex-col space-y-4">
-              <a href="#features" className="text-slate-300 hover:text-green-400 transition-colors">
+              <button 
+                onClick={() => handleNavClick('features')} 
+                className="text-slate-300 hover:text-green-400 transition-colors text-left"
+              >
                 Fonctionnalités
-              </a>
-              <a href="#advantages" className="text-slate-300 hover:text-green-400 transition-colors">
+              </button>
+              <button 
+                onClick={() => handleNavClick('advantages')} 
+                className="text-slate-300 hover:text-green-400 transition-colors text-left"
+              >
                 Avantages
-              </a>
-              <a href="#pricing" className="text-slate-300 hover:text-green-400 transition-colors">
+              </button>
+              <button 
+                onClick={() => handleNavClick('pricing')} 
+                className="text-slate-300 hover:text-green-400 transition-colors text-left"
+              >
                 Tarifs
-              </a>
-              <a href="#testimonials" className="text-slate-300 hover:text-green-400 transition-colors">
+              </button>
+              <button 
+                onClick={() => handleNavClick('testimonials')} 
+                className="text-slate-300 hover:text-green-400 transition-colors text-left"
+              >
                 Témoignages
-              </a>
+              </button>
               <div className="flex flex-col space-y-2 pt-4">
                 <Link to="/dashboard">
                   <Button variant="ghost" className="w-full justify-start text-slate-300 hover:bg-slate-800">

@@ -5,6 +5,11 @@ import { ArrowRight, CheckCircle, Play } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const HeroSection = () => {
+  const handleWatchDemo = () => {
+    // Ouvrir une vidéo de démo ou rediriger vers une page de démo
+    window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ', '_blank');
+  };
+
   return (
     <section className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 py-20 lg:py-32 overflow-hidden">
       {/* Background pattern */}
@@ -62,6 +67,7 @@ const HeroSection = () => {
                 size="lg" 
                 variant="outline" 
                 className="border-2 border-slate-600 text-slate-300 hover:bg-slate-800 hover:text-white px-8 py-4 text-lg rounded-lg"
+                onClick={handleWatchDemo}
               >
                 <Play className="mr-2 w-5 h-5" />
                 Voir la démo

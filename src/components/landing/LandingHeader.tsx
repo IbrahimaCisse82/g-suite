@@ -21,7 +21,7 @@ export const LandingHeader = () => {
               <Building className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-gray-900">GrowHub</h1>
+              <h1 className="text-xl font-bold text-gray-900">G-Suite</h1>
               <p className="text-sm text-gray-600">Gestion d'entreprise</p>
             </div>
           </Link>

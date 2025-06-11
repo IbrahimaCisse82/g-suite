@@ -38,14 +38,14 @@ serve(async (req) => {
       )
     }
 
-    // Générer des mots de passe par défaut et créer les comptes
+    // Générer des comptes avec le mot de passe standard Admin1946
     const results = []
     
     for (const admin of admins) {
-      // Mot de passe par défaut : Admin2024! + premières lettres du nom
-      const defaultPassword = `Admin2024!${admin.name.split(' ').map(n => n.charAt(0)).join('').toUpperCase()}`
+      // Mot de passe standard pour tous les administrateurs
+      const defaultPassword = "Admin1946"
       
-      console.log(`Creating account for ${admin.email} with password: ${defaultPassword}`)
+      console.log(`Creating account for ${admin.email} with standard admin password`)
       
       // Créer le compte utilisateur dans Supabase Auth
       const { data: authData, error: authError } = await supabaseClient.auth.admin.createUser({
@@ -72,20 +72,20 @@ serve(async (req) => {
       // Envoyer l'email avec les identifiants
       try {
         const emailResponse = await resend.emails.send({
-          from: 'GrowHub Admin <admin@growhubsenegal.com>',
+          from: 'G-Suite Admin <admin@growhubsenegal.com>',
           to: [admin.email],
-          subject: 'Vos identifiants administrateur GrowHub',
+          subject: 'Vos identifiants administrateur G-Suite',
           html: `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
               <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; text-align: center;">
-                <h1 style="color: white; margin: 0;">GrowHub Administration</h1>
+                <h1 style="color: white; margin: 0;">G-Suite Administration</h1>
               </div>
               
               <div style="padding: 30px; background: #f8f9fa;">
                 <h2 style="color: #333;">Bonjour ${admin.name},</h2>
                 
                 <p style="color: #666; line-height: 1.6;">
-                  Votre compte administrateur GrowHub a été créé avec succès. Voici vos identifiants de connexion :
+                  Votre compte administrateur G-Suite a été créé avec succès. Voici vos identifiants de connexion :
                 </p>
                 
                 <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #667eea; margin: 20px 0;">
@@ -122,7 +122,7 @@ serve(async (req) => {
                 
                 <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
                   <p style="color: #999; font-size: 12px;">
-                    © 2024 GrowHub Sénégal - Plateforme de gestion d'entreprise
+                    © 2024 G-Suite Sénégal - Plateforme de gestion d'entreprise
                   </p>
                 </div>
               </div>

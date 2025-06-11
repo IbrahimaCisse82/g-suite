@@ -39,7 +39,7 @@ export class SecurityValidator {
     return uuidRegex.test(uuid);
   }
 
-  // Validate date format - Fixed TypeScript error
+  // Validate date format
   static validateDate(date: string): boolean {
     const parsedDate = new Date(date);
     const isValidDate = !isNaN(parsedDate.getTime());

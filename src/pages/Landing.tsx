@@ -1,7 +1,9 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
 import { 
   Building, 
   Calculator, 
@@ -17,11 +19,46 @@ import {
   Cloud,
   Smartphone,
   HeadphonesIcon,
-  ArrowRight
+  ArrowRight,
+  Mail,
+  Phone
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
 
 const Landing = () => {
+  const [quoteForm, setQuoteForm] = useState({
+    name: '',
+    company: '',
+    email: '',
+    phone: '',
+    message: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
+
+  const handleQuoteSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      // Ici on peut ajouter l'appel API pour envoyer l'email
+      toast({
+        title: "Demande envoyée",
+        description: "Votre demande de devis a été envoyée avec succès. Nous vous recontacterons sous 24h.",
+      });
+      setQuoteForm({ name: '', company: '', email: '', phone: '', message: '' });
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: "Une erreur est survenue. Veuillez réessayer.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   const features = [
     {
       icon: Calculator,
@@ -82,7 +119,7 @@ const Landing = () => {
     {
       name: "Marie Diallo",
       company: "Boutique Mode Dakar",
-      content: "ComptaCloud a révolutionné la gestion de ma boutique. Je peux maintenant suivre mes ventes et ma trésorerie en temps réel.",
+      content: "G-Compta a révolutionné la gestion de ma boutique. Je peux maintenant suivre mes ventes et ma trésorerie en temps réel.",
       rating: 5
     },
     {
@@ -107,7 +144,7 @@ const Landing = () => {
           <div className="flex items-center space-x-3">
             <Building className="w-8 h-8 text-blue-600" />
             <div>
-              <h1 className="text-xl font-bold text-gray-900">ComptaCloud</h1>
+              <h1 className="text-xl font-bold text-gray-900">G-Compta</h1>
               <p className="text-sm text-gray-600">Gestion d'entreprise</p>
             </div>
           </div>
@@ -115,9 +152,11 @@ const Landing = () => {
             <Link to="/dashboard">
               <Button variant="ghost">Se connecter</Button>
             </Link>
-            <Button className="bg-blue-600 hover:bg-blue-700">
-              Essai gratuit
-            </Button>
+            <Link to="/register">
+              <Button className="bg-blue-600 hover:bg-blue-700">
+                Essai gratuit
+              </Button>
+            </Link>
           </div>
         </div>
       </header>
@@ -130,15 +169,19 @@ const Landing = () => {
             <span className="text-blue-600"> pour les PME africaines</span>
           </h1>
           <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-            Simplifiez votre gestion d'entreprise avec ComptaCloud : comptabilité, facturation, 
+            Simplifiez votre gestion d'entreprise avec G-Compta : comptabilité, facturation, 
             trésorerie et analyses, le tout dans une interface moderne et intuitive.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-lg px-8 py-3">
-              <span>Essai gratuit 5 jours</span>
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </Button>
-            <Button size="lg" variant="outline" className="text-lg px-8 py-3">
+            <Link to="/register">
+              <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-lg px-8 py-3">
+                <span>Essai gratuit 5 jours</span>
+                <ArrowRight className="ml-2 w-5 h-5" />
+              </Button>
+            </Link>
+            <Button size="lg" variant="outline" className="text-lg px-8 py-3" onClick={() => {
+              document.getElementById('quote-section')?.scrollIntoView({ behavior: 'smooth' });
+            }}>
               Demander un devis
             </Button>
           </div>
@@ -180,7 +223,7 @@ const Landing = () => {
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Pourquoi choisir ComptaCloud ?
+              Pourquoi choisir G-Compta ?
             </h2>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -244,9 +287,11 @@ const Landing = () => {
                     <span>Aucun engagement</span>
                   </li>
                 </ul>
-                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-lg py-3">
-                  Commencer l'essai gratuit
-                </Button>
+                <Link to="/register">
+                  <Button className="w-full bg-blue-600 hover:bg-blue-700 text-lg py-3">
+                    Commencer l'essai gratuit
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
 
@@ -286,7 +331,9 @@ const Landing = () => {
                     <span>Accompagnement dédié</span>
                   </li>
                 </ul>
-                <Button variant="outline" className="w-full text-lg py-3 border-2">
+                <Button variant="outline" className="w-full text-lg py-3 border-2" onClick={() => {
+                  document.getElementById('quote-section')?.scrollIntoView({ behavior: 'smooth' });
+                }}>
                   Demander un devis
                 </Button>
               </CardContent>
@@ -295,8 +342,89 @@ const Landing = () => {
         </div>
       </section>
 
+      {/* Quote Section */}
+      <section id="quote-section" className="py-20 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="max-w-2xl mx-auto">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">
+                Demander un devis personnalisé
+              </h2>
+              <p className="text-gray-600">
+                Remplissez ce formulaire et nous vous recontacterons sous 24h avec une proposition adaptée à vos besoins.
+              </p>
+            </div>
+            <Card>
+              <CardContent className="pt-6">
+                <form onSubmit={handleQuoteSubmit} className="space-y-4">
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="name">Nom et prénom *</Label>
+                      <Input
+                        id="name"
+                        required
+                        value={quoteForm.name}
+                        onChange={(e) => setQuoteForm({ ...quoteForm, name: e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="company">Entreprise *</Label>
+                      <Input
+                        id="company"
+                        required
+                        value={quoteForm.company}
+                        onChange={(e) => setQuoteForm({ ...quoteForm, company: e.target.value })}
+                      />
+                    </div>
+                  </div>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="email">Email *</Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        required
+                        value={quoteForm.email}
+                        onChange={(e) => setQuoteForm({ ...quoteForm, email: e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="phone">Téléphone</Label>
+                      <Input
+                        id="phone"
+                        type="tel"
+                        value={quoteForm.phone}
+                        onChange={(e) => setQuoteForm({ ...quoteForm, phone: e.target.value })}
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <Label htmlFor="message">Décrivez vos besoins *</Label>
+                    <Textarea
+                      id="message"
+                      required
+                      rows={4}
+                      placeholder="Décrivez votre entreprise, vos besoins spécifiques, le nombre d'utilisateurs..."
+                      value={quoteForm.message}
+                      onChange={(e) => setQuoteForm({ ...quoteForm, message: e.target.value })}
+                    />
+                  </div>
+                  <Button 
+                    type="submit" 
+                    className="w-full bg-blue-600 hover:bg-blue-700"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? 'Envoi en cours...' : 'Envoyer la demande'}
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
       {/* Testimonials */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-4">
@@ -331,13 +459,17 @@ const Landing = () => {
             Prêt à transformer votre gestion d'entreprise ?
           </h2>
           <p className="text-xl text-blue-100 mb-8">
-            Rejoignez des centaines d'entreprises qui font confiance à ComptaCloud
+            Rejoignez des centaines d'entreprises qui font confiance à G-Compta
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 text-lg px-8 py-3">
-              Commencer l'essai gratuit
-            </Button>
-            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600 text-lg px-8 py-3">
+            <Link to="/register">
+              <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 text-lg px-8 py-3">
+                Commencer l'essai gratuit
+              </Button>
+            </Link>
+            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600 text-lg px-8 py-3" onClick={() => {
+              document.getElementById('quote-section')?.scrollIntoView({ behavior: 'smooth' });
+            }}>
               Parler à un expert
             </Button>
           </div>
@@ -352,13 +484,17 @@ const Landing = () => {
               <div className="flex items-center space-x-3 mb-4">
                 <Building className="w-8 h-8 text-blue-400" />
                 <div>
-                  <h3 className="text-xl font-bold">ComptaCloud</h3>
+                  <h3 className="text-xl font-bold">G-Compta</h3>
                   <p className="text-sm text-gray-400">Gestion d'entreprise</p>
                 </div>
               </div>
-              <p className="text-gray-400">
+              <p className="text-gray-400 mb-4">
                 La solution comptable moderne pour les entreprises africaines.
               </p>
+              <div className="flex items-center space-x-2 text-gray-400">
+                <Mail className="w-4 h-4" />
+                <span className="text-sm">facturation@growhubsenegal.com</span>
+              </div>
             </div>
             <div>
               <h4 className="font-semibold mb-4">Produit</h4>
@@ -389,7 +525,7 @@ const Landing = () => {
             </div>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 ComptaCloud. Tous droits réservés.</p>
+            <p>&copy; 2024 G-Compta by GrowHub Sénégal. Tous droits réservés.</p>
           </div>
         </div>
       </footer>

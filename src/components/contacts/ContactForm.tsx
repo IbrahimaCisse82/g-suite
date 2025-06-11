@@ -43,8 +43,25 @@ export const ContactForm = ({ onSubmit, onCancel, loading }: ContactFormProps) =
 
   const typeValue = watch('type');
 
+  const onFormSubmit = (data: ContactFormData) => {
+    // Transform the form data to match the expected type
+    const submitData: Omit<ContactInsert, 'company_id'> = {
+      name: data.name,
+      type: data.type,
+      email: data.email || null,
+      phone: data.phone || null,
+      address: data.address || null,
+      city: data.city || null,
+      postal_code: data.postal_code || null,
+      country: data.country || null,
+      siret: data.siret || null,
+      tax_number: data.tax_number || null,
+    };
+    onSubmit(submitData);
+  };
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4">
       <div className="grid grid-cols-2 gap-4">
         <div>
           <Label htmlFor="name">Nom *</Label>

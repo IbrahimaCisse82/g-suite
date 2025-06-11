@@ -66,6 +66,7 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
   };
 
   const onSubmit = async (data: CompanyFormData) => {
+    console.log('Formulaire soumis avec les données:', data);
     await submitForm(data, logoFile);
   };
 

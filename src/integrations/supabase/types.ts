@@ -177,6 +177,64 @@ export type Database = {
         }
         Relationships: []
       }
+      company_subscriptions: {
+        Row: {
+          company_id: string
+          created_at: string
+          end_date: string
+          id: string
+          is_active: boolean | null
+          plan_id: string
+          request_id: string | null
+          start_date: string
+          updated_at: string
+        }
+        Insert: {
+          company_id: string
+          created_at?: string
+          end_date: string
+          id?: string
+          is_active?: boolean | null
+          plan_id: string
+          request_id?: string | null
+          start_date: string
+          updated_at?: string
+        }
+        Update: {
+          company_id?: string
+          created_at?: string
+          end_date?: string
+          id?: string
+          is_active?: boolean | null
+          plan_id?: string
+          request_id?: string | null
+          start_date?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "company_subscriptions_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "company_subscriptions_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "subscription_plans"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "company_subscriptions_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "paid_account_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       contacts: {
         Row: {
           address: string | null
@@ -537,6 +595,73 @@ export type Database = {
           },
         ]
       }
+      paid_account_requests: {
+        Row: {
+          admin_notes: string | null
+          company_id: string
+          created_at: string
+          expires_at: string | null
+          id: string
+          plan_id: string
+          processed_at: string | null
+          processed_by: string | null
+          request_message: string | null
+          requested_by: string
+          status: Database["public"]["Enums"]["request_status"] | null
+          updated_at: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          company_id: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          plan_id: string
+          processed_at?: string | null
+          processed_by?: string | null
+          request_message?: string | null
+          requested_by: string
+          status?: Database["public"]["Enums"]["request_status"] | null
+          updated_at?: string
+        }
+        Update: {
+          admin_notes?: string | null
+          company_id?: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          plan_id?: string
+          processed_at?: string | null
+          processed_by?: string | null
+          request_message?: string | null
+          requested_by?: string
+          status?: Database["public"]["Enums"]["request_status"] | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "paid_account_requests_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "paid_account_requests_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "subscription_plans"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "paid_account_requests_requested_by_fkey"
+            columns: ["requested_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       product_categories: {
         Row: {
           company_id: string
@@ -882,6 +1007,69 @@ export type Database = {
           },
         ]
       }
+      subscription_plans: {
+        Row: {
+          created_at: string
+          duration_months: number
+          features: Json | null
+          id: string
+          is_active: boolean | null
+          max_users: number | null
+          name: string
+          plan_type: Database["public"]["Enums"]["plan_type"]
+          price: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          duration_months: number
+          features?: Json | null
+          id?: string
+          is_active?: boolean | null
+          max_users?: number | null
+          name: string
+          plan_type: Database["public"]["Enums"]["plan_type"]
+          price: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          duration_months?: number
+          features?: Json | null
+          id?: string
+          is_active?: boolean | null
+          max_users?: number | null
+          name?: string
+          plan_type?: Database["public"]["Enums"]["plan_type"]
+          price?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      system_admins: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          is_active: boolean | null
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          is_active?: boolean | null
+          name: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          is_active?: boolean | null
+          name?: string
+        }
+        Relationships: []
+      }
       user_invitations: {
         Row: {
           company_id: string
@@ -967,6 +1155,8 @@ export type Database = {
         | "arts_spectacles"
         | "autres_services"
       invitation_status: "pending" | "accepted" | "expired" | "cancelled"
+      plan_type: "free" | "premium" | "enterprise"
+      request_status: "pending" | "approved" | "rejected" | "expired"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1100,6 +1290,8 @@ export const Constants = {
         "autres_services",
       ],
       invitation_status: ["pending", "accepted", "expired", "cancelled"],
+      plan_type: ["free", "premium", "enterprise"],
+      request_status: ["pending", "approved", "rejected", "expired"],
     },
   },
 } as const

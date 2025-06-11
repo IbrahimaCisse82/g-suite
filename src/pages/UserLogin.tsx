@@ -27,14 +27,14 @@ const UserLogin = () => {
 
       if (error) throw error;
 
-      // Vérifier si l'utilisateur a un compte d'entreprise
-      const { data: companyUser, error: companyError } = await supabase
-        .from('company_users')
+      // Vérifier si l'utilisateur a un profil avec un compte d'entreprise
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
         .select('company_id, role')
-        .eq('user_id', data.user.id)
+        .eq('id', data.user.id)
         .single();
 
-      if (companyError || !companyUser) {
+      if (profileError || !profile || !profile.company_id) {
         await supabase.auth.signOut();
         throw new Error('Aucun compte d\'entreprise associé à cet email');
       }

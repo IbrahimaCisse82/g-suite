@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -22,9 +21,10 @@ interface InvoiceFormProps {
   onSubmit: (invoiceData: any) => void;
   onCancel: () => void;
   loading?: boolean;
+  initialData?: any;
 }
 
-export const InvoiceForm = ({ onSubmit, onCancel, loading }: InvoiceFormProps) => {
+export const InvoiceForm = ({ onSubmit, onCancel, loading, initialData }: InvoiceFormProps) => {
   const { data: contacts = [] } = useContacts();
   const [formData, setFormData] = useState({
     contact_id: '',
@@ -44,6 +44,31 @@ export const InvoiceForm = ({ onSubmit, onCancel, loading }: InvoiceFormProps) =
       line_total: 0
     }
   ]);
+
+  // Initialize form with existing data if provided
+  useEffect(() => {
+    if (initialData) {
+      setFormData({
+        contact_id: initialData.contact_id || '',
+        invoice_number: initialData.invoice_number || '',
+        invoice_date: initialData.invoice_date ? new Date(initialData.invoice_date).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+        due_date: initialData.due_date ? new Date(initialData.due_date).toISOString().split('T')[0] : '',
+        notes: initialData.notes || ''
+      });
+
+      // If there are existing lines, use them; otherwise use default
+      if (initialData.lines && initialData.lines.length > 0) {
+        setLines(initialData.lines.map((line: any, index: number) => ({
+          id: line.id || (index + 1).toString(),
+          description: line.description || '',
+          quantity: line.quantity || 1,
+          unit_price: line.unit_price || 0,
+          tax_rate: line.tax_rate || 18,
+          line_total: calculateLineTotal(line.quantity || 1, line.unit_price || 0, line.tax_rate || 18)
+        })));
+      }
+    }
+  }, [initialData]);
 
   const calculateLineTotal = (quantity: number, unitPrice: number, taxRate: number) => {
     const subtotal = quantity * unitPrice;
@@ -275,7 +300,7 @@ export const InvoiceForm = ({ onSubmit, onCancel, loading }: InvoiceFormProps) =
           Annuler
         </Button>
         <Button type="submit" disabled={loading}>
-          {loading ? 'Création...' : 'Créer la facture'}
+          {loading ? (initialData ? 'Modification...' : 'Création...') : (initialData ? 'Modifier la facture' : 'Créer la facture')}
         </Button>
       </div>
     </form>

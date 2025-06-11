@@ -1,107 +1,107 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, CheckCircle, Play } from 'lucide-react';
+import { ArrowRight, Play, Star, Users, CheckCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const HeroSection = () => {
-  const handleWatchDemo = () => {
-    // Ouvrir une vidéo de démo ou rediriger vers une page de démo
-    window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ', '_blank');
+  const handleVideoDemo = () => {
+    // Pour l'instant, on peut rediriger vers une page de démo ou ouvrir un modal
+    alert('Démonstration vidéo bientôt disponible !');
   };
 
   return (
-    <section className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 py-20 lg:py-32 overflow-hidden">
-      {/* Background pattern */}
-      <div className="absolute inset-0 bg-grid-slate-700 [mask-image:linear-gradient(0deg,rgba(0,0,0,0.8),rgba(0,0,0,0.2))] -z-10" />
+    <section className="relative py-20 lg:py-32 bg-gradient-to-br from-green-50 via-white to-blue-50 overflow-hidden">
+      {/* Background decoration */}
+      <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] -z-10" />
       
-      <div className="container mx-auto px-4">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Left column - Content */}
-          <div className="space-y-8">
-            <div className="space-y-6">
-              <div className="inline-flex items-center px-4 py-2 rounded-full bg-green-100 text-green-700 text-sm font-medium">
-                ✨ Solution de gestion nouvelle génération
-              </div>
-              
-              <h1 className="text-4xl lg:text-6xl font-bold text-white leading-tight">
-                Gérez votre entreprise
-                <span className="text-green-400"> en toute simplicité</span>
-              </h1>
-              
-              <p className="text-xl text-white leading-relaxed">
-                G-Suite révolutionne la gestion d'entreprise avec une suite complète d'outils : 
-                comptabilité, facturation, stock, CRM et bien plus. Conçu spécialement pour les PME africaines.
-              </p>
-            </div>
-
-            {/* Key benefits */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="flex items-center space-x-3">
-                <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
-                <span className="text-white">Interface moderne et intuitive</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
-                <span className="text-white">100% cloud et sécurisé</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
-                <span className="text-white">Support expert inclus</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
-                <span className="text-white">Accessible partout</span>
-              </div>
-            </div>
-
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Link to="/dashboard">
-                <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 text-lg rounded-lg shadow-lg hover:shadow-xl transition-all">
-                  <span>Accéder à l'application</span>
-                  <ArrowRight className="ml-2 w-5 h-5" />
-                </Button>
-              </Link>
-              <Button 
-                size="lg" 
-                variant="outline" 
-                className="border-2 border-white text-white hover:bg-white hover:text-slate-900 px-8 py-4 text-lg rounded-lg"
-                onClick={handleWatchDemo}
-              >
-                <Play className="mr-2 w-5 h-5" />
-                Voir la démo
-              </Button>
-            </div>
-
-            <p className="text-sm text-white">
-              ✓ Aucune carte bancaire requise ✓ Configuration en 5 minutes ✓ Support gratuit
-            </p>
+      <div className="container mx-auto px-4 relative">
+        <div className="max-w-4xl mx-auto text-center space-y-8">
+          {/* Badge de lancement */}
+          <div className="inline-flex items-center px-4 py-2 rounded-full bg-green-100 text-green-700 text-sm font-medium animate-pulse">
+            🚀 Nouveau : Essai gratuit de 5 jours sans engagement
           </div>
 
-          {/* Right column - Visual */}
-          <div className="relative">
-            <div className="relative bg-white rounded-2xl shadow-2xl p-8 transform rotate-3">
-              <div className="absolute inset-0 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl transform -rotate-6 -z-10"></div>
-              <div className="bg-slate-50 rounded-lg p-6 space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="h-3 bg-green-500 rounded w-1/3"></div>
-                  <div className="h-3 bg-slate-300 rounded w-16"></div>
-                </div>
-                <div className="space-y-3">
-                  <div className="h-4 bg-slate-300 rounded w-full"></div>
-                  <div className="h-4 bg-slate-300 rounded w-3/4"></div>
-                  <div className="h-4 bg-slate-300 rounded w-1/2"></div>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-white rounded p-3 border border-slate-200">
-                    <div className="h-3 bg-green-400 rounded w-2/3 mb-2"></div>
-                    <div className="h-6 bg-slate-200 rounded w-full"></div>
+          {/* Titre principal */}
+          <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 leading-tight">
+            La solution de gestion
+            <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-blue-600">
+              pensée pour l'Afrique
+            </span>
+          </h1>
+
+          {/* Sous-titre */}
+          <p className="text-xl lg:text-2xl text-gray-600 leading-relaxed max-w-3xl mx-auto">
+            Transformez votre entreprise avec G-Suite : comptabilité, facturation, CRM et gestion de stock 
+            réunis dans une plateforme intuitive et puissante.
+          </p>
+
+          {/* Statistiques de confiance */}
+          <div className="flex flex-wrap justify-center items-center gap-8 text-sm text-gray-600">
+            <div className="flex items-center space-x-2">
+              <Users className="w-5 h-5 text-green-600" />
+              <span>500+ entreprises</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Star className="w-5 h-5 text-yellow-500 fill-current" />
+              <span>4.9/5 étoiles</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <CheckCircle className="w-5 h-5 text-blue-600" />
+              <span>99.9% de disponibilité</span>
+            </div>
+          </div>
+
+          {/* Appels à l'action */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
+            <Link to="/company-registration">
+              <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white text-lg px-8 py-4 rounded-lg shadow-lg hover:shadow-xl transition-all">
+                <span>Essai gratuit 5 jours</span>
+                <ArrowRight className="ml-2 w-5 h-5" />
+              </Button>
+            </Link>
+            <Button 
+              size="lg" 
+              variant="outline" 
+              className="text-lg px-8 py-4 rounded-lg border-2 hover:bg-gray-50 transition-all"
+              onClick={handleVideoDemo}
+            >
+              <Play className="mr-2 w-5 h-5" />
+              Voir la démo
+            </Button>
+          </div>
+
+          {/* Garantie */}
+          <div className="pt-8">
+            <p className="text-sm text-gray-500">
+              ✅ Aucune carte bancaire requise • ✅ Configuration en moins de 5 minutes • ✅ Support francophone
+            </p>
+          </div>
+        </div>
+
+        {/* Illustration ou screenshot */}
+        <div className="mt-16 relative">
+          <div className="mx-auto max-w-4xl">
+            <div className="relative rounded-xl shadow-2xl overflow-hidden bg-white border">
+              <div className="aspect-video bg-gradient-to-br from-green-100 to-blue-100 flex items-center justify-center">
+                <div className="text-center space-y-4">
+                  <div className="w-24 h-24 bg-green-500 rounded-full flex items-center justify-center mx-auto">
+                    <CheckCircle className="w-12 h-12 text-white" />
                   </div>
-                  <div className="bg-white rounded p-3 border border-slate-200">
-                    <div className="h-3 bg-green-400 rounded w-1/2 mb-2"></div>
-                    <div className="h-6 bg-slate-200 rounded w-full"></div>
-                  </div>
+                  <h3 className="text-2xl font-bold text-gray-800">Interface G-Suite</h3>
+                  <p className="text-gray-600">Découvrez notre tableau de bord intuitif</p>
+                  <Link to="/dashboard">
+                    <Button>Voir l'aperçu</Button>
+                  </Link>
+                </div>
+              </div>
+              {/* Simulated browser window */}
+              <div className="absolute top-0 left-0 right-0 h-8 bg-gray-100 flex items-center px-4">
+                <div className="flex space-x-2">
+                  <div className="w-3 h-3 bg-red-400 rounded-full"></div>
+                  <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
+                  <div className="w-3 h-3 bg-green-400 rounded-full"></div>
                 </div>
               </div>
             </div>

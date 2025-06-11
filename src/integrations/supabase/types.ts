@@ -1070,6 +1070,50 @@ export type Database = {
         }
         Relationships: []
       }
+      trial_accounts: {
+        Row: {
+          activated_at: string | null
+          company_id: string | null
+          created_at: string
+          email: string
+          expires_at: string
+          expiry_email_sent: boolean | null
+          id: string
+          is_active: boolean | null
+          trial_token: string
+        }
+        Insert: {
+          activated_at?: string | null
+          company_id?: string | null
+          created_at?: string
+          email: string
+          expires_at?: string
+          expiry_email_sent?: boolean | null
+          id?: string
+          is_active?: boolean | null
+          trial_token: string
+        }
+        Update: {
+          activated_at?: string | null
+          company_id?: string | null
+          created_at?: string
+          email?: string
+          expires_at?: string
+          expiry_email_sent?: boolean | null
+          id?: string
+          is_active?: boolean | null
+          trial_token?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trial_accounts_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_invitations: {
         Row: {
           company_id: string
@@ -1135,6 +1179,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      cleanup_expired_trials: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       get_user_company_id: {
         Args: { user_id: string }
         Returns: string
@@ -1145,6 +1193,10 @@ export type Database = {
       }
       is_system_admin: {
         Args: { user_email: string }
+        Returns: boolean
+      }
+      is_trial_valid: {
+        Args: { trial_token_param: string }
         Returns: boolean
       }
     }

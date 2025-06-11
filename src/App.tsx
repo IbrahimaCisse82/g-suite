@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -29,6 +28,7 @@ import AdminSetupSuccess from "./pages/AdminSetupSuccess";
 import TrainingSupport from "./pages/TrainingSupport";
 import TrainingSupportStandalone from "./pages/TrainingSupportStandalone";
 import ProductDocumentation from "./pages/ProductDocumentation";
+import TrialActivation from "./pages/TrialActivation";
 
 const queryClient = new QueryClient();
 
@@ -66,6 +66,9 @@ const App = () => (
           {/* Company Admin Setup Routes */}
           <Route path="/company-admin-setup" element={<CompanyAdminSetup />} />
           <Route path="/admin-setup-success" element={<AdminSetupSuccess />} />
+          
+          {/* Trial activation route */}
+          <Route path="/activate-trial/:token" element={<TrialActivation />} />
           
           <Route path="*" element={<NotFound />} />
         </Routes>

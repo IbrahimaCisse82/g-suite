@@ -53,9 +53,6 @@ export const LandingHeader = () => {
                 Connexion Entreprise
               </Button>
             </Link>
-            <Link to="/company-registration">
-              <Button>Inscription Entreprise</Button>
-            </Link>
           </div>
         </div>
       </div>

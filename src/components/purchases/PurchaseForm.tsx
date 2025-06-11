@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -13,9 +12,10 @@ interface PurchaseFormProps {
   onSubmit: (purchaseData: any) => void;
   onCancel: () => void;
   loading?: boolean;
+  initialData?: any;
 }
 
-export const PurchaseForm = ({ onSubmit, onCancel, loading }: PurchaseFormProps) => {
+export const PurchaseForm = ({ onSubmit, onCancel, loading, initialData }: PurchaseFormProps) => {
   const { data: contacts = [] } = useContacts();
   const [formData, setFormData] = useState({
     supplier_id: '',
@@ -34,6 +34,21 @@ export const PurchaseForm = ({ onSubmit, onCancel, loading }: PurchaseFormProps)
       line_total: 0
     }
   ]);
+
+  useEffect(() => {
+    if (initialData) {
+      setFormData({
+        supplier_id: initialData.supplier_id || '',
+        purchase_number: initialData.purchase_number || '',
+        purchase_date: initialData.purchase_date || new Date().toISOString().split('T')[0],
+        notes: initialData.notes || ''
+      });
+      
+      if (initialData.lines && initialData.lines.length > 0) {
+        setLines(initialData.lines);
+      }
+    }
+  }, [initialData]);
 
   const calculateLineTotal = (quantity: number, unitPrice: number, taxRate: number) => {
     const subtotal = quantity * unitPrice;
@@ -254,7 +269,7 @@ export const PurchaseForm = ({ onSubmit, onCancel, loading }: PurchaseFormProps)
           Annuler
         </Button>
         <Button type="submit" disabled={loading}>
-          {loading ? 'Création...' : 'Créer l\'achat'}
+          {loading ? (initialData ? 'Modification...' : 'Création...') : (initialData ? 'Modifier l\'achat' : 'Créer l\'achat')}
         </Button>
       </div>
     </form>

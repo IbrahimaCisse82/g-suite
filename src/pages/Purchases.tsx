@@ -1,12 +1,12 @@
 
 import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
-import { Plus, ShoppingCart, TrendingUp, AlertCircle } from 'lucide-react';
-import { PurchasesTable } from '@/components/purchases/PurchasesTable';
 import { PurchaseForm } from '@/components/purchases/PurchaseForm';
+import { PurchasesHeader } from '@/components/purchases/PurchasesHeader';
+import { PurchasesKPICards } from '@/components/purchases/PurchasesKPICards';
+import { PurchasesListCard } from '@/components/purchases/PurchasesListCard';
+import { PurchasesViewDialog } from '@/components/purchases/PurchasesViewDialog';
+import { PurchasesDeleteDialog } from '@/components/purchases/PurchasesDeleteDialog';
 import { useToast } from '@/hooks/use-toast';
 
 const mockPurchases = [
@@ -87,96 +87,19 @@ export const Purchases = () => {
     setSelectedPurchase(null);
   };
 
-  const totalAmount = purchases.reduce((sum, purchase) => sum + purchase.total_amount, 0);
-  const receivedPurchases = purchases.filter(p => p.status === 'received');
-  const pendingPurchases = purchases.filter(p => p.status === 'pending');
-
   return (
     <div className="p-8">
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Achats</h1>
-          <p className="text-gray-600 mt-2">Gérez vos achats et fournisseurs</p>
-        </div>
-        <Button onClick={() => setIsDialogOpen(true)}>
-          <Plus className="w-4 h-4 mr-2" />
-          Nouvel achat
-        </Button>
-      </div>
+      <PurchasesHeader onCreatePurchase={() => setIsDialogOpen(true)} />
+      
+      <PurchasesKPICards purchases={purchases} />
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total achats</CardTitle>
-            <ShoppingCart className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{purchases.length}</div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Montant total</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {new Intl.NumberFormat('fr-FR', {
-                style: 'currency',
-                currency: 'XOF'
-              }).format(totalAmount)}
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Achats reçus</CardTitle>
-            <ShoppingCart className="h-4 w-4 text-green-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-600">{receivedPurchases.length}</div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">En attente</CardTitle>
-            <AlertCircle className="h-4 w-4 text-orange-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-orange-600">{pendingPurchases.length}</div>
-          </CardContent>
-        </Card>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Liste des achats</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {purchases.length > 0 ? (
-            <PurchasesTable 
-              purchases={purchases} 
-              onView={handleView}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-            />
-          ) : (
-            <div className="text-center py-8">
-              <ShoppingCart className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-500">Aucun achat trouvé</p>
-              <Button 
-                onClick={() => setIsDialogOpen(true)} 
-                className="mt-4"
-              >
-                Créer votre premier achat
-              </Button>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+      <PurchasesListCard 
+        purchases={purchases}
+        onView={handleView}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+        onCreatePurchase={() => setIsDialogOpen(true)}
+      />
 
       {/* Dialogue de création */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -192,46 +115,11 @@ export const Purchases = () => {
       </Dialog>
 
       {/* Dialogue de visualisation */}
-      <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>Détails de l'achat</DialogTitle>
-          </DialogHeader>
-          {selectedPurchase && (
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Numéro d'achat</label>
-                  <p className="mt-1 text-sm text-gray-900">{selectedPurchase.purchase_number}</p>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Fournisseur</label>
-                  <p className="mt-1 text-sm text-gray-900">{selectedPurchase.supplier}</p>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Date d'achat</label>
-                  <p className="mt-1 text-sm text-gray-900">
-                    {new Date(selectedPurchase.purchase_date).toLocaleDateString('fr-FR')}
-                  </p>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Statut</label>
-                  <p className="mt-1 text-sm text-gray-900">{selectedPurchase.status}</p>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Montant total</label>
-                  <p className="mt-1 text-sm text-gray-900">
-                    {new Intl.NumberFormat('fr-FR', {
-                      style: 'currency',
-                      currency: 'XOF'
-                    }).format(selectedPurchase.total_amount)}
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
+      <PurchasesViewDialog 
+        isOpen={isViewDialogOpen}
+        onOpenChange={setIsViewDialogOpen}
+        purchase={selectedPurchase}
+      />
 
       {/* Dialogue d'édition */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
@@ -254,28 +142,12 @@ export const Purchases = () => {
       </Dialog>
 
       {/* Dialogue de confirmation de suppression */}
-      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Supprimer l'achat</AlertDialogTitle>
-            <AlertDialogDescription>
-              Êtes-vous sûr de vouloir supprimer l'achat {selectedPurchase?.purchase_number} ? 
-              Cette action est irréversible.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => {
-              setIsDeleteDialogOpen(false);
-              setSelectedPurchase(null);
-            }}>
-              Annuler
-            </AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDelete}>
-              Supprimer
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <PurchasesDeleteDialog 
+        isOpen={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+        purchase={selectedPurchase}
+        onConfirm={confirmDelete}
+      />
     </div>
   );
 };

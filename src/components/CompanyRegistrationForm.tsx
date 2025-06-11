@@ -5,6 +5,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Label } from '@/components/ui/label';
 import { Building } from 'lucide-react';
 import { useCompanyRegistration, type CompanyFormData } from '@/hooks/useCompanyRegistration';
 import { CompanyLogoUpload } from '@/components/company/CompanyLogoUpload';
@@ -41,6 +43,7 @@ interface CompanyRegistrationFormProps {
 export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormProps) => {
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string>('');
+  const [accountType, setAccountType] = useState<'demo' | 'paid'>('paid');
   const { isLoading, submitForm } = useCompanyRegistration(onSuccess);
 
   const form = useForm<CompanyFormData>({
@@ -67,7 +70,7 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
 
   const onSubmit = async (data: CompanyFormData) => {
     console.log('Formulaire soumis avec les données:', data);
-    await submitForm(data, logoFile);
+    await submitForm(data, logoFile, accountType);
   };
 
   return (
@@ -83,6 +86,35 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
       </CardHeader>
       <CardContent>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          {/* Sélection du type de compte */}
+          <div className="space-y-3">
+            <Label>Type de compte</Label>
+            <RadioGroup value={accountType} onValueChange={(value) => setAccountType(value as 'demo' | 'paid')}>
+              <div className="flex items-center space-x-2 p-3 border rounded-lg">
+                <RadioGroupItem value="demo" id="demo" />
+                <Label htmlFor="demo" className="flex-1 cursor-pointer">
+                  <div>
+                    <div className="font-medium">Compte démo (5 jours gratuits)</div>
+                    <div className="text-sm text-gray-500">
+                      Accès immédiat à toutes les fonctionnalités
+                    </div>
+                  </div>
+                </Label>
+              </div>
+              <div className="flex items-center space-x-2 p-3 border rounded-lg">
+                <RadioGroupItem value="paid" id="paid" />
+                <Label htmlFor="paid" className="flex-1 cursor-pointer">
+                  <div>
+                    <div className="font-medium">Compte payant</div>
+                    <div className="text-sm text-gray-500">
+                      Demande soumise pour validation (24h)
+                    </div>
+                  </div>
+                </Label>
+              </div>
+            </RadioGroup>
+          </div>
+
           <CompanyLogoUpload 
             logoPreview={logoPreview} 
             onLogoChange={handleLogoChange} 
@@ -97,8 +129,15 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
           <CompanyRepresentativeInfo form={form} />
 
           <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? 'Création en cours...' : 'Créer l\'entreprise'}
+            {isLoading ? 'Création en cours...' : 
+             accountType === 'demo' ? 'Créer le compte démo' : 'Soumettre la demande de compte payant'}
           </Button>
+
+          {accountType === 'paid' && (
+            <div className="text-sm text-gray-600 text-center">
+              Votre demande sera traitée dans les 24 heures. Vous recevrez un email de confirmation.
+            </div>
+          )}
         </form>
       </CardContent>
     </Card>

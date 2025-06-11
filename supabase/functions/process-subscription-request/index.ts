@@ -35,10 +35,20 @@ serve(async (req) => {
       )
     }
 
-    // Récupérer la demande
+    // Récupérer la demande avec les informations de l'entreprise et du plan
     const { data: request } = await supabaseClient
       .from('paid_account_requests')
-      .select('*')
+      .select(`
+        *,
+        subscription_plans (
+          name,
+          duration_months
+        ),
+        companies (
+          name,
+          email
+        )
+      `)
       .eq('id', requestId)
       .single()
 
@@ -64,7 +74,7 @@ serve(async (req) => {
       throw updateError
     }
 
-    // Si approuvé, créer l'abonnement
+    // Si approuvé, créer l'abonnement et envoyer l'email d'activation
     if (action === 'approved') {
       // Récupérer les détails du plan
       const { data: plan } = await supabaseClient
@@ -99,6 +109,27 @@ serve(async (req) => {
 
         if (subscriptionError) {
           throw subscriptionError
+        }
+
+        // Envoyer l'email d'activation
+        if (request.companies?.email) {
+          try {
+            const loginUrl = `${Deno.env.get('SUPABASE_URL').replace('supabase.co', 'lovable.app')}/dashboard`
+            
+            await supabaseClient.functions.invoke('send-approval-notification', {
+              body: {
+                email: request.companies.email,
+                companyName: request.companies.name,
+                planName: request.subscription_plans?.name,
+                startDate: startDate.toISOString(),
+                endDate: endDate.toISOString(),
+                loginUrl: loginUrl,
+              },
+            })
+          } catch (emailError) {
+            console.error('Erreur lors de l\'envoi de l\'email d\'activation:', emailError)
+            // Ne pas faire échouer le processus si l'email échoue
+          }
         }
       }
     }

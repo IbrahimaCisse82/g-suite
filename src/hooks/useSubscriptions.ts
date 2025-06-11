@@ -63,6 +63,19 @@ export const useCreatePaidAccountRequest = () => {
         throw new Error('Profil utilisateur non trouvé');
       }
 
+      // Récupérer les informations de l'entreprise et du plan
+      const { data: company } = await supabase
+        .from('companies')
+        .select('name, email')
+        .eq('id', profile.company_id)
+        .single();
+
+      const { data: plan } = await supabase
+        .from('subscription_plans')
+        .select('name, price')
+        .eq('id', planId)
+        .single();
+
       const { data, error } = await supabase
         .from('paid_account_requests')
         .insert({
@@ -75,6 +88,24 @@ export const useCreatePaidAccountRequest = () => {
         .single();
 
       if (error) throw error;
+
+      // Envoyer l'email de confirmation automatiquement
+      if (company && plan) {
+        try {
+          await supabase.functions.invoke('send-request-confirmation', {
+            body: {
+              email: company.email,
+              companyName: company.name,
+              planName: plan.name,
+              planPrice: plan.price,
+            },
+          });
+        } catch (emailError) {
+          console.error('Erreur lors de l\'envoi de l\'email de confirmation:', emailError);
+          // Ne pas faire échouer la création de la demande si l'email échoue
+        }
+      }
+
       return data;
     },
     onSuccess: () => {

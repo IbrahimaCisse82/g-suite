@@ -24,6 +24,8 @@ import { AdminLogin } from "./pages/AdminLogin";
 import { AdminSetup } from "./pages/AdminSetup";
 import { AdminPanel } from "./pages/AdminPanel";
 import { SubscriptionSettings } from "./pages/SubscriptionSettings";
+import CompanyAdminSetup from "./pages/CompanyAdminSetup";
+import AdminSetupSuccess from "./pages/AdminSetupSuccess";
 
 const queryClient = new QueryClient();
 
@@ -54,6 +56,10 @@ const App = () => (
           <Route path="/admin-login" element={<AdminLogin />} />
           <Route path="/admin-setup" element={<AdminSetup />} />
           <Route path="/admin" element={<AdminPanel />} />
+          
+          {/* Company Admin Setup Routes */}
+          <Route path="/company-admin-setup" element={<CompanyAdminSetup />} />
+          <Route path="/admin-setup-success" element={<AdminSetupSuccess />} />
           
           <Route path="*" element={<NotFound />} />
         </Routes>

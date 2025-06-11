@@ -24,7 +24,10 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { email, companyName, planName, startDate, endDate, loginUrl }: ApprovalNotificationEmail = await req.json()
+    const { email, companyName, planName, startDate, endDate, loginUrl, companyId }: ApprovalNotificationEmail & { companyId: string } = await req.json()
+
+    // Générer le lien de configuration du profil administrateur
+    const setupUrl = `${loginUrl.replace('/dashboard', '')}/company-admin-setup?company_id=${companyId}&token=${Date.now()}`
 
     const emailResponse = await resend.emails.send({
       from: "GrowHub SARL <noreply@growhub.com>",
@@ -56,16 +59,22 @@ const handler = async (req: Request): Promise<Response> => {
               </ul>
             </div>
             
+            <div style="background-color: #e0f2fe; padding: 15px; border-radius: 8px; margin: 20px 0;">
+              <p style="color: #0277bd; margin: 0;">
+                <strong>📋 Prochaine étape obligatoire :</strong><br>
+                Vous devez créer votre profil administrateur pour accéder à votre tableau de bord entreprise.
+              </p>
+            </div>
+            
             <div style="text-align: center; margin: 30px 0;">
-              <a href="${loginUrl}" style="background-color: #10b981; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block;">
-                🚀 Accéder à mon compte entreprise
+              <a href="${setupUrl}" style="background-color: #10b981; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block;">
+                🚀 Créer mon profil administrateur
               </a>
             </div>
             
-            <div style="background-color: #e0f2fe; padding: 15px; border-radius: 8px; margin: 20px 0;">
-              <p style="color: #0277bd; margin: 0;">
-                <strong>💡 Prochaines étapes :</strong><br>
-                Votre compte est maintenant configuré et prêt à utiliser. Vous pouvez commencer à gérer votre comptabilité, vos factures, vos stocks et bien plus encore !
+            <div style="background-color: #fff3cd; padding: 15px; border-radius: 8px; margin: 20px 0;">
+              <p style="color: #856404; margin: 0;">
+                <strong>⚠️ Important :</strong> Vous devez cliquer sur le lien ci-dessus pour configurer votre accès administrateur et commencer à utiliser votre compte entreprise.
               </p>
             </div>
             

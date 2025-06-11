@@ -1,4 +1,3 @@
-
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
@@ -111,7 +110,7 @@ serve(async (req) => {
           throw subscriptionError
         }
 
-        // Envoyer l'email d'activation
+        // Envoyer l'email d'activation avec l'ID de l'entreprise
         if (request.companies?.email) {
           try {
             const loginUrl = `${Deno.env.get('SUPABASE_URL').replace('supabase.co', 'lovable.app')}/dashboard`
@@ -124,6 +123,7 @@ serve(async (req) => {
                 startDate: startDate.toISOString(),
                 endDate: endDate.toISOString(),
                 loginUrl: loginUrl,
+                companyId: request.company_id, // Ajouter l'ID de l'entreprise
               },
             })
           } catch (emailError) {

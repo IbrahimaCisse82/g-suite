@@ -52,46 +52,46 @@ export const AdminLoginForm = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
-      <Card className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+      <Card className="w-full max-w-md bg-white border-slate-200">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
-            <div className="p-3 bg-blue-100 rounded-full">
-              <Shield className="w-8 h-8 text-blue-600" />
+            <div className="p-3 bg-green-100 rounded-full">
+              <Shield className="w-8 h-8 text-green-600" />
             </div>
           </div>
-          <CardTitle className="text-2xl font-bold">Administration GrowHub</CardTitle>
-          <p className="text-gray-600">Connexion administrateur</p>
+          <CardTitle className="text-2xl font-bold text-slate-900">Administration GrowHub</CardTitle>
+          <p className="text-slate-600">Connexion administrateur</p>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Email administrateur</Label>
+              <Label htmlFor="email" className="text-slate-900">Email administrateur</Label>
               <div className="relative">
-                <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Mail className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
                 <Input
                   id="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="admin@growhubsenegal.com"
-                  className="pl-10"
+                  className="pl-10 text-slate-900 bg-white border-slate-300"
                   required
                 />
               </div>
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="password">Mot de passe</Label>
+              <Label htmlFor="password" className="text-slate-900">Mot de passe</Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Lock className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
                 <Input
                   id="password"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Votre mot de passe"
-                  className="pl-10"
+                  className="pl-10 text-slate-900 bg-white border-slate-300"
                   required
                 />
               </div>
@@ -99,7 +99,7 @@ export const AdminLoginForm = () => {
 
             <Button 
               type="submit" 
-              className="w-full" 
+              className="w-full bg-green-600 hover:bg-green-700 text-white" 
               disabled={isLoading}
             >
               {isLoading ? 'Connexion...' : 'Se connecter'}

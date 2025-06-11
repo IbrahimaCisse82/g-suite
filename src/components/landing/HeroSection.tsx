@@ -29,7 +29,7 @@ const HeroSection = () => {
                 <span className="text-green-400"> en toute simplicité</span>
               </h1>
               
-              <p className="text-xl text-slate-300 leading-relaxed">
+              <p className="text-xl text-white leading-relaxed">
                 G-Suite révolutionne la gestion d'entreprise avec une suite complète d'outils : 
                 comptabilité, facturation, stock, CRM et bien plus. Conçu spécialement pour les PME africaines.
               </p>
@@ -39,19 +39,19 @@ const HeroSection = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="flex items-center space-x-3">
                 <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
-                <span className="text-slate-300">Interface moderne et intuitive</span>
+                <span className="text-white">Interface moderne et intuitive</span>
               </div>
               <div className="flex items-center space-x-3">
                 <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
-                <span className="text-slate-300">100% cloud et sécurisé</span>
+                <span className="text-white">100% cloud et sécurisé</span>
               </div>
               <div className="flex items-center space-x-3">
                 <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
-                <span className="text-slate-300">Support expert inclus</span>
+                <span className="text-white">Support expert inclus</span>
               </div>
               <div className="flex items-center space-x-3">
                 <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
-                <span className="text-slate-300">Accessible partout</span>
+                <span className="text-white">Accessible partout</span>
               </div>
             </div>
 
@@ -66,7 +66,7 @@ const HeroSection = () => {
               <Button 
                 size="lg" 
                 variant="outline" 
-                className="border-2 border-slate-600 text-slate-300 hover:bg-slate-800 hover:text-white px-8 py-4 text-lg rounded-lg"
+                className="border-2 border-white text-white hover:bg-white hover:text-slate-900 px-8 py-4 text-lg rounded-lg"
                 onClick={handleWatchDemo}
               >
                 <Play className="mr-2 w-5 h-5" />
@@ -74,7 +74,7 @@ const HeroSection = () => {
               </Button>
             </div>
 
-            <p className="text-sm text-slate-400">
+            <p className="text-sm text-white">
               ✓ Aucune carte bancaire requise ✓ Configuration en 5 minutes ✓ Support gratuit
             </p>
           </div>

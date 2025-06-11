@@ -14,11 +14,11 @@ import {
 
 export const Dashboard = () => {
   return (
-    <div className="p-8">
+    <div className="p-8 bg-background text-foreground">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Tableau de bord</h1>
-        <p className="text-gray-600">Vue d'ensemble de votre activité financière</p>
+        <h1 className="text-3xl font-bold text-foreground mb-2">Tableau de bord</h1>
+        <p className="text-muted-foreground">Vue d'ensemble de votre activité financière</p>
       </div>
 
       {/* KPIs Grid */}
@@ -66,18 +66,18 @@ export const Dashboard = () => {
 
         {/* Quick Actions - 1/3 width */}
         <div className="space-y-6">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Actions rapides</h3>
+          <div className="bg-card rounded-xl shadow-sm border border-border p-6">
+            <h3 className="text-lg font-semibold text-card-foreground mb-4">Actions rapides</h3>
             <div className="space-y-3">
-              <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center space-x-2">
+              <button className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center space-x-2">
                 <FileText className="w-5 h-5" />
                 <span>Nouvelle facture</span>
               </button>
-              <button className="w-full border border-gray-300 hover:border-gray-400 text-gray-700 font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center space-x-2">
+              <button className="w-full border border-border hover:border-border/60 text-foreground font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center space-x-2 bg-card">
                 <Users className="w-5 h-5" />
                 <span>Ajouter client</span>
               </button>
-              <button className="w-full border border-gray-300 hover:border-gray-400 text-gray-700 font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center space-x-2">
+              <button className="w-full border border-border hover:border-border/60 text-foreground font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center space-x-2 bg-card">
                 <TrendingUp className="w-5 h-5" />
                 <span>Saisir écriture</span>
               </button>
@@ -85,8 +85,8 @@ export const Dashboard = () => {
           </div>
 
           {/* Alerts */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Alertes</h3>
+          <div className="bg-card rounded-xl shadow-sm border border-border p-6">
+            <h3 className="text-lg font-semibold text-card-foreground mb-4">Alertes</h3>
             <div className="space-y-3">
               <div className="flex items-start space-x-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
                 <AlertCircle className="w-5 h-5 text-yellow-600 mt-0.5" />

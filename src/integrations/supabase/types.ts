@@ -9,7 +9,164 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      companies: {
+        Row: {
+          address: string
+          business_sector: Database["public"]["Enums"]["business_sector"]
+          city: string
+          country: string
+          created_at: string
+          email: string
+          id: string
+          logo_url: string | null
+          name: string
+          ninea: string | null
+          phone: string | null
+          rccm: string | null
+          representative_first_name: string
+          representative_last_name: string
+          updated_at: string
+          website: string | null
+        }
+        Insert: {
+          address: string
+          business_sector: Database["public"]["Enums"]["business_sector"]
+          city: string
+          country?: string
+          created_at?: string
+          email: string
+          id?: string
+          logo_url?: string | null
+          name: string
+          ninea?: string | null
+          phone?: string | null
+          rccm?: string | null
+          representative_first_name: string
+          representative_last_name: string
+          updated_at?: string
+          website?: string | null
+        }
+        Update: {
+          address?: string
+          business_sector?: Database["public"]["Enums"]["business_sector"]
+          city?: string
+          country?: string
+          created_at?: string
+          email?: string
+          id?: string
+          logo_url?: string | null
+          name?: string
+          ninea?: string | null
+          phone?: string | null
+          rccm?: string | null
+          representative_first_name?: string
+          representative_last_name?: string
+          updated_at?: string
+          website?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          company_id: string | null
+          created_at: string
+          first_name: string | null
+          id: string
+          is_company_admin: boolean | null
+          last_name: string | null
+          role: string | null
+          updated_at: string
+        }
+        Insert: {
+          company_id?: string | null
+          created_at?: string
+          first_name?: string | null
+          id: string
+          is_company_admin?: boolean | null
+          last_name?: string | null
+          role?: string | null
+          updated_at?: string
+        }
+        Update: {
+          company_id?: string | null
+          created_at?: string
+          first_name?: string | null
+          id?: string
+          is_company_admin?: boolean | null
+          last_name?: string | null
+          role?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_invitations: {
+        Row: {
+          company_id: string
+          created_at: string
+          email: string
+          expires_at: string
+          first_name: string | null
+          id: string
+          invited_by: string
+          last_name: string | null
+          role: string | null
+          status: Database["public"]["Enums"]["invitation_status"] | null
+          token: string
+          updated_at: string
+        }
+        Insert: {
+          company_id: string
+          created_at?: string
+          email: string
+          expires_at?: string
+          first_name?: string | null
+          id?: string
+          invited_by: string
+          last_name?: string | null
+          role?: string | null
+          status?: Database["public"]["Enums"]["invitation_status"] | null
+          token?: string
+          updated_at?: string
+        }
+        Update: {
+          company_id?: string
+          created_at?: string
+          email?: string
+          expires_at?: string
+          first_name?: string | null
+          id?: string
+          invited_by?: string
+          last_name?: string | null
+          role?: string | null
+          status?: Database["public"]["Enums"]["invitation_status"] | null
+          token?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_invitations_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_invitations_invited_by_fkey"
+            columns: ["invited_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -18,7 +175,23 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      business_sector:
+        | "agriculture"
+        | "industrie"
+        | "construction"
+        | "commerce"
+        | "transport"
+        | "hebergement_restauration"
+        | "information_communication"
+        | "activites_financieres"
+        | "immobilier"
+        | "activites_specialisees"
+        | "administration_publique"
+        | "enseignement"
+        | "sante_action_sociale"
+        | "arts_spectacles"
+        | "autres_services"
+      invitation_status: "pending" | "accepted" | "expired" | "cancelled"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -133,6 +306,25 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      business_sector: [
+        "agriculture",
+        "industrie",
+        "construction",
+        "commerce",
+        "transport",
+        "hebergement_restauration",
+        "information_communication",
+        "activites_financieres",
+        "immobilier",
+        "activites_specialisees",
+        "administration_publique",
+        "enseignement",
+        "sante_action_sociale",
+        "arts_spectacles",
+        "autres_services",
+      ],
+      invitation_status: ["pending", "accepted", "expired", "cancelled"],
+    },
   },
 } as const

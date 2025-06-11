@@ -9,7 +9,7 @@ const corsHeaders = {
 
 interface CredentialRequest {
   email: string
-  name: string
+  password: string
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -18,31 +18,27 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    // Rate limiting - max 5 attempts per IP per 15 minutes
-    const clientIP = req.headers.get('x-forwarded-for') || 'unknown'
-    const rateLimitKey = `admin_login_${clientIP}`
-    
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
-    const { email, name }: CredentialRequest = await req.json()
+    const { email, password }: CredentialRequest = await req.json()
 
     // Input validation
-    if (!email || !name) {
-      console.log(`Missing credentials: email=${!!email}, name=${!!name}`)
+    if (!email || !password) {
+      console.log(`Missing credentials: email=${!!email}, password=${!!password}`)
       return new Response(
-        JSON.stringify({ error: 'Email et nom requis', valid: false }),
+        JSON.stringify({ error: 'Email et mot de passe requis', valid: false }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
 
     // Sanitize inputs
     const sanitizedEmail = email.trim().toLowerCase()
-    const sanitizedName = name.trim()
+    const sanitizedPassword = password.trim()
 
-    console.log(`Admin login attempt: ${sanitizedEmail} with name: ${sanitizedName}`)
+    console.log(`Admin login attempt: ${sanitizedEmail}`)
 
     // Email format validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -54,56 +50,51 @@ const handler = async (req: Request): Promise<Response> => {
       )
     }
 
-    // First, check if admin exists by email only
-    const { data: adminByEmail, error: emailError } = await supabaseClient
+    // Check if admin exists by email
+    const { data: adminData, error: adminError } = await supabaseClient
       .from('system_admins')
-      .select('email, name, is_active')
+      .select('email, password, is_active, is_first_login')
       .eq('email', sanitizedEmail)
       .eq('is_active', true)
       .single()
 
-    if (emailError) {
-      console.log(`Database error checking admin by email: ${emailError.message}`)
-      return new Response(
-        JSON.stringify({ error: 'Erreur de vérification', valid: false }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      )
-    }
-
-    if (!adminByEmail) {
+    if (adminError || !adminData) {
       console.log(`Admin not found for email: ${sanitizedEmail}`)
       return new Response(
-        JSON.stringify({ error: 'Email administrateur non trouvé', valid: false }),
+        JSON.stringify({ error: 'Email administrateur non trouvé ou inactif', valid: false }),
         { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
 
-    // Check if name matches (case insensitive)
-    const storedName = adminByEmail.name.toLowerCase().trim()
-    const providedName = sanitizedName.toLowerCase()
-    
-    console.log(`Name comparison: stored="${storedName}", provided="${providedName}"`)
+    // Vérifier le mot de passe
+    // Pour les nouveaux comptes ou mot de passe par défaut
+    const defaultPassword = 'Admin1946'
+    const isValidPassword = adminData.password === sanitizedPassword || 
+                          (!adminData.password && sanitizedPassword === defaultPassword)
 
-    if (storedName !== providedName) {
-      console.log(`Name mismatch for ${sanitizedEmail}: expected "${storedName}", got "${providedName}"`)
+    if (!isValidPassword) {
+      console.log(`Invalid password for ${sanitizedEmail}`)
       return new Response(
         JSON.stringify({ 
-          error: `Nom incorrect. Nom attendu: "${adminByEmail.name}"`, 
-          valid: false,
-          expectedName: adminByEmail.name
+          error: 'Mot de passe incorrect', 
+          valid: false
         }),
         { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
 
     // Log successful authentication
-    console.log(`Successful admin login: ${sanitizedEmail} from ${clientIP}`)
+    console.log(`Successful admin login: ${sanitizedEmail}`)
+
+    // Déterminer s'il s'agit de la première connexion
+    const isFirstLogin = adminData.is_first_login !== false && (!adminData.password || adminData.password === defaultPassword)
 
     return new Response(
       JSON.stringify({ 
         valid: true, 
         message: 'Authentification réussie',
-        adminEmail: adminByEmail.email
+        adminEmail: adminData.email,
+        isFirstLogin: isFirstLogin
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )

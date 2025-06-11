@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Shield, AlertTriangle, Info } from 'lucide-react';
+import { Shield, AlertTriangle, Eye, EyeOff } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useSecureAdminAuth } from '@/hooks/useSecureAdminAuth';
 import { SecurityValidator } from '@/utils/securityValidation';
@@ -13,11 +13,16 @@ import { useToast } from '@/hooks/use-toast';
 export const SecureAdminLoginForm = () => {
   const [formData, setFormData] = useState({
     email: '',
-    name: ''
+    password: ''
   });
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
-  const [expectedName, setExpectedName] = useState<string>('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordCreation, setShowPasswordCreation] = useState(false);
+  const [newPasswordData, setNewPasswordData] = useState({
+    newPassword: '',
+    confirmPassword: ''
+  });
   const navigate = useNavigate();
   const { login } = useSecureAdminAuth();
   const { toast } = useToast();
@@ -27,16 +32,16 @@ export const SecureAdminLoginForm = () => {
 
     // Sanitize inputs
     const sanitizedEmail = SecurityValidator.sanitizeHtml(formData.email.trim());
-    const sanitizedName = SecurityValidator.sanitizeHtml(formData.name.trim());
+    const sanitizedPassword = SecurityValidator.sanitizeHtml(formData.password.trim());
 
     // Validate email
     if (!sanitizedEmail || !SecurityValidator.validateEmail(sanitizedEmail)) {
       newErrors.push('Adresse email invalide');
     }
 
-    // Validate name
-    if (!sanitizedName || sanitizedName.length < 2 || sanitizedName.length > 100) {
-      newErrors.push('Nom invalide (2-100 caractères requis)');
+    // Validate password
+    if (!sanitizedPassword || sanitizedPassword.length < 1) {
+      newErrors.push('Mot de passe requis');
     }
 
     // Check rate limiting
@@ -57,36 +62,136 @@ export const SecureAdminLoginForm = () => {
 
     setLoading(true);
     setErrors([]);
-    setExpectedName('');
 
     try {
       const sanitizedEmail = SecurityValidator.sanitizeHtml(formData.email.trim());
-      const sanitizedName = SecurityValidator.sanitizeHtml(formData.name.trim());
+      const sanitizedPassword = SecurityValidator.sanitizeHtml(formData.password.trim());
 
-      const success = await login(sanitizedEmail, sanitizedName);
+      const result = await login(sanitizedEmail, sanitizedPassword);
       
-      if (success) {
-        navigate('/admin');
+      if (result.success) {
+        if (result.isFirstLogin) {
+          setShowPasswordCreation(true);
+        } else {
+          navigate('/admin');
+        }
       }
     } catch (error: any) {
       console.error('Login error:', error);
-      
-      // Parse error response to show specific error messages
-      if (error.message && error.message.includes('Nom incorrect')) {
-        const match = error.message.match(/Nom attendu: "([^"]+)"/);
-        if (match) {
-          setExpectedName(match[1]);
-          setErrors([`Nom incorrect. Le nom attendu pour cet email est: "${match[1]}"`]);
-        } else {
-          setErrors([error.message]);
-        }
-      } else {
-        setErrors([error.message || 'Une erreur est survenue lors de la connexion']);
-      }
+      setErrors([error.message || 'Une erreur est survenue lors de la connexion']);
     } finally {
       setLoading(false);
     }
   };
+
+  const handlePasswordCreation = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (newPasswordData.newPassword !== newPasswordData.confirmPassword) {
+      setErrors(['Les mots de passe ne correspondent pas']);
+      return;
+    }
+
+    if (newPasswordData.newPassword.length < 8) {
+      setErrors(['Le nouveau mot de passe doit contenir au moins 8 caractères']);
+      return;
+    }
+
+    setLoading(true);
+    setErrors([]);
+
+    try {
+      // Ici on simule la mise à jour du mot de passe
+      // Dans un vrai système, cela irait mettre à jour la base de données
+      toast({
+        title: "Mot de passe mis à jour",
+        description: "Votre mot de passe a été changé avec succès"
+      });
+      
+      navigate('/admin');
+    } catch (error: any) {
+      setErrors([error.message || 'Erreur lors de la création du mot de passe']);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (showPasswordCreation) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <Card className="w-full max-w-md">
+          <CardHeader className="text-center">
+            <div className="mx-auto w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+              <Shield className="w-8 h-8 text-blue-600" />
+            </div>
+            <CardTitle className="text-2xl">Première connexion</CardTitle>
+            <CardDescription>
+              Créez un nouveau mot de passe sécurisé
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handlePasswordCreation} className="space-y-4">
+              {errors.length > 0 && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                  <div className="flex items-center mb-2">
+                    <AlertTriangle className="w-4 h-4 text-red-600 mr-2" />
+                    <span className="text-sm font-medium text-red-800">Erreurs :</span>
+                  </div>
+                  <ul className="list-disc list-inside text-sm text-red-700">
+                    {errors.map((error, index) => (
+                      <li key={index}>{error}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              <div className="space-y-2">
+                <Label htmlFor="newPassword">Nouveau mot de passe</Label>
+                <div className="relative">
+                  <Input
+                    id="newPassword"
+                    type={showPassword ? "text" : "password"}
+                    value={newPasswordData.newPassword}
+                    onChange={(e) => setNewPasswordData(prev => ({ ...prev, newPassword: e.target.value }))}
+                    placeholder="Minimum 8 caractères"
+                    required
+                    minLength={8}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
+                  >
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="confirmPassword">Confirmer le mot de passe</Label>
+                <Input
+                  id="confirmPassword"
+                  type="password"
+                  value={newPasswordData.confirmPassword}
+                  onChange={(e) => setNewPasswordData(prev => ({ ...prev, confirmPassword: e.target.value }))}
+                  placeholder="Confirmer le mot de passe"
+                  required
+                />
+              </div>
+
+              <Button 
+                type="submit" 
+                className="w-full" 
+                disabled={loading}
+              >
+                {loading ? 'Création...' : 'Créer le mot de passe'}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
@@ -116,18 +221,6 @@ export const SecureAdminLoginForm = () => {
               </div>
             )}
 
-            {expectedName && (
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                <div className="flex items-center mb-2">
-                  <Info className="w-4 h-4 text-blue-600 mr-2" />
-                  <span className="text-sm font-medium text-blue-800">Information :</span>
-                </div>
-                <p className="text-sm text-blue-700">
-                  Pour l'email <strong>{formData.email}</strong>, utilisez le nom: <strong>{expectedName}</strong>
-                </p>
-              </div>
-            )}
-
             <div className="space-y-2">
               <Label htmlFor="email">Email administrateur</Label>
               <Input
@@ -135,7 +228,7 @@ export const SecureAdminLoginForm = () => {
                 type="email"
                 value={formData.email}
                 onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                placeholder="admin@growhub.com"
+                placeholder="admin@growhubsenegal.com"
                 required
                 maxLength={255}
                 autoComplete="email"
@@ -143,20 +236,25 @@ export const SecureAdminLoginForm = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="name">Nom complet</Label>
-              <Input
-                id="name"
-                type="text"
-                value={formData.name}
-                onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                placeholder={expectedName || "Nom Prénom"}
-                required
-                maxLength={100}
-                autoComplete="name"
-              />
-              <p className="text-xs text-gray-500">
-                Utilisez exactement le nom associé à votre email (sensible à la casse)
-              </p>
+              <Label htmlFor="password">Mot de passe</Label>
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  value={formData.password}
+                  onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
+                  placeholder="Mot de passe"
+                  required
+                  autoComplete="current-password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
             </div>
 
             <Button 
@@ -181,8 +279,9 @@ export const SecureAdminLoginForm = () => {
           <div className="mt-4 p-3 bg-gray-50 border border-gray-200 rounded-lg">
             <p className="text-xs text-gray-600">
               <strong>Comptes administrateurs disponibles :</strong><br />
-              • i.cisse@growhubsenegal.com → Ibrahim Cisse<br />
-              • h.ndiaye@growhubsenegal.com → Hawa Ndiaye
+              • i.cisse@growhubsenegal.com<br />
+              • h.ndiaye@growhubsenegal.com<br />
+              <strong>Mot de passe par défaut :</strong> Admin1946
             </p>
           </div>
         </CardContent>

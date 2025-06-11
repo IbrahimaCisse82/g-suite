@@ -9,6 +9,11 @@ interface AdminSession {
   loading: boolean;
 }
 
+interface LoginResult {
+  success: boolean;
+  isFirstLogin?: boolean;
+}
+
 export const useSecureAdminAuth = () => {
   const [session, setSession] = useState<AdminSession>({
     isAuthenticated: false,
@@ -61,13 +66,13 @@ export const useSecureAdminAuth = () => {
     }
   };
 
-  const login = async (email: string, name: string) => {
+  const login = async (email: string, password: string): Promise<LoginResult> => {
     try {
-      console.log(`Attempting admin login for: ${email} with name: ${name}`);
+      console.log(`Attempting admin login for: ${email}`);
       
-      // Verify admin credentials with the server
+      // Vérifier les identifiants admin
       const { data, error } = await supabase.functions.invoke('verify-admin-credentials', {
-        body: { email, name }
+        body: { email, password }
       });
 
       console.log('Login response:', { data, error });
@@ -80,12 +85,6 @@ export const useSecureAdminAuth = () => {
       if (!data?.valid) {
         const errorMessage = data?.error || 'Identifiants administrateur invalides';
         console.log('Login failed:', errorMessage);
-        
-        // If there's an expected name, include it in the error
-        if (data?.expectedName) {
-          throw new Error(`Nom incorrect. Nom attendu: "${data.expectedName}"`);
-        }
-        
         throw new Error(errorMessage);
       }
 
@@ -104,11 +103,12 @@ export const useSecureAdminAuth = () => {
         description: "Bienvenue dans le panneau d'administration"
       });
 
-      return true;
+      return {
+        success: true,
+        isFirstLogin: data.isFirstLogin || false
+      };
     } catch (error: any) {
       console.error('Admin login error:', error);
-      
-      // Re-throw the error so the component can handle it
       throw error;
     }
   };

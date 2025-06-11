@@ -1,49 +1,49 @@
 
 import React, { useState } from 'react';
-import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Plus } from 'lucide-react';
+import { useProducts, useProductCategories } from '@/hooks/useProducts';
 import { ProductsTable } from '@/components/products/ProductsTable';
 import { ProductForm } from '@/components/products/ProductForm';
 import { CategoriesTable } from '@/components/products/CategoriesTable';
 import { CategoryForm } from '@/components/products/CategoryForm';
-import { useProducts, useProductCategories } from '@/hooks/useProducts';
 
 export const Products = () => {
-  const [productDialogOpen, setProductDialogOpen] = useState(false);
-  const [categoryDialogOpen, setCategoryDialogOpen] = useState(false);
-  const [editingProduct, setEditingProduct] = useState(null);
-  const [editingCategory, setEditingCategory] = useState(null);
+  const [isProductDialogOpen, setIsProductDialogOpen] = useState(false);
+  const [isCategoryDialogOpen, setIsCategoryDialogOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
   const { data: products, isLoading: productsLoading } = useProducts();
   const { data: categories, isLoading: categoriesLoading } = useProductCategories();
 
   const handleEditProduct = (product: any) => {
-    setEditingProduct(product);
-    setProductDialogOpen(true);
+    setSelectedProduct(product);
+    setIsProductDialogOpen(true);
   };
 
   const handleEditCategory = (category: any) => {
-    setEditingCategory(category);
-    setCategoryDialogOpen(true);
+    setSelectedCategory(category);
+    setIsCategoryDialogOpen(true);
   };
 
   const handleCloseProductDialog = () => {
-    setProductDialogOpen(false);
-    setEditingProduct(null);
+    setIsProductDialogOpen(false);
+    setSelectedProduct(null);
   };
 
   const handleCloseCategoryDialog = () => {
-    setCategoryDialogOpen(false);
-    setEditingCategory(null);
+    setIsCategoryDialogOpen(false);
+    setSelectedCategory(null);
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-gray-900">Gestion des Produits</h1>
+    <div className="p-8">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Gestion des produits</h1>
+        <p className="text-gray-600">Gérez vos produits et catégories</p>
       </div>
 
       <Tabs defaultValue="products" className="space-y-6">
@@ -53,77 +53,71 @@ export const Products = () => {
         </TabsList>
 
         <TabsContent value="products" className="space-y-6">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle>Liste des Produits</CardTitle>
-              <Dialog open={productDialogOpen} onOpenChange={setProductDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button>
-                    <Plus className="w-4 h-4 mr-2" />
-                    Nouveau Produit
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-2xl">
-                  <DialogHeader>
-                    <DialogTitle>
-                      {editingProduct ? 'Modifier le produit' : 'Nouveau produit'}
-                    </DialogTitle>
-                  </DialogHeader>
-                  <ProductForm 
-                    product={editingProduct}
-                    onClose={handleCloseProductDialog}
-                  />
-                </DialogContent>
-              </Dialog>
-            </CardHeader>
-            <CardContent>
-              {productsLoading ? (
-                <div>Chargement...</div>
-              ) : (
-                <ProductsTable 
-                  products={products || []}
-                  onEdit={handleEditProduct}
+          <div className="flex justify-between items-center">
+            <h2 className="text-xl font-semibold">Liste des produits</h2>
+            <Dialog open={isProductDialogOpen} onOpenChange={setIsProductDialogOpen}>
+              <DialogTrigger asChild>
+                <Button onClick={() => setSelectedProduct(null)}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Nouveau produit
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl">
+                <DialogHeader>
+                  <DialogTitle>
+                    {selectedProduct ? 'Modifier le produit' : 'Créer un nouveau produit'}
+                  </DialogTitle>
+                </DialogHeader>
+                <ProductForm 
+                  product={selectedProduct} 
+                  onClose={handleCloseProductDialog}
                 />
-              )}
-            </CardContent>
-          </Card>
+              </DialogContent>
+            </Dialog>
+          </div>
+
+          {productsLoading ? (
+            <div className="text-center py-4">Chargement des produits...</div>
+          ) : (
+            <ProductsTable 
+              products={products || []} 
+              onEdit={handleEditProduct}
+            />
+          )}
         </TabsContent>
 
         <TabsContent value="categories" className="space-y-6">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle>Catégories de Produits</CardTitle>
-              <Dialog open={categoryDialogOpen} onOpenChange={setCategoryDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button>
-                    <Plus className="w-4 h-4 mr-2" />
-                    Nouvelle Catégorie
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>
-                      {editingCategory ? 'Modifier la catégorie' : 'Nouvelle catégorie'}
-                    </DialogTitle>
-                  </DialogHeader>
-                  <CategoryForm 
-                    category={editingCategory}
-                    onClose={handleCloseCategoryDialog}
-                  />
-                </DialogContent>
-              </Dialog>
-            </CardHeader>
-            <CardContent>
-              {categoriesLoading ? (
-                <div>Chargement...</div>
-              ) : (
-                <CategoriesTable 
-                  categories={categories || []}
-                  onEdit={handleEditCategory}
+          <div className="flex justify-between items-center">
+            <h2 className="text-xl font-semibold">Catégories de produits</h2>
+            <Dialog open={isCategoryDialogOpen} onOpenChange={setIsCategoryDialogOpen}>
+              <DialogTrigger asChild>
+                <Button onClick={() => setSelectedCategory(null)}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Nouvelle catégorie
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>
+                    {selectedCategory ? 'Modifier la catégorie' : 'Créer une nouvelle catégorie'}
+                  </DialogTitle>
+                </DialogHeader>
+                <CategoryForm 
+                  category={selectedCategory} 
+                  onClose={handleCloseCategoryDialog}
                 />
-              )}
-            </CardContent>
-          </Card>
+              </DialogContent>
+            </Dialog>
+          </div>
+
+          {categoriesLoading ? (
+            <div className="text-center py-4">Chargement des catégories...</div>
+          ) : (
+            <CategoriesTable 
+              categories={categories || []} 
+              onEdit={handleEditCategory}
+            />
+          )}
         </TabsContent>
       </Tabs>
     </div>

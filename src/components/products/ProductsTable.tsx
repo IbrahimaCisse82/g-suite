@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Edit, Package } from 'lucide-react';
+import { Edit } from 'lucide-react';
 
 interface ProductsTableProps {
   products: any[];
@@ -67,11 +67,9 @@ export const ProductsTable = ({ products, onEdit }: ProductsTableProps) => {
                 {getStockStatus(product.product_stock?.[0])}
               </TableCell>
               <TableCell>
-                <div className="flex space-x-2">
-                  <Button variant="outline" size="sm" onClick={() => onEdit(product)}>
-                    <Edit className="w-4 h-4" />
-                  </Button>
-                </div>
+                <Button variant="outline" size="sm" onClick={() => onEdit(product)}>
+                  <Edit className="w-4 h-4" />
+                </Button>
               </TableCell>
             </TableRow>
           ))}

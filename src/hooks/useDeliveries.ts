@@ -33,7 +33,8 @@ export const useInvoicesForDelivery = () => {
       const { data, error } = await supabase
         .from('invoices')
         .select(`
-          *,
+          id,
+          invoice_number,
           contacts (
             name
           )
@@ -112,7 +113,7 @@ export const useCompleteDelivery = () => {
 
       if (deliveryError) throw deliveryError;
 
-      // Récupérer les lignes de livraison pour débiter le stock
+      // Débiter le stock pour chaque produit livré
       const { data: deliveryLines } = await supabase
         .from('delivery_lines')
         .select('product_id, quantity_delivered')
@@ -120,45 +121,44 @@ export const useCompleteDelivery = () => {
 
       if (deliveryLines) {
         for (const line of deliveryLines) {
-          if (line.quantity_delivered > 0) {
-            // Débiter le stock
-            const { data: currentStock } = await supabase
+          // Récupérer le stock actuel
+          const { data: currentStock } = await supabase
+            .from('product_stock')
+            .select('quantity_in_stock')
+            .eq('product_id', line.product_id)
+            .eq('company_id', profile.company_id)
+            .single();
+
+          if (currentStock) {
+            const newQuantity = currentStock.quantity_in_stock - line.quantity_delivered;
+            
+            // Mettre à jour le stock
+            await supabase
               .from('product_stock')
-              .select('quantity_in_stock')
+              .update({ 
+                quantity_in_stock: newQuantity,
+                last_stock_update: new Date().toISOString()
+              })
               .eq('product_id', line.product_id)
-              .eq('company_id', profile.company_id)
-              .single();
+              .eq('company_id', profile.company_id);
 
-            if (currentStock) {
-              const newQuantity = currentStock.quantity_in_stock - line.quantity_delivered;
-              
-              await supabase
-                .from('product_stock')
-                .update({ 
-                  quantity_in_stock: newQuantity,
-                  last_stock_update: new Date().toISOString()
-                })
-                .eq('product_id', line.product_id)
-                .eq('company_id', profile.company_id);
-
-              // Enregistrer le mouvement de stock
-              await supabase
-                .from('stock_movements')
-                .insert([{
-                  company_id: profile.company_id,
-                  product_id: line.product_id,
-                  movement_type: 'out',
-                  quantity: line.quantity_delivered,
-                  reference_type: 'delivery',
-                  reference_id: deliveryId,
-                  notes: 'Sortie de stock pour livraison'
-                }]);
-            }
+            // Enregistrer le mouvement
+            await supabase
+              .from('stock_movements')
+              .insert([{
+                company_id: profile.company_id,
+                product_id: line.product_id,
+                movement_type: 'out',
+                quantity: line.quantity_delivered,
+                reference_type: 'delivery',
+                reference_id: deliveryId,
+                notes: 'Sortie automatique suite à livraison'
+              }]);
           }
         }
       }
 
-      return deliveryId;
+      return { deliveryId };
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['deliveries'] });

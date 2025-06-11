@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Plus, Minus, Edit } from 'lucide-react';
+import { Edit } from 'lucide-react';
 
 interface StockTableProps {
   stock: any[];

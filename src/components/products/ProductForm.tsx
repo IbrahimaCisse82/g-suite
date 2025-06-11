@@ -14,7 +14,7 @@ interface ProductFormProps {
 }
 
 export const ProductForm = ({ product, onClose }: ProductFormProps) => {
-  const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm({
+  const { register, handleSubmit, setValue, formState: { errors } } = useForm({
     defaultValues: product || {}
   });
 

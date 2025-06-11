@@ -1,21 +1,20 @@
 
 import React, { useState } from 'react';
-import { Plus, Package } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Plus, Package, Truck } from 'lucide-react';
+import { useStock, useStockMovements } from '@/hooks/useStock';
+import { useDeliveries } from '@/hooks/useDeliveries';
 import { StockTable } from '@/components/stock/StockTable';
 import { StockMovementForm } from '@/components/stock/StockMovementForm';
 import { StockMovementsTable } from '@/components/stock/StockMovementsTable';
 import { DeliveriesTable } from '@/components/stock/DeliveriesTable';
 import { DeliveryForm } from '@/components/stock/DeliveryForm';
-import { useStock, useStockMovements } from '@/hooks/useStock';
-import { useDeliveries } from '@/hooks/useDeliveries';
 
 export const Stock = () => {
-  const [movementDialogOpen, setMovementDialogOpen] = useState(false);
-  const [deliveryDialogOpen, setDeliveryDialogOpen] = useState(false);
+  const [isMovementDialogOpen, setIsMovementDialogOpen] = useState(false);
+  const [isDeliveryDialogOpen, setIsDeliveryDialogOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
   const { data: stock, isLoading: stockLoading } = useStock();
@@ -24,107 +23,100 @@ export const Stock = () => {
 
   const handleStockMovement = (product: any) => {
     setSelectedProduct(product);
-    setMovementDialogOpen(true);
+    setIsMovementDialogOpen(true);
   };
 
   const handleCloseMovementDialog = () => {
-    setMovementDialogOpen(false);
+    setIsMovementDialogOpen(false);
     setSelectedProduct(null);
   };
 
+  const handleCloseDeliveryDialog = () => {
+    setIsDeliveryDialogOpen(false);
+  };
+
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-gray-900">Gestion du Stock</h1>
+    <div className="p-8">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Gestion du stock</h1>
+        <p className="text-gray-600">Suivez et gérez vos niveaux de stock</p>
       </div>
 
       <Tabs defaultValue="stock" className="space-y-6">
         <TabsList>
-          <TabsTrigger value="stock">Stock Actuel</TabsTrigger>
+          <TabsTrigger value="stock">Stock actuel</TabsTrigger>
           <TabsTrigger value="movements">Mouvements</TabsTrigger>
           <TabsTrigger value="deliveries">Livraisons</TabsTrigger>
         </TabsList>
 
         <TabsContent value="stock" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <Package className="w-5 h-5 mr-2" />
-                État du Stock
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {stockLoading ? (
-                <div>Chargement...</div>
-              ) : (
-                <StockTable 
-                  stock={stock || []}
-                  onStockMovement={handleStockMovement}
+          <div className="flex justify-between items-center">
+            <h2 className="text-xl font-semibold">État du stock</h2>
+            <Dialog open={isMovementDialogOpen} onOpenChange={setIsMovementDialogOpen}>
+              <DialogTrigger asChild>
+                <Button onClick={() => setSelectedProduct(null)}>
+                  <Package className="w-4 h-4 mr-2" />
+                  Mouvement de stock
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Nouveau mouvement de stock</DialogTitle>
+                </DialogHeader>
+                <StockMovementForm 
+                  product={selectedProduct} 
+                  onClose={handleCloseMovementDialog}
                 />
-              )}
-            </CardContent>
-          </Card>
+              </DialogContent>
+            </Dialog>
+          </div>
+
+          {stockLoading ? (
+            <div className="text-center py-4">Chargement du stock...</div>
+          ) : (
+            <StockTable 
+              stock={stock || []} 
+              onStockMovement={handleStockMovement}
+            />
+          )}
         </TabsContent>
 
         <TabsContent value="movements" className="space-y-6">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle>Mouvements de Stock</CardTitle>
-              <Dialog open={movementDialogOpen} onOpenChange={setMovementDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button>
-                    <Plus className="w-4 h-4 mr-2" />
-                    Nouveau Mouvement
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Mouvement de Stock</DialogTitle>
-                  </DialogHeader>
-                  <StockMovementForm 
-                    product={selectedProduct}
-                    onClose={handleCloseMovementDialog}
-                  />
-                </DialogContent>
-              </Dialog>
-            </CardHeader>
-            <CardContent>
-              {movementsLoading ? (
-                <div>Chargement...</div>
-              ) : (
-                <StockMovementsTable movements={movements || []} />
-              )}
-            </CardContent>
-          </Card>
+          <div className="flex justify-between items-center">
+            <h2 className="text-xl font-semibold">Historique des mouvements</h2>
+          </div>
+
+          {movementsLoading ? (
+            <div className="text-center py-4">Chargement des mouvements...</div>
+          ) : (
+            <StockMovementsTable movements={movements || []} />
+          )}
         </TabsContent>
 
         <TabsContent value="deliveries" className="space-y-6">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle>Gestion des Livraisons</CardTitle>
-              <Dialog open={deliveryDialogOpen} onOpenChange={setDeliveryDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button>
-                    <Plus className="w-4 h-4 mr-2" />
-                    Nouvelle Livraison
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-2xl">
-                  <DialogHeader>
-                    <DialogTitle>Créer une Livraison</DialogTitle>
-                  </DialogHeader>
-                  <DeliveryForm onClose={() => setDeliveryDialogOpen(false)} />
-                </DialogContent>
-              </Dialog>
-            </CardHeader>
-            <CardContent>
-              {deliveriesLoading ? (
-                <div>Chargement...</div>
-              ) : (
-                <DeliveriesTable deliveries={deliveries || []} />
-              )}
-            </CardContent>
-          </Card>
+          <div className="flex justify-between items-center">
+            <h2 className="text-xl font-semibold">Gestion des livraisons</h2>
+            <Dialog open={isDeliveryDialogOpen} onOpenChange={setIsDeliveryDialogOpen}>
+              <DialogTrigger asChild>
+                <Button>
+                  <Truck className="w-4 h-4 mr-2" />
+                  Nouvelle livraison
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Créer une livraison</DialogTitle>
+                </DialogHeader>
+                <DeliveryForm onClose={handleCloseDeliveryDialog} />
+              </DialogContent>
+            </Dialog>
+          </div>
+
+          {deliveriesLoading ? (
+            <div className="text-center py-4">Chargement des livraisons...</div>
+          ) : (
+            <DeliveriesTable deliveries={deliveries || []} />
+          )}
         </TabsContent>
       </Tabs>
     </div>

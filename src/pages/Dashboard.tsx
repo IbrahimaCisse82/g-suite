@@ -4,6 +4,7 @@ import { Layout } from '@/components/Layout';
 import { KPICard } from '../components/KPICard';
 import { RecentTransactions } from '../components/RecentTransactions';
 import { FinancialChart } from '../components/FinancialChart';
+import { Button } from '@/components/ui/button';
 import { 
   TrendingUp, 
   TrendingDown, 
@@ -12,8 +13,23 @@ import {
   FileText,
   AlertCircle 
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+
+  const handleNewInvoice = () => {
+    navigate('/invoicing');
+  };
+
+  const handleAddClient = () => {
+    navigate('/contacts');
+  };
+
+  const handleNewEntry = () => {
+    navigate('/accounting');
+  };
+
   return (
     <Layout>
       <div className="p-8 bg-background text-foreground">
@@ -71,18 +87,29 @@ const Dashboard = () => {
             <div className="bg-card rounded-xl shadow-sm border border-border p-6">
               <h3 className="text-lg font-semibold text-card-foreground mb-4">Actions rapides</h3>
               <div className="space-y-3">
-                <button className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center space-x-2">
-                  <FileText className="w-5 h-5" />
-                  <span>Nouvelle facture</span>
-                </button>
-                <button className="w-full border border-border hover:border-border/60 text-foreground font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center space-x-2 bg-card">
-                  <Users className="w-5 h-5" />
-                  <span>Ajouter client</span>
-                </button>
-                <button className="w-full border border-border hover:border-border/60 text-foreground font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center space-x-2 bg-card">
-                  <TrendingUp className="w-5 h-5" />
-                  <span>Saisir écriture</span>
-                </button>
+                <Button 
+                  onClick={handleNewInvoice}
+                  className="w-full bg-green-600 hover:bg-green-700 text-white"
+                >
+                  <FileText className="w-5 h-5 mr-2" />
+                  Nouvelle facture
+                </Button>
+                <Button 
+                  onClick={handleAddClient}
+                  variant="outline" 
+                  className="w-full"
+                >
+                  <Users className="w-5 h-5 mr-2" />
+                  Ajouter client
+                </Button>
+                <Button 
+                  onClick={handleNewEntry}
+                  variant="outline" 
+                  className="w-full"
+                >
+                  <TrendingUp className="w-5 h-5 mr-2" />
+                  Saisir écriture
+                </Button>
               </div>
             </div>
 

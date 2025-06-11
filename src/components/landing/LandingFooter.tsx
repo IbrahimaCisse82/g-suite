@@ -35,11 +35,11 @@ const LandingFooter = () => {
   };
 
   const handleDocumentationClick = () => {
-    navigate('/training');
+    navigate('/product-documentation');
   };
 
   const handleFormationClick = () => {
-    navigate('/training');
+    navigate('/formation');
   };
 
   return (

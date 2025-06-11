@@ -27,6 +27,8 @@ import { SubscriptionSettings } from "./pages/SubscriptionSettings";
 import CompanyAdminSetup from "./pages/CompanyAdminSetup";
 import AdminSetupSuccess from "./pages/AdminSetupSuccess";
 import TrainingSupport from "./pages/TrainingSupport";
+import TrainingSupportStandalone from "./pages/TrainingSupportStandalone";
+import ProductDocumentation from "./pages/ProductDocumentation";
 
 const queryClient = new QueryClient();
 
@@ -49,6 +51,8 @@ const App = () => (
           <Route path="/reports" element={<Reports />} />
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/training" element={<TrainingSupport />} />
+          <Route path="/formation" element={<TrainingSupportStandalone />} />
+          <Route path="/product-documentation" element={<ProductDocumentation />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/company-registration" element={<CompanyRegistration />} />
           <Route path="/quote-request" element={<QuoteRequest />} />

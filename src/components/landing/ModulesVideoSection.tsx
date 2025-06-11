@@ -1,7 +1,6 @@
 
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { 
   FileText, 
   Users, 
@@ -81,14 +80,6 @@ const modules = [
 export const ModulesVideoSection = () => {
   const [currentModule, setCurrentModule] = useState(0);
 
-  const handlePrevious = () => {
-    setCurrentModule((prev) => (prev - 1 + modules.length) % modules.length);
-  };
-
-  const handleNext = () => {
-    setCurrentModule((prev) => (prev + 1) % modules.length);
-  };
-
   const currentModuleData = modules[currentModule];
   const IconComponent = currentModuleData.icon;
 
@@ -155,21 +146,6 @@ export const ModulesVideoSection = () => {
                 </div>
               </div>
             </div>
-
-            {/* Boutons de navigation */}
-            <button
-              onClick={handlePrevious}
-              className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/80 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition-all duration-200"
-            >
-              <ChevronLeft className="w-6 h-6 text-gray-800" />
-            </button>
-            
-            <button
-              onClick={handleNext}
-              className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/80 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition-all duration-200"
-            >
-              <ChevronRight className="w-6 h-6 text-gray-800" />
-            </button>
           </div>
         </div>
 

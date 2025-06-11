@@ -1,12 +1,9 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Plus, Trash2 } from 'lucide-react';
-import { useContacts } from '@/hooks/useContacts';
+import { InvoiceFormFields } from './InvoiceFormFields';
+import { InvoiceLinesSection } from './InvoiceLinesSection';
+import { InvoiceTotalsSection } from './InvoiceTotalsSection';
 
 interface InvoiceLine {
   id: string;
@@ -25,7 +22,6 @@ interface InvoiceFormProps {
 }
 
 export const InvoiceForm = ({ onSubmit, onCancel, loading, initialData }: InvoiceFormProps) => {
-  const { data: contacts = [] } = useContacts();
   const [formData, setFormData] = useState({
     contact_id: '',
     invoice_number: '',
@@ -74,6 +70,10 @@ export const InvoiceForm = ({ onSubmit, onCancel, loading, initialData }: Invoic
     const subtotal = quantity * unitPrice;
     const taxAmount = subtotal * (taxRate / 100);
     return subtotal + taxAmount;
+  };
+
+  const handleFormDataChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
   };
 
   const updateLine = (id: string, field: keyof InvoiceLine, value: any) => {
@@ -133,167 +133,23 @@ export const InvoiceForm = ({ onSubmit, onCancel, loading, initialData }: Invoic
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="contact_id">Client</Label>
-          <Select value={formData.contact_id} onValueChange={(value) => setFormData(prev => ({ ...prev, contact_id: value }))}>
-            <SelectTrigger>
-              <SelectValue placeholder="Sélectionner un client" />
-            </SelectTrigger>
-            <SelectContent>
-              {contacts.filter(contact => contact.type === 'client' || contact.type === 'both').map((contact) => (
-                <SelectItem key={contact.id} value={contact.id}>
-                  {contact.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+      <InvoiceFormFields 
+        formData={formData}
+        onFormDataChange={handleFormDataChange}
+      />
 
-        <div className="space-y-2">
-          <Label htmlFor="invoice_number">Numéro de facture</Label>
-          <Input
-            id="invoice_number"
-            value={formData.invoice_number}
-            onChange={(e) => setFormData(prev => ({ ...prev, invoice_number: e.target.value }))}
-            placeholder="F-2024-001"
-            required
-          />
-        </div>
+      <InvoiceLinesSection
+        lines={lines}
+        onUpdateLine={updateLine}
+        onAddLine={addLine}
+        onRemoveLine={removeLine}
+      />
 
-        <div className="space-y-2">
-          <Label htmlFor="invoice_date">Date de facture</Label>
-          <Input
-            id="invoice_date"
-            type="date"
-            value={formData.invoice_date}
-            onChange={(e) => setFormData(prev => ({ ...prev, invoice_date: e.target.value }))}
-            required
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="due_date">Date d'échéance</Label>
-          <Input
-            id="due_date"
-            type="date"
-            value={formData.due_date}
-            onChange={(e) => setFormData(prev => ({ ...prev, due_date: e.target.value }))}
-            required
-          />
-        </div>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex justify-between items-center">
-            Lignes de facture
-            <Button type="button" onClick={addLine} size="sm">
-              <Plus className="w-4 h-4 mr-2" />
-              Ajouter une ligne
-            </Button>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {lines.map((line, index) => (
-              <div key={line.id} className="grid grid-cols-1 md:grid-cols-6 gap-4 p-4 border rounded-lg">
-                <div className="md:col-span-2">
-                  <Label>Description</Label>
-                  <Input
-                    value={line.description}
-                    onChange={(e) => updateLine(line.id, 'description', e.target.value)}
-                    placeholder="Description du produit/service"
-                  />
-                </div>
-                <div>
-                  <Label>Quantité</Label>
-                  <Input
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    value={line.quantity}
-                    onChange={(e) => updateLine(line.id, 'quantity', parseFloat(e.target.value) || 0)}
-                  />
-                </div>
-                <div>
-                  <Label>Prix unitaire</Label>
-                  <Input
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    value={line.unit_price}
-                    onChange={(e) => updateLine(line.id, 'unit_price', parseFloat(e.target.value) || 0)}
-                  />
-                </div>
-                <div>
-                  <Label>TVA (%)</Label>
-                  <Input
-                    type="number"
-                    min="0"
-                    max="100"
-                    step="0.01"
-                    value={line.tax_rate}
-                    onChange={(e) => updateLine(line.id, 'tax_rate', parseFloat(e.target.value) || 0)}
-                  />
-                </div>
-                <div className="flex items-end">
-                  <div className="flex-1">
-                    <Label>Total</Label>
-                    <div className="text-lg font-semibold">
-                      {new Intl.NumberFormat('fr-FR', {
-                        style: 'currency',
-                        currency: 'XOF'
-                      }).format(line.line_total)}
-                    </div>
-                  </div>
-                  {lines.length > 1 && (
-                    <Button 
-                      type="button" 
-                      variant="outline" 
-                      size="sm"
-                      onClick={() => removeLine(line.id)}
-                      className="ml-2"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardContent className="pt-6">
-          <div className="space-y-2 max-w-md ml-auto">
-            <div className="flex justify-between">
-              <span>Sous-total:</span>
-              <span>{new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF' }).format(subtotal)}</span>
-            </div>
-            <div className="flex justify-between">
-              <span>TVA:</span>
-              <span>{new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF' }).format(taxAmount)}</span>
-            </div>
-            <div className="flex justify-between text-lg font-bold border-t pt-2">
-              <span>Total:</span>
-              <span>{new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF' }).format(total)}</span>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      <div className="space-y-2">
-        <Label htmlFor="notes">Notes</Label>
-        <Textarea
-          id="notes"
-          value={formData.notes}
-          onChange={(e) => setFormData(prev => ({ ...prev, notes: e.target.value }))}
-          placeholder="Notes ou conditions particulières..."
-          rows={3}
-        />
-      </div>
+      <InvoiceTotalsSection
+        subtotal={subtotal}
+        taxAmount={taxAmount}
+        total={total}
+      />
 
       <div className="flex justify-end space-x-4">
         <Button type="button" variant="outline" onClick={onCancel}>

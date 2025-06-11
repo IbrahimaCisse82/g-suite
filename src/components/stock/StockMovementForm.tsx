@@ -81,7 +81,7 @@ export const StockMovementForm = ({ product, onClose }: StockMovementFormProps) 
           placeholder="0"
         />
         {errors.quantity && (
-          <p className="text-sm text-red-600">{errors.quantity.message}</p>
+          <p className="text-sm text-red-600">{String(errors.quantity.message)}</p>
         )}
       </div>
 

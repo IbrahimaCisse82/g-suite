@@ -40,7 +40,7 @@ export const ProductForm = ({ product, onClose }: ProductFormProps) => {
             placeholder="Nom du produit"
           />
           {errors.name && (
-            <p className="text-sm text-red-600">{errors.name.message}</p>
+            <p className="text-sm text-red-600">{String(errors.name.message)}</p>
           )}
         </div>
 
@@ -91,7 +91,7 @@ export const ProductForm = ({ product, onClose }: ProductFormProps) => {
             placeholder="0.00"
           />
           {errors.unit_price && (
-            <p className="text-sm text-red-600">{errors.unit_price.message}</p>
+            <p className="text-sm text-red-600">{String(errors.unit_price.message)}</p>
           )}
         </div>
 

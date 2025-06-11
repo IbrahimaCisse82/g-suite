@@ -37,7 +37,7 @@ export const CategoryForm = ({ category, onClose }: CategoryFormProps) => {
           placeholder="Nom de la catégorie"
         />
         {errors.name && (
-          <p className="text-sm text-red-600">{errors.name.message}</p>
+          <p className="text-sm text-red-600">{String(errors.name.message)}</p>
         )}
       </div>
 

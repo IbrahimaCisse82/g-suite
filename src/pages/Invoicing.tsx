@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -69,7 +68,7 @@ export const Invoicing = () => {
             <div className="text-2xl font-bold">
               {new Intl.NumberFormat('fr-FR', {
                 style: 'currency',
-                currency: 'EUR'
+                currency: 'XOF'
               }).format(totalAmount)}
             </div>
           </CardContent>

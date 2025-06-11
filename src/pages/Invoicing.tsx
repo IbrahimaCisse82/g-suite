@@ -69,7 +69,7 @@ export const Invoicing = () => {
             <div className="text-2xl font-bold">
               {new Intl.NumberFormat('fr-FR', {
                 style: 'currency',
-                currency: 'XOF'
+                currency: 'EUR'
               }).format(totalAmount)}
             </div>
           </CardContent>

@@ -11,32 +11,28 @@ const quickStartSteps = [
     title: 'Configuration initiale',
     description: 'Paramétrez votre entreprise et vos informations de base',
     duration: '10 min',
-    route: '/settings',
-    completed: false
+    route: '/settings'
   },
   {
     id: 2,
     title: 'Ajout des contacts',
     description: 'Créez votre liste de clients et fournisseurs',
     duration: '15 min',
-    route: '/contacts',
-    completed: false
+    route: '/contacts'
   },
   {
     id: 3,
     title: 'Création du premier produit',
     description: 'Ajoutez vos produits et services au catalogue',
     duration: '10 min',
-    route: '/products',
-    completed: false
+    route: '/products'
   },
   {
     id: 4,
     title: 'Première facture',
     description: 'Émettez votre première facture client',
     duration: '20 min',
-    route: '/invoicing',
-    completed: false
+    route: '/invoicing'
   }
 ];
 

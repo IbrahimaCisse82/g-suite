@@ -20,7 +20,8 @@ const documentationSections = [
     description: 'Documentation exhaustive de toutes les fonctionnalités de G-Suite.',
     type: 'PDF',
     size: '15 MB',
-    color: 'bg-blue-100 text-blue-600'
+    color: 'bg-blue-100 text-blue-600',
+    action: () => alert('Téléchargement du guide utilisateur...')
   },
   {
     icon: Zap,
@@ -28,7 +29,8 @@ const documentationSections = [
     description: 'Les essentiels pour commencer à utiliser G-Suite en 30 minutes.',
     type: 'PDF',
     size: '3 MB',
-    color: 'bg-green-100 text-green-600'
+    color: 'bg-green-100 text-green-600',
+    action: () => alert('Téléchargement du guide de démarrage...')
   },
   {
     icon: Settings,
@@ -36,7 +38,8 @@ const documentationSections = [
     description: 'Instructions détaillées pour paramétrer votre système.',
     type: 'PDF',
     size: '8 MB',
-    color: 'bg-orange-100 text-orange-600'
+    color: 'bg-orange-100 text-orange-600',
+    action: () => alert('Téléchargement du manuel de configuration...')
   },
   {
     icon: Shield,
@@ -44,7 +47,8 @@ const documentationSections = [
     description: 'Bonnes pratiques pour sécuriser vos données et accès.',
     type: 'PDF',
     size: '5 MB',
-    color: 'bg-red-100 text-red-600'
+    color: 'bg-red-100 text-red-600',
+    action: () => alert('Téléchargement du guide de sécurité...')
   },
   {
     icon: HelpCircle,
@@ -52,7 +56,8 @@ const documentationSections = [
     description: 'Réponses aux questions les plus posées par nos utilisateurs.',
     type: 'Web',
     size: '-',
-    color: 'bg-purple-100 text-purple-600'
+    color: 'bg-purple-100 text-purple-600',
+    action: () => window.open('/training#support', '_self')
   },
   {
     icon: FileText,
@@ -60,15 +65,32 @@ const documentationSections = [
     description: 'Nouveautés et améliorations des dernières versions.',
     type: 'Web',
     size: '-',
-    color: 'bg-teal-100 text-teal-600'
+    color: 'bg-teal-100 text-teal-600',
+    action: () => alert('Consultation des notes de version...')
   }
 ];
 
 const quickLinks = [
-  { title: 'Centre d\'aide en ligne', url: '#', icon: HelpCircle },
-  { title: 'Forum communautaire', url: '#', icon: ExternalLink },
-  { title: 'Tutoriels interactifs', url: '#', icon: Book },
-  { title: 'Raccourcis clavier', url: '#', icon: FileText }
+  { 
+    title: 'Centre d\'aide en ligne', 
+    icon: HelpCircle,
+    action: () => window.open('/training#support', '_self')
+  },
+  { 
+    title: 'Forum communautaire', 
+    icon: ExternalLink,
+    action: () => alert('Redirection vers le forum communautaire...')
+  },
+  { 
+    title: 'Tutoriels interactifs', 
+    icon: Book,
+    action: () => window.open('/training#tutorials', '_self')
+  },
+  { 
+    title: 'Raccourcis clavier', 
+    icon: FileText,
+    action: () => alert('Affichage des raccourcis clavier...')
+  }
 ];
 
 export const DocumentationLinks = () => {
@@ -110,17 +132,19 @@ export const DocumentationLinks = () => {
                   <CardContent className="pt-0">
                     <p className="text-muted-foreground text-sm mb-4">{doc.description}</p>
                     <div className="flex space-x-2">
-                      {doc.type === 'PDF' ? (
-                        <Button variant="outline" size="sm" className="flex-1">
-                          <Download className="w-4 h-4 mr-2" />
-                          Télécharger
-                        </Button>
-                      ) : (
-                        <Button variant="outline" size="sm" className="flex-1">
-                          <ExternalLink className="w-4 h-4 mr-2" />
-                          Consulter
-                        </Button>
-                      )}
+                      <Button variant="outline" size="sm" className="flex-1" onClick={doc.action}>
+                        {doc.type === 'PDF' ? (
+                          <>
+                            <Download className="w-4 h-4 mr-2" />
+                            Télécharger
+                          </>
+                        ) : (
+                          <>
+                            <ExternalLink className="w-4 h-4 mr-2" />
+                            Consulter
+                          </>
+                        )}
+                      </Button>
                     </div>
                   </CardContent>
                 </Card>
@@ -145,6 +169,7 @@ export const DocumentationLinks = () => {
                   return (
                     <button
                       key={index}
+                      onClick={link.action}
                       className="w-full flex items-center space-x-3 p-3 rounded-lg hover:bg-accent transition-colors text-left"
                     >
                       <Icon className="w-5 h-5 text-muted-foreground" />
@@ -164,7 +189,10 @@ export const DocumentationLinks = () => {
               <p className="text-muted-foreground text-sm mb-4">
                 Notre équipe support est disponible pour vous accompagner.
               </p>
-              <Button className="w-full">
+              <Button 
+                className="w-full"
+                onClick={() => window.open('/training#support', '_self')}
+              >
                 <HelpCircle className="w-4 h-4 mr-2" />
                 Contacter le support
               </Button>

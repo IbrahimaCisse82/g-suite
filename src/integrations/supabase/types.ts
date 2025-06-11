@@ -815,6 +815,7 @@ export type Database = {
           first_name: string | null
           id: string
           is_company_admin: boolean | null
+          is_first_login: boolean | null
           last_name: string | null
           role: string | null
           updated_at: string
@@ -825,6 +826,7 @@ export type Database = {
           first_name?: string | null
           id: string
           is_company_admin?: boolean | null
+          is_first_login?: boolean | null
           last_name?: string | null
           role?: string | null
           updated_at?: string
@@ -835,6 +837,7 @@ export type Database = {
           first_name?: string | null
           id?: string
           is_company_admin?: boolean | null
+          is_first_login?: boolean | null
           last_name?: string | null
           role?: string | null
           updated_at?: string

@@ -19,6 +19,8 @@ import { Treasury } from "./pages/Treasury";
 import { Reports } from "./pages/Reports";
 import { Analytics } from "./pages/Analytics";
 import { Settings } from "./pages/Settings";
+import { Products } from "./pages/Products";
+import { Stock } from "./pages/Stock";
 
 const queryClient = new QueryClient();
 
@@ -55,6 +57,16 @@ const App = () => (
           <Route path="/purchases" element={
             <Layout>
               <Purchases />
+            </Layout>
+          } />
+          <Route path="/products" element={
+            <Layout>
+              <Products />
+            </Layout>
+          } />
+          <Route path="/stock" element={
+            <Layout>
+              <Stock />
             </Layout>
           } />
           <Route path="/treasury" element={

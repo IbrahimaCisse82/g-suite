@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -74,16 +73,16 @@ const FeaturesSection = () => {
   ];
 
   return (
-    <section id="features" className="py-20 bg-white">
+    <section id="features" className="py-20 bg-slate-50">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <div className="inline-flex items-center px-4 py-2 rounded-full bg-green-100 text-green-700 text-sm font-medium mb-6">
             🚀 Fonctionnalités complètes
           </div>
-          <h2 className="text-4xl font-bold text-gray-900 mb-6">
+          <h2 className="text-4xl font-bold text-slate-900 mb-6">
             Tout ce dont votre entreprise a besoin
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-slate-600 max-w-3xl mx-auto">
             Une suite d'outils puissants et intégrés pour digitaliser et optimiser 
             tous les aspects de votre gestion d'entreprise
           </p>
@@ -91,17 +90,17 @@ const FeaturesSection = () => {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {features.map((feature, index) => (
-            <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group">
+            <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group bg-white">
               <CardHeader className="pb-4">
                 <div className={`w-12 h-12 rounded-lg ${feature.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                   <feature.icon className="w-6 h-6" />
                 </div>
-                <CardTitle className="text-xl text-gray-900 group-hover:text-green-600 transition-colors">
+                <CardTitle className="text-xl text-slate-900 group-hover:text-green-600 transition-colors">
                   {feature.title}
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600 leading-relaxed">{feature.description}</p>
+                <p className="text-slate-600 leading-relaxed">{feature.description}</p>
               </CardContent>
             </Card>
           ))}
@@ -110,7 +109,7 @@ const FeaturesSection = () => {
         {/* Call to action */}
         <div className="text-center mt-16">
           <Link to="/register">
-            <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white px-8 py-3">
+            <Button size="lg" className="bg-slate-900 hover:bg-slate-800 text-white px-8 py-3">
               Découvrir toutes les fonctionnalités
             </Button>
           </Link>

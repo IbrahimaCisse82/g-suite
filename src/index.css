@@ -46,12 +46,15 @@
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
 
-    /* GrowHub Senegal colors */
+    /* GrowHub Senegal colors avec noir et gris foncé */
     --growhub-green: 142 76% 36%;
     --growhub-green-light: 142 76% 46%;
     --growhub-green-dark: 142 76% 26%;
     --growhub-gray: 220 13% 18%;
     --growhub-gray-light: 220 13% 91%;
+    --growhub-black: 0 0% 8%;
+    --growhub-dark-gray: 220 13% 12%;
+    --growhub-charcoal: 218 20% 15%;
   }
 
   .dark {

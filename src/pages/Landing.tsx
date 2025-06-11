@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -28,6 +27,8 @@ import { Link } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 
 const Landing = () => {
+  const { toast } = useToast();
+
   const [quoteForm, setQuoteForm] = useState({
     name: '',
     company: '',
@@ -36,7 +37,6 @@ const Landing = () => {
     message: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { toast } = useToast();
 
   const handleQuoteSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -425,7 +425,7 @@ const Landing = () => {
       </section>
 
       {/* Testimonials */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-4">

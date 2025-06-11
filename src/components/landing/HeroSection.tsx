@@ -3,11 +3,15 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Play, Star, Users, CheckCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { ModulesVideoSection } from './ModulesVideoSection';
 
 const HeroSection = () => {
   const handleVideoDemo = () => {
-    // Pour l'instant, on peut rediriger vers une page de démo ou ouvrir un modal
-    alert('Démonstration vidéo bientôt disponible !');
+    // Faire défiler vers la section vidéo
+    const videoSection = document.getElementById('modules-video-section');
+    if (videoSection) {
+      videoSection.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   return (
@@ -80,32 +84,9 @@ const HeroSection = () => {
           </div>
         </div>
 
-        {/* Illustration ou screenshot */}
-        <div className="mt-16 relative">
-          <div className="mx-auto max-w-4xl">
-            <div className="relative rounded-xl shadow-2xl overflow-hidden bg-white border">
-              <div className="aspect-video bg-gradient-to-br from-green-100 to-blue-100 flex items-center justify-center">
-                <div className="text-center space-y-4">
-                  <div className="w-24 h-24 bg-green-500 rounded-full flex items-center justify-center mx-auto">
-                    <CheckCircle className="w-12 h-12 text-white" />
-                  </div>
-                  <h3 className="text-2xl font-bold text-gray-800">Interface G-Suite</h3>
-                  <p className="text-gray-600">Découvrez notre tableau de bord intuitif</p>
-                  <Link to="/dashboard">
-                    <Button>Voir l'aperçu</Button>
-                  </Link>
-                </div>
-              </div>
-              {/* Simulated browser window */}
-              <div className="absolute top-0 left-0 right-0 h-8 bg-gray-100 flex items-center px-4">
-                <div className="flex space-x-2">
-                  <div className="w-3 h-3 bg-red-400 rounded-full"></div>
-                  <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
-                  <div className="w-3 h-3 bg-green-400 rounded-full"></div>
-                </div>
-              </div>
-            </div>
-          </div>
+        {/* Section vidéo des modules */}
+        <div id="modules-video-section">
+          <ModulesVideoSection />
         </div>
       </div>
     </section>

@@ -103,5 +103,46 @@
 
   body {
     @apply bg-background text-foreground;
+    /* Optimisations mobiles */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    touch-action: manipulation;
+    overscroll-behavior: none;
+  }
+
+  /* Optimisations pour iOS */
+  html {
+    -webkit-text-size-adjust: 100%;
+    height: 100%;
+  }
+
+  /* Suppression des highlights sur mobile */
+  * {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+  }
+
+  /* Zone de sécurité pour les appareils avec encoche */
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top);
+  }
+  
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  .safe-area-left {
+    padding-left: env(safe-area-inset-left);
+  }
+  
+  .safe-area-right {
+    padding-right: env(safe-area-inset-right);
+  }
+}
+
+/* Optimisations spécifiques pour les inputs sur mobile */
+@layer components {
+  .mobile-input {
+    @apply text-base; /* Empêche le zoom sur iOS */
   }
 }

@@ -1,4 +1,6 @@
+
 import * as React from "react"
+import { Capacitor } from '@capacitor/core'
 
 const MOBILE_BREAKPOINT = 768
 
@@ -16,4 +18,12 @@ export function useIsMobile() {
   }, [])
 
   return !!isMobile
+}
+
+export function useIsNativeApp() {
+  return Capacitor.isNativePlatform()
+}
+
+export function getPlatform() {
+  return Capacitor.getPlatform()
 }

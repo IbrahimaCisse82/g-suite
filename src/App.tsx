@@ -3,6 +3,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { MobileWrapper } from "@/components/MobileWrapper";
 import { navItems } from "./nav-items";
 import Landing from "./pages/Landing";
 import Index from "./pages/Index";
@@ -38,48 +39,50 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="/index" element={<Index />} />
-          
-          {/* Enterprise Application Routes */}
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/contacts" element={<Contacts />} />
-          <Route path="/invoicing" element={<Invoicing />} />
-          <Route path="/products" element={<Products />} />
-          <Route path="/stock" element={<Stock />} />
-          <Route path="/purchases" element={<Purchases />} />
-          <Route path="/treasury" element={<Treasury />} />
-          <Route path="/accounting" element={<Accounting />} />
-          <Route path="/reports" element={<Reports />} />
-          <Route path="/analytics" element={<Analytics />} />
-          <Route path="/training" element={<TrainingSupport />} />
-          <Route path="/formation" element={<TrainingSupportStandalone />} />
-          <Route path="/product-documentation" element={<ProductDocumentation />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/subscription-settings" element={<SubscriptionSettings />} />
-          
-          {/* Company Registration and User Login */}
-          <Route path="/company-registration" element={<CompanyRegistration />} />
-          <Route path="/quote-request" element={<QuoteRequest />} />
-          <Route path="/user-login" element={<UserLogin />} />
-          
-          {/* Admin Backend Routes (License Management Only) */}
-          <Route path="/admin-login" element={<AdminLogin />} />
-          <Route path="/admin-setup" element={<AdminSetup />} />
-          <Route path="/admin" element={<AdminBackend />} />
-          
-          {/* Company Admin Setup Routes */}
-          <Route path="/company-admin-setup" element={<CompanyAdminSetup />} />
-          <Route path="/admin-setup-success" element={<AdminSetupSuccess />} />
-          
-          {/* Trial activation route */}
-          <Route path="/activate-trial/:token" element={<TrialActivation />} />
-          
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
+      <MobileWrapper>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Landing />} />
+            <Route path="/index" element={<Index />} />
+            
+            {/* Enterprise Application Routes */}
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/contacts" element={<Contacts />} />
+            <Route path="/invoicing" element={<Invoicing />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/stock" element={<Stock />} />
+            <Route path="/purchases" element={<Purchases />} />
+            <Route path="/treasury" element={<Treasury />} />
+            <Route path="/accounting" element={<Accounting />} />
+            <Route path="/reports" element={<Reports />} />
+            <Route path="/analytics" element={<Analytics />} />
+            <Route path="/training" element={<TrainingSupport />} />
+            <Route path="/formation" element={<TrainingSupportStandalone />} />
+            <Route path="/product-documentation" element={<ProductDocumentation />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/subscription-settings" element={<SubscriptionSettings />} />
+            
+            {/* Company Registration and User Login */}
+            <Route path="/company-registration" element={<CompanyRegistration />} />
+            <Route path="/quote-request" element={<QuoteRequest />} />
+            <Route path="/user-login" element={<UserLogin />} />
+            
+            {/* Admin Backend Routes (License Management Only) */}
+            <Route path="/admin-login" element={<AdminLogin />} />
+            <Route path="/admin-setup" element={<AdminSetup />} />
+            <Route path="/admin" element={<AdminBackend />} />
+            
+            {/* Company Admin Setup Routes */}
+            <Route path="/company-admin-setup" element={<CompanyAdminSetup />} />
+            <Route path="/admin-setup-success" element={<AdminSetupSuccess />} />
+            
+            {/* Trial activation route */}
+            <Route path="/activate-trial/:token" element={<TrialActivation />} />
+            
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </MobileWrapper>
     </TooltipProvider>
   </QueryClientProvider>
 );

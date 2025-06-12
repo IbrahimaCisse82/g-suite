@@ -1,8 +1,6 @@
 
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
 import { 
   Calculator, 
   Users, 
@@ -105,15 +103,6 @@ const FeaturesSection = () => {
               </CardContent>
             </Card>
           ))}
-        </div>
-
-        {/* Call to action */}
-        <div className="text-center mt-16">
-          <Link to="/dashboard">
-            <Button size="lg" className="bg-slate-900 hover:bg-slate-800 text-white px-8 py-3">
-              Découvrir toutes les fonctionnalités
-            </Button>
-          </Link>
         </div>
       </div>
     </section>

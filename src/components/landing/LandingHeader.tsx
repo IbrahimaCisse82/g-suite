@@ -3,6 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Building } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { SolutionsDropdown } from './SolutionsDropdown';
 
 export const LandingHeader = () => {
   const scrollToSection = (sectionId: string) => {
@@ -13,7 +14,7 @@ export const LandingHeader = () => {
   };
 
   return (
-    <header className="bg-white shadow-sm border-b">
+    <header className="bg-white shadow-sm border-b sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center space-x-3">
@@ -27,6 +28,7 @@ export const LandingHeader = () => {
           </Link>
           
           <nav className="hidden md:flex items-center space-x-6">
+            <SolutionsDropdown />
             <button 
               onClick={() => scrollToSection('features')} 
               className="text-gray-600 hover:text-gray-900 transition-colors"

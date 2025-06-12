@@ -31,6 +31,9 @@ import TrainingSupportStandalone from "./pages/TrainingSupportStandalone";
 import ProductDocumentation from "./pages/ProductDocumentation";
 import TrialActivation from "./pages/TrialActivation";
 import UserLogin from "./pages/UserLogin";
+import ComptabiliteSolution from "./pages/solutions/ComptabiliteSolution";
+import CommercialeSolution from "./pages/solutions/CommercialeSolution";
+import EntrepriseSolution from "./pages/solutions/EntrepriseSolution";
 
 const queryClient = new QueryClient();
 
@@ -42,6 +45,11 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Landing />} />
             <Route path="/index" element={<Index />} />
+            
+            {/* Solutions Routes */}
+            <Route path="/solutions/comptabilite" element={<ComptabiliteSolution />} />
+            <Route path="/solutions/commerciale" element={<CommercialeSolution />} />
+            <Route path="/solutions/entreprise" element={<EntrepriseSolution />} />
             
             {/* Enterprise Application Routes */}
             <Route path="/dashboard" element={<Dashboard />} />

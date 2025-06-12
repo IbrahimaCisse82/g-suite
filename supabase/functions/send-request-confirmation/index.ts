@@ -1,4 +1,3 @@
-
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { Resend } from "npm:resend@2.0.0"
 
@@ -27,12 +26,12 @@ const handler = async (req: Request): Promise<Response> => {
     const emailResponse = await resend.emails.send({
       from: "GrowHub Sénégal <contact@growhubsenegal.com>",
       to: [email],
-      subject: "Confirmation de votre demande de compte payant - G-Compta",
+      subject: "Confirmation de votre demande de compte payant - G-Suite",
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="background-color: #1e293b; color: white; padding: 20px; border-radius: 8px 8px 0 0;">
             <h1 style="margin: 0; color: white;">GrowHub Sénégal</h1>
-            <p style="margin: 10px 0 0 0; color: #e2e8f0;">Votre solution de gestion d'entreprise G-Compta</p>
+            <p style="margin: 10px 0 0 0; color: #e2e8f0;">Votre solution de gestion d'entreprise G-Suite</p>
           </div>
           
           <div style="background-color: #f8fafc; padding: 30px; border-radius: 0 0 8px 8px;">
@@ -79,7 +78,7 @@ const handler = async (req: Request): Promise<Response> => {
             </div>
             
             <p style="color: #475569;">
-              Merci de votre confiance et à bientôt sur G-Compta !
+              Merci de votre confiance et à bientôt sur G-Suite !
             </p>
             
             <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 30px 0;">

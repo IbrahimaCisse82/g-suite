@@ -41,7 +41,7 @@ export const Sidebar = () => {
         <div className="flex items-center space-x-3">
           <Building className="w-8 h-8 text-blue-400" />
           <div>
-            <h1 className="text-xl font-bold">G-Compta</h1>
+            <h1 className="text-xl font-bold">G-Suite</h1>
             <p className="text-sm text-slate-400">Gestion d'entreprise</p>
           </div>
         </div>

@@ -56,11 +56,11 @@ const handler = async (req: Request): Promise<Response> => {
     const emailResponse = await resend.emails.send({
       from: 'GrowHub Sénégal <contact@growhubsenegal.com>',
       to: [email],
-      subject: 'Votre accès d\'essai G-Compta de 5 jours est prêt !',
+      subject: 'Votre accès d\'essai G-Suite de 5 jours est prêt !',
       html: `
         <div style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif;">
           <div style="background: linear-gradient(135deg, #10b981, #059669); padding: 40px 20px; text-align: center;">
-            <h1 style="color: white; margin: 0; font-size: 28px;">Bienvenue chez G-Compta !</h1>
+            <h1 style="color: white; margin: 0; font-size: 28px;">Bienvenue chez G-Suite !</h1>
           </div>
           
           <div style="padding: 40px 20px; background: white;">
@@ -69,7 +69,7 @@ const handler = async (req: Request): Promise<Response> => {
             </p>
             
             <p style="font-size: 16px; line-height: 1.6; color: #374151;">
-              Merci pour votre intérêt pour G-Compta ! Votre période d'essai gratuite de <strong>5 jours</strong> 
+              Merci pour votre intérêt pour G-Suite ! Votre période d'essai gratuite de <strong>5 jours</strong> 
               pour <strong>${companyName}</strong> est maintenant activée.
             </p>
             
@@ -107,7 +107,7 @@ const handler = async (req: Request): Promise<Response> => {
           </div>
           
           <div style="background: #f9fafb; padding: 20px; text-align: center; color: #6b7280; font-size: 12px;">
-            © 2024 G-Compta by GrowHub Sénégal. Tous droits réservés.
+            © 2024 G-Suite by GrowHub Sénégal. Tous droits réservés.
           </div>
         </div>
       `,

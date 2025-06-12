@@ -1,4 +1,3 @@
-
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import { Resend } from "npm:resend@2.0.0"
@@ -41,7 +40,7 @@ serve(async (req) => {
     // Générer des comptes avec le mot de passe standard Admin1946
     const results = []
     
-    for (const admin of admins) {
+    for (const admin of admins || []) {
       // Mot de passe standard pour tous les administrateurs
       const defaultPassword = "Admin1946"
       
@@ -140,7 +139,7 @@ serve(async (req) => {
         })
         
       } catch (emailError) {
-        console.error(`Erreur envoi email à ${admin.email}:`, emailError)
+        console.error(`Erreur envoi email pour ${admin.email}:`, emailError)
         results.push({
           email: admin.email,
           success: false,

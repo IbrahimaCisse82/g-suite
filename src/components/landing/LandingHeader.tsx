@@ -28,19 +28,19 @@ export const LandingHeader = () => {
           </Link>
           
           <nav className="hidden md:flex items-center space-x-6">
+            <Link 
+              to="/" 
+              className="text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              Accueil
+            </Link>
             <SolutionsDropdown />
-            <button 
-              onClick={() => scrollToSection('features')} 
+            <Link 
+              to="/company-registration" 
               className="text-gray-600 hover:text-gray-900 transition-colors"
             >
-              Fonctionnalités
-            </button>
-            <button 
-              onClick={() => scrollToSection('pricing')} 
-              className="text-gray-600 hover:text-gray-900 transition-colors"
-            >
-              Tarifs
-            </button>
+              Test Gratuit
+            </Link>
             <button 
               onClick={() => scrollToSection('contact')} 
               className="text-gray-600 hover:text-gray-900 transition-colors"

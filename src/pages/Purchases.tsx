@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { PurchaseForm } from '@/components/purchases/PurchaseForm';
@@ -9,6 +8,7 @@ import { PurchasesViewDialog } from '@/components/purchases/PurchasesViewDialog'
 import { PurchasesDeleteDialog } from '@/components/purchases/PurchasesDeleteDialog';
 import { PurchaseReceiptDialog } from '@/components/purchases/PurchaseReceiptDialog';
 import { useToast } from '@/hooks/use-toast';
+import { Layout } from '@/components/Layout';
 
 const mockPurchases = [
   {
@@ -163,75 +163,77 @@ export const Purchases = () => {
   };
 
   return (
-    <div className="p-8">
-      <PurchasesHeader onCreatePurchase={() => setIsDialogOpen(true)} />
-      
-      <PurchasesKPICards purchases={purchases} />
+    <Layout>
+      <div className="p-8">
+        <PurchasesHeader onCreatePurchase={() => setIsDialogOpen(true)} />
+        
+        <PurchasesKPICards purchases={purchases} />
 
-      <PurchasesListCard 
-        purchases={purchases}
-        onView={handleView}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-        onCreatePurchase={() => setIsDialogOpen(true)}
-        onReceive={handleReceive}
-      />
+        <PurchasesListCard 
+          purchases={purchases}
+          onView={handleView}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+          onCreatePurchase={() => setIsDialogOpen(true)}
+          onReceive={handleReceive}
+        />
 
-      {/* Dialogue de création */}
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-4xl">
-          <DialogHeader>
-            <DialogTitle>Nouvel achat</DialogTitle>
-          </DialogHeader>
-          <PurchaseForm 
-            onSubmit={handleCreatePurchase}
-            onCancel={() => setIsDialogOpen(false)}
-          />
-        </DialogContent>
-      </Dialog>
-
-      {/* Dialogue de visualisation */}
-      <PurchasesViewDialog 
-        isOpen={isViewDialogOpen}
-        onOpenChange={setIsViewDialogOpen}
-        purchase={selectedPurchase}
-      />
-
-      {/* Dialogue d'édition */}
-      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="max-w-4xl">
-          <DialogHeader>
-            <DialogTitle>Modifier l'achat</DialogTitle>
-          </DialogHeader>
-          {selectedPurchase && (
+        {/* Dialogue de création */}
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogContent className="max-w-4xl">
+            <DialogHeader>
+              <DialogTitle>Nouvel achat</DialogTitle>
+            </DialogHeader>
             <PurchaseForm 
-              initialData={selectedPurchase}
-              onSubmit={handleEditSubmit}
-              onCancel={() => {
-                setIsEditDialogOpen(false);
-                setSelectedPurchase(null);
-              }}
-              loading={false}
+              onSubmit={handleCreatePurchase}
+              onCancel={() => setIsDialogOpen(false)}
             />
-          )}
-        </DialogContent>
-      </Dialog>
+          </DialogContent>
+        </Dialog>
 
-      {/* Dialogue de confirmation de suppression */}
-      <PurchasesDeleteDialog 
-        isOpen={isDeleteDialogOpen}
-        onOpenChange={setIsDeleteDialogOpen}
-        purchase={selectedPurchase}
-        onConfirm={confirmDelete}
-      />
+        {/* Dialogue de visualisation */}
+        <PurchasesViewDialog 
+          isOpen={isViewDialogOpen}
+          onOpenChange={setIsViewDialogOpen}
+          purchase={selectedPurchase}
+        />
 
-      {/* Dialogue de réception partielle */}
-      <PurchaseReceiptDialog 
-        isOpen={isReceiptDialogOpen}
-        onOpenChange={setIsReceiptDialogOpen}
-        purchase={selectedPurchase}
-        onConfirm={handleReceiptConfirm}
-      />
-    </div>
+        {/* Dialogue d'édition */}
+        <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+          <DialogContent className="max-w-4xl">
+            <DialogHeader>
+              <DialogTitle>Modifier l'achat</DialogTitle>
+            </DialogHeader>
+            {selectedPurchase && (
+              <PurchaseForm 
+                initialData={selectedPurchase}
+                onSubmit={handleEditSubmit}
+                onCancel={() => {
+                  setIsEditDialogOpen(false);
+                  setSelectedPurchase(null);
+                }}
+                loading={false}
+              />
+            )}
+          </DialogContent>
+        </Dialog>
+
+        {/* Dialogue de confirmation de suppression */}
+        <PurchasesDeleteDialog 
+          isOpen={isDeleteDialogOpen}
+          onOpenChange={setIsDeleteDialogOpen}
+          purchase={selectedPurchase}
+          onConfirm={confirmDelete}
+        />
+
+        {/* Dialogue de réception partielle */}
+        <PurchaseReceiptDialog 
+          isOpen={isReceiptDialogOpen}
+          onOpenChange={setIsReceiptDialogOpen}
+          purchase={selectedPurchase}
+          onConfirm={handleReceiptConfirm}
+        />
+      </div>
+    </Layout>
   );
 };

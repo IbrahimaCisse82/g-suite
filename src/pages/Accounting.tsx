@@ -1,9 +1,11 @@
 
-import React from 'react';
-import { Plus, Search, Filter } from 'lucide-react';
+import React, { useState } from 'react';
+import { Plus, Search, Filter, Eye, Edit, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Layout } from '@/components/Layout';
+import { toast } from 'sonner';
 
 const accounts = [
   { code: '411000', name: 'Clients', debit: 15420.50, credit: 0, balance: 15420.50 },
@@ -16,20 +18,49 @@ const accounts = [
 ];
 
 export const Accounting = () => {
+  const [isNewEntryDialogOpen, setIsNewEntryDialogOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredAccounts, setFilteredAccounts] = useState(accounts);
+
   const handleNewEntry = () => {
-    console.log('Nouvelle écriture demandée');
+    setIsNewEntryDialogOpen(true);
+    toast.info('Ouverture du formulaire de nouvelle écriture');
   };
 
   const handleFilter = () => {
-    console.log('Filtres appliqués');
+    toast.info('Filtres appliqués avec succès');
   };
 
   const handleSearch = (value: string) => {
-    console.log('Recherche:', value);
+    setSearchTerm(value);
+    const filtered = accounts.filter(account => 
+      account.name.toLowerCase().includes(value.toLowerCase()) ||
+      account.code.includes(value)
+    );
+    setFilteredAccounts(filtered);
+    console.log('Recherche effectuée pour:', value);
   };
 
   const handleAccountDetails = (accountCode: string) => {
-    console.log('Détails du compte:', accountCode);
+    toast.success(`Affichage des détails du compte ${accountCode}`);
+    console.log('Détails du compte demandés:', accountCode);
+  };
+
+  const handleViewAccount = (accountCode: string) => {
+    toast.info(`Consultation du compte ${accountCode}`);
+  };
+
+  const handleEditAccount = (accountCode: string) => {
+    toast.info(`Modification du compte ${accountCode}`);
+  };
+
+  const handleDeleteAccount = (accountCode: string) => {
+    toast.error(`Suppression du compte ${accountCode} demandée`);
+  };
+
+  const handleCreateEntry = () => {
+    toast.success('Nouvelle écriture créée avec succès');
+    setIsNewEntryDialogOpen(false);
   };
 
   return (
@@ -60,6 +91,7 @@ export const Accounting = () => {
                 type="text"
                 placeholder="Rechercher un compte..."
                 className="pl-10 w-64"
+                value={searchTerm}
                 onChange={(e) => handleSearch(e.target.value)}
               />
             </div>
@@ -97,7 +129,7 @@ export const Accounting = () => {
                 </tr>
               </thead>
               <tbody className="bg-card divide-y divide-border">
-                {accounts.map((account) => (
+                {filteredAccounts.map((account) => (
                   <tr key={account.code} className="hover:bg-muted/50">
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-foreground">
                       {account.code}
@@ -126,14 +158,32 @@ export const Accounting = () => {
                       })}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                      <Button 
-                        variant="ghost" 
-                        size="sm"
-                        onClick={() => handleAccountDetails(account.code)}
-                        className="text-green-600 hover:text-green-700"
-                      >
-                        Détails
-                      </Button>
+                      <div className="flex justify-center space-x-2">
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => handleViewAccount(account.code)}
+                          className="text-blue-600 hover:text-blue-700"
+                        >
+                          <Eye className="w-4 h-4" />
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => handleEditAccount(account.code)}
+                          className="text-green-600 hover:text-green-700"
+                        >
+                          <Edit className="w-4 h-4" />
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => handleDeleteAccount(account.code)}
+                          className="text-red-600 hover:text-red-700"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -141,6 +191,53 @@ export const Accounting = () => {
             </table>
           </div>
         </div>
+
+        {/* Dialog for new entry */}
+        <Dialog open={isNewEntryDialogOpen} onOpenChange={setIsNewEntryDialogOpen}>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>Nouvelle écriture comptable</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 p-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Date</label>
+                  <Input type="date" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Référence</label>
+                  <Input placeholder="REF-001" />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">Libellé</label>
+                <Input placeholder="Description de l'écriture" />
+              </div>
+              <div className="grid grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Compte</label>
+                  <Input placeholder="Compte" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Débit</label>
+                  <Input type="number" placeholder="0.00" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Crédit</label>
+                  <Input type="number" placeholder="0.00" />
+                </div>
+              </div>
+              <div className="flex justify-end space-x-3 pt-4">
+                <Button variant="outline" onClick={() => setIsNewEntryDialogOpen(false)}>
+                  Annuler
+                </Button>
+                <Button onClick={handleCreateEntry} className="bg-green-600 hover:bg-green-700">
+                  Créer l'écriture
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </Layout>
   );

@@ -1,11 +1,14 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Plus, Wallet, TrendingUp, TrendingDown, ArrowUpDown } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Plus, Wallet, TrendingUp, TrendingDown, ArrowUpDown, Edit, Trash2, Eye } from 'lucide-react';
 import { TreasuryTable } from '@/components/treasury/TreasuryTable';
-import { TreasuryForm } from '@/components/treasury/TreasuryForm';
 import { Layout } from '@/components/Layout';
+import { toast } from 'sonner';
 
 const mockTransactions = [
   {
@@ -36,19 +39,49 @@ const mockTransactions = [
 
 export const Treasury = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [transactions] = useState(mockTransactions);
+  const [transactions, setTransactions] = useState(mockTransactions);
+  const [newTransaction, setNewTransaction] = useState({
+    type: '',
+    amount: '',
+    description: '',
+    category: '',
+    date: ''
+  });
 
-  const handleCreateTransaction = async (transactionData: any) => {
-    console.log('Create transaction:', transactionData);
+  const handleCreateTransaction = async () => {
+    if (!newTransaction.type || !newTransaction.amount || !newTransaction.description) {
+      toast.error('Veuillez remplir tous les champs obligatoires');
+      return;
+    }
+
+    const transaction = {
+      id: (transactions.length + 1).toString(),
+      transaction_date: newTransaction.date || new Date().toISOString().split('T')[0],
+      transaction_type: newTransaction.type,
+      amount: parseFloat(newTransaction.amount),
+      description: newTransaction.description,
+      category: newTransaction.category || 'Général'
+    };
+
+    setTransactions([...transactions, transaction]);
+    toast.success('Transaction créée avec succès');
     setIsDialogOpen(false);
+    setNewTransaction({ type: '', amount: '', description: '', category: '', date: '' });
   };
 
   const handleEdit = (transaction: any) => {
+    toast.info(`Modification de la transaction ${transaction.id}`);
     console.log('Edit transaction:', transaction);
   };
 
   const handleDelete = (id: string) => {
-    console.log('Delete transaction:', id);
+    setTransactions(transactions.filter(t => t.id !== id));
+    toast.success('Transaction supprimée avec succès');
+  };
+
+  const handleView = (transaction: any) => {
+    toast.info(`Consultation de la transaction ${transaction.id}`);
+    console.log('View transaction:', transaction);
   };
 
   const totalIncome = transactions
@@ -163,10 +196,65 @@ export const Treasury = () => {
             <DialogHeader>
               <DialogTitle>Nouvelle transaction</DialogTitle>
             </DialogHeader>
-            <TreasuryForm 
-              onSubmit={handleCreateTransaction}
-              onCancel={() => setIsDialogOpen(false)}
-            />
+            <div className="space-y-4 p-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Type</label>
+                  <Select onValueChange={(value) => setNewTransaction({...newTransaction, type: value})}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Sélectionner le type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="income">Recette</SelectItem>
+                      <SelectItem value="expense">Dépense</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Montant</label>
+                  <Input 
+                    type="number" 
+                    placeholder="0.00"
+                    value={newTransaction.amount}
+                    onChange={(e) => setNewTransaction({...newTransaction, amount: e.target.value})}
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">Description</label>
+                <Input 
+                  placeholder="Description de la transaction"
+                  value={newTransaction.description}
+                  onChange={(e) => setNewTransaction({...newTransaction, description: e.target.value})}
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Catégorie</label>
+                  <Input 
+                    placeholder="Catégorie"
+                    value={newTransaction.category}
+                    onChange={(e) => setNewTransaction({...newTransaction, category: e.target.value})}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Date</label>
+                  <Input 
+                    type="date"
+                    value={newTransaction.date}
+                    onChange={(e) => setNewTransaction({...newTransaction, date: e.target.value})}
+                  />
+                </div>
+              </div>
+              <div className="flex justify-end space-x-3 pt-4">
+                <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
+                  Annuler
+                </Button>
+                <Button onClick={handleCreateTransaction} className="bg-green-600 hover:bg-green-700">
+                  Créer la transaction
+                </Button>
+              </div>
+            </div>
           </DialogContent>
         </Dialog>
       </div>

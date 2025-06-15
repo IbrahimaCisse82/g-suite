@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Building, Mail, Phone, MapPin } from 'lucide-react';
+import { GrowHubLogo } from './GrowHubLogo';
 
 interface FooterCompanyInfoProps {
   onLogoClick: () => void;
@@ -16,6 +17,8 @@ export const FooterCompanyInfo = ({
   return (
     <div className="md:col-span-2">
       <div className="flex items-center space-x-3 mb-6 cursor-pointer" onClick={onLogoClick}>
+        {/* GrowHub logo visible à gauche */}
+        <GrowHubLogo size={40} className="bg-white rounded shadow p-1" />
         <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center">
           <Building className="w-6 h-6 text-white" />
         </div>

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Building, Mail, Phone, MapPin, Facebook, Twitter, Linkedin } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -110,7 +111,7 @@ const LandingFooter = () => {
               </li>
               <li>
                 <button 
-                  onClick={() => alert('Page Sécurité en construction')} 
+                  onClick={() => navigate('/security')} 
                   className="text-slate-300 hover:text-green-400 transition-colors"
                 >
                   Sécurité
@@ -118,7 +119,7 @@ const LandingFooter = () => {
               </li>
               <li>
                 <button 
-                  onClick={() => alert('Page Intégrations en construction')} 
+                  onClick={() => navigate('/integrations')} 
                   className="text-slate-300 hover:text-green-400 transition-colors"
                 >
                   Intégrations
@@ -126,7 +127,7 @@ const LandingFooter = () => {
               </li>
               <li>
                 <button 
-                  onClick={() => alert('Application mobile bientôt disponible')} 
+                  onClick={() => navigate('/mobile')} 
                   className="text-slate-300 hover:text-green-400 transition-colors"
                 >
                   Mobile
@@ -141,7 +142,7 @@ const LandingFooter = () => {
             <ul className="space-y-3">
               <li>
                 <button 
-                  onClick={() => alert('Centre d\'aide en construction')} 
+                  onClick={() => navigate('/help-center')} 
                   className="text-slate-300 hover:text-green-400 transition-colors"
                 >
                   Centre d'aide
@@ -207,25 +208,25 @@ const LandingFooter = () => {
           
           <div className="flex flex-wrap justify-center md:justify-start space-x-6 mt-4 text-sm text-slate-400">
             <button 
-              onClick={() => alert('Mentions légales en construction')} 
+              onClick={() => navigate('/legal-notices')} 
               className="hover:text-green-400 transition-colors"
             >
               Mentions légales
             </button>
             <button 
-              onClick={() => alert('Politique de confidentialité en construction')} 
+              onClick={() => navigate('/privacy-policy')} 
               className="hover:text-green-400 transition-colors"
             >
               Politique de confidentialité
             </button>
             <button 
-              onClick={() => alert('CGU en construction')} 
+              onClick={() => navigate('/terms-of-service')} 
               className="hover:text-green-400 transition-colors"
             >
               CGU
             </button>
             <button 
-              onClick={() => alert('Politique de cookies en construction')} 
+              onClick={() => navigate('/cookies-policy')} 
               className="hover:text-green-400 transition-colors"
             >
               Cookies

@@ -28,6 +28,9 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubItem,
+  SidebarMenuSubButton,
 } from '@/components/ui/sidebar';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -44,7 +47,7 @@ const menuItems = [
   { icon: PieChart, label: 'Rapports', path: '/reports' },
   { icon: TrendingUp, label: 'Analyse', path: '/analytics' },
   { icon: GraduationCap, label: 'Formation', path: '/training' },
-  { icon: Settings, label: 'Paramètres', path: '/settings' },
+  // Retirer l'entrée "Paramètres" ici (on va l'ajouter avec son sous-menu plus bas)
 ];
 
 export const EnterpriseHeader = () => {
@@ -59,6 +62,9 @@ export const EnterpriseHeader = () => {
       toast.error('Erreur lors de la déconnexion');
     }
   };
+
+  // Helper pour savoir si un chemin est "actif" ou dans un sous-menu de paramètres
+  const isSettingsBase = location.pathname.startsWith('/settings');
 
   return (
     <Sidebar>
@@ -93,6 +99,46 @@ export const EnterpriseHeader = () => {
                   </SidebarMenuItem>
                 );
               })}
+              {/* Bloc Paramètres avec sous-menu */}
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  isActive={isSettingsBase}
+                  // Désactive le lien si on affiche le sous-menu
+                  asChild={false}
+                  aria-expanded={isSettingsBase}
+                >
+                  <span className="flex items-center gap-2">
+                    <Settings className="w-5 h-5" />
+                    <span className="font-medium">Paramètres</span>
+                  </span>
+                </SidebarMenuButton>
+                <SidebarMenuSub>
+                  <SidebarMenuSubItem>
+                    <SidebarMenuSubButton
+                      asChild
+                      isActive={location.pathname === "/settings/profile"}
+                    >
+                      <Link to="/settings/profile">Profil de l'entreprise</Link>
+                    </SidebarMenuSubButton>
+                  </SidebarMenuSubItem>
+                  <SidebarMenuSubItem>
+                    <SidebarMenuSubButton
+                      asChild
+                      isActive={location.pathname === "/settings/users"}
+                    >
+                      <Link to="/settings/users">Utilisateurs</Link>
+                    </SidebarMenuSubButton>
+                  </SidebarMenuSubItem>
+                  <SidebarMenuSubItem>
+                    <SidebarMenuSubButton
+                      asChild
+                      isActive={location.pathname === "/settings/licenses"}
+                    >
+                      <Link to="/settings/licenses">Clés de licence</Link>
+                    </SidebarMenuSubButton>
+                  </SidebarMenuSubItem>
+                </SidebarMenuSub>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -120,3 +166,4 @@ export const EnterpriseHeader = () => {
     </Sidebar>
   );
 };
+

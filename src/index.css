@@ -16,7 +16,7 @@
     --popover: 255 255 255;
     --popover-foreground: 15 23 42;
 
-    --primary: 16 185 129;
+    --primary: 5 150 105;
     --primary-foreground: 255 255 255;
 
     --secondary: 241 245 249;
@@ -25,7 +25,7 @@
     --muted: 241 245 249;
     --muted-foreground: 71 85 105;
 
-    --accent: 5 150 105;
+    --accent: 16 185 129;
     --accent-foreground: 255 255 255;
 
     --destructive: 239 68 68;
@@ -33,22 +33,23 @@
 
     --border: 226 232 240;
     --input: 248 250 252;
-    --ring: 16 185 129;
+    --ring: 5 150 105;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
     --sidebar-background: 15 23 42;
     --sidebar-foreground: 248 250 252;
-    --sidebar-primary: 16 185 129;
+    --sidebar-primary: 5 150 105;
     --sidebar-primary-foreground: 255 255 255;
     --sidebar-accent: 30 41 59;
     --sidebar-accent-foreground: 248 250 252;
     --sidebar-border: 51 65 85;
-    --sidebar-ring: 16 185 129;
+    --sidebar-ring: 5 150 105;
 
     /* Professional color palette */
     --emerald-50: 236 253 245;
     --emerald-100: 209 250 229;
+    --emerald-500: 16 185 129;
     --emerald-600: 5 150 105;
     --emerald-700: 4 120 87;
     --slate-50: 248 250 252;
@@ -69,7 +70,7 @@
     --popover: 30 41 59;
     --popover-foreground: 248 250 252;
 
-    --primary: 16 185 129;
+    --primary: 5 150 105;
     --primary-foreground: 15 23 42;
 
     --secondary: 51 65 85;
@@ -86,16 +87,16 @@
 
     --border: 71 85 105;
     --input: 51 65 85;
-    --ring: 16 185 129;
+    --ring: 5 150 105;
     
     --sidebar-background: 15 23 42;
     --sidebar-foreground: 248 250 252;
-    --sidebar-primary: 16 185 129;
+    --sidebar-primary: 5 150 105;
     --sidebar-primary-foreground: 255 255 255;
     --sidebar-accent: 30 41 59;
     --sidebar-accent-foreground: 248 250 252;
     --sidebar-border: 51 65 85;
-    --sidebar-ring: 16 185 129;
+    --sidebar-ring: 5 150 105;
   }
 }
 
@@ -160,11 +161,11 @@
   }
   
   .btn-primary {
-    @apply bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg font-medium shadow-lg hover:shadow-xl transition-all duration-200;
+    @apply bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200;
   }
 
   .btn-secondary {
-    @apply bg-slate-100 hover:bg-slate-200 text-slate-700 px-6 py-3 rounded-lg font-medium transition-all duration-200;
+    @apply bg-slate-100 hover:bg-slate-200 text-slate-700 px-8 py-4 rounded-xl font-semibold transition-all duration-200;
   }
 
   /* Amélioration de la lisibilité du texte */
@@ -199,16 +200,32 @@
   }
 
   .shadow-professional-lg {
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   }
 
   /* Professional gradients */
   .gradient-emerald {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
   }
 
   .gradient-slate {
     background: linear-gradient(135deg, #475569 0%, #334155 100%);
+  }
+
+  /* Modern glass effect */
+  .glass-effect {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  /* Enhanced hover effects */
+  .hover-lift {
+    @apply transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl;
+  }
+
+  .hover-glow {
+    @apply transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/25;
   }
 }
 
@@ -220,4 +237,30 @@
 
 .bg-grid-slate-100 {
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='%23e2e8f0'%3e%3cpath d='m0 .5h32m-32 32v-32'/%3e%3c/svg%3e");
+  opacity: 0.5;
+}
+
+/* Professional animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
 }

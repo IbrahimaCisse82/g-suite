@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import {
@@ -14,23 +15,23 @@ export const SolutionsDropdown = () => {
     <NavigationMenu>
       <NavigationMenuList>
         <NavigationMenuItem>
-          <NavigationMenuTrigger className="text-gray-600 hover:text-gray-900 transition-colors bg-transparent">
+          <NavigationMenuTrigger className="text-slate-600 hover:text-slate-900 transition-colors bg-transparent font-medium text-base">
             Solutions
           </NavigationMenuTrigger>
           <NavigationMenuContent>
-            <div className="w-96 p-6 bg-white shadow-lg">
+            <div className="w-96 p-6 bg-white shadow-2xl border-2 border-slate-200 rounded-lg">
               <div className="grid gap-4">
                 <Link
                   to="/solutions/comptabilite"
-                  className="group block p-4 rounded-lg hover:bg-gray-50 transition-colors"
+                  className="group block p-4 rounded-lg hover:bg-emerald-50 transition-colors border border-transparent hover:border-emerald-200"
                 >
                   <div className="flex items-start space-x-4">
-                    <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-200 transition-colors">
-                      <Receipt className="w-5 h-5 text-blue-600" />
+                    <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-200 transition-colors border border-blue-200">
+                      <Receipt className="w-6 h-6 text-blue-600" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-900 mb-1">Comptabilité</h3>
-                      <p className="text-sm text-gray-600">
+                      <h3 className="font-bold text-slate-900 mb-1 text-base">Comptabilité</h3>
+                      <p className="text-sm text-slate-700 font-medium">
                         Solution complète pour gérer votre comptabilité en toute simplicité
                       </p>
                     </div>
@@ -39,15 +40,15 @@ export const SolutionsDropdown = () => {
                 
                 <Link
                   to="/solutions/commerciale"
-                  className="group block p-4 rounded-lg hover:bg-gray-50 transition-colors"
+                  className="group block p-4 rounded-lg hover:bg-emerald-50 transition-colors border border-transparent hover:border-emerald-200"
                 >
                   <div className="flex items-start space-x-4">
-                    <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center group-hover:bg-green-200 transition-colors">
-                      <Handshake className="w-5 h-5 text-green-600" />
+                    <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center group-hover:bg-green-200 transition-colors border border-green-200">
+                      <Handshake className="w-6 h-6 text-green-600" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-900 mb-1">Commerciale</h3>
-                      <p className="text-sm text-gray-600">
+                      <h3 className="font-bold text-slate-900 mb-1 text-base">Commerciale</h3>
+                      <p className="text-sm text-slate-700 font-medium">
                         Optimisez votre activité commerciale et boostez vos ventes
                       </p>
                     </div>
@@ -56,15 +57,15 @@ export const SolutionsDropdown = () => {
                 
                 <Link
                   to="/solutions/entreprise"
-                  className="group block p-4 rounded-lg hover:bg-gray-50 transition-colors"
+                  className="group block p-4 rounded-lg hover:bg-emerald-50 transition-colors border border-transparent hover:border-emerald-200"
                 >
                   <div className="flex items-start space-x-4">
-                    <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center group-hover:bg-purple-200 transition-colors">
-                      <Briefcase className="w-5 h-5 text-purple-600" />
+                    <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center group-hover:bg-purple-200 transition-colors border border-purple-200">
+                      <Briefcase className="w-6 h-6 text-purple-600" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-900 mb-1">Gestion d'Entreprise</h3>
-                      <p className="text-sm text-gray-600">
+                      <h3 className="font-bold text-slate-900 mb-1 text-base">Gestion d'Entreprise</h3>
+                      <p className="text-sm text-slate-700 font-medium">
                         Solution tout-en-un avec tous les modules pour votre entreprise
                       </p>
                     </div>

@@ -1,11 +1,9 @@
 
 import React from 'react';
 import { Building, Mail, Phone, MapPin, Facebook, Twitter, Linkedin } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const LandingFooter = () => {
-  const navigate = useNavigate();
-
   const handleNavClick = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -15,7 +13,6 @@ const LandingFooter = () => {
 
   const handleNavigation = (path: string) => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    navigate(path);
   };
 
   const handleEmailClick = () => {
@@ -103,28 +100,31 @@ const LandingFooter = () => {
                 </button>
               </li>
               <li>
-                <button 
-                  onClick={() => handleNavigation('/security')} 
+                <Link 
+                  to="/security" 
+                  onClick={() => handleNavigation('/security')}
                   className="text-slate-300 hover:text-green-400 transition-colors"
                 >
                   Sécurité
-                </button>
+                </Link>
               </li>
               <li>
-                <button 
-                  onClick={() => handleNavigation('/integrations')} 
+                <Link 
+                  to="/integrations" 
+                  onClick={() => handleNavigation('/integrations')}
                   className="text-slate-300 hover:text-green-400 transition-colors"
                 >
                   Intégrations
-                </button>
+                </Link>
               </li>
               <li>
-                <button 
-                  onClick={() => handleNavigation('/mobile')} 
+                <Link 
+                  to="/mobile" 
+                  onClick={() => handleNavigation('/mobile')}
                   className="text-slate-300 hover:text-green-400 transition-colors"
                 >
                   Mobile
-                </button>
+                </Link>
               </li>
             </ul>
           </div>
@@ -134,36 +134,40 @@ const LandingFooter = () => {
             <h4 className="font-semibold mb-6 text-white">Support</h4>
             <ul className="space-y-3">
               <li>
-                <button 
-                  onClick={() => handleNavigation('/help-center')} 
+                <Link 
+                  to="/help-center" 
+                  onClick={() => handleNavigation('/help-center')}
                   className="text-slate-300 hover:text-green-400 transition-colors"
                 >
                   Centre d'aide
-                </button>
+                </Link>
               </li>
               <li>
-                <button 
-                  onClick={() => handleNavigation('/product-documentation')} 
+                <Link 
+                  to="/product-documentation" 
+                  onClick={() => handleNavigation('/product-documentation')}
                   className="text-slate-300 hover:text-green-400 transition-colors"
                 >
                   Documentation
-                </button>
+                </Link>
               </li>
               <li>
-                <button 
-                  onClick={() => handleNavigation('/formation')} 
+                <Link 
+                  to="/formation" 
+                  onClick={() => handleNavigation('/formation')}
                   className="text-slate-300 hover:text-green-400 transition-colors"
                 >
                   Formation
-                </button>
+                </Link>
               </li>
               <li>
-                <button 
-                  onClick={() => handleNavigation('/contact')} 
+                <Link 
+                  to="/contact" 
+                  onClick={() => handleNavigation('/contact')}
                   className="text-slate-300 hover:text-green-400 transition-colors"
                 >
                   Contact
-                </button>
+                </Link>
               </li>
             </ul>
           </div>
@@ -200,36 +204,41 @@ const LandingFooter = () => {
           </div>
           
           <div className="flex flex-wrap justify-center md:justify-start space-x-6 mt-4 text-sm text-slate-400">
-            <button 
-              onClick={() => handleNavigation('/legal-notices')} 
+            <Link 
+              to="/legal-notices" 
+              onClick={() => handleNavigation('/legal-notices')}
               className="hover:text-green-400 transition-colors"
             >
               Mentions légales
-            </button>
-            <button 
-              onClick={() => handleNavigation('/privacy-policy')} 
+            </Link>
+            <Link 
+              to="/privacy-policy" 
+              onClick={() => handleNavigation('/privacy-policy')}
               className="hover:text-green-400 transition-colors"
             >
               Politique de confidentialité
-            </button>
-            <button 
-              onClick={() => handleNavigation('/terms-of-service')} 
+            </Link>
+            <Link 
+              to="/terms-of-service" 
+              onClick={() => handleNavigation('/terms-of-service')}
               className="hover:text-green-400 transition-colors"
             >
               CGU
-            </button>
-            <button 
-              onClick={() => handleNavigation('/cookies-policy')} 
+            </Link>
+            <Link 
+              to="/cookies-policy" 
+              onClick={() => handleNavigation('/cookies-policy')}
               className="hover:text-green-400 transition-colors"
             >
               Cookies
-            </button>
-            <button 
-              onClick={() => handleNavigation('/admin-login')} 
+            </Link>
+            <Link 
+              to="/admin-login" 
+              onClick={() => handleNavigation('/admin-login')}
               className="hover:text-green-400 transition-colors text-xs opacity-50 hover:opacity-100"
             >
               Admin
-            </button>
+            </Link>
           </div>
         </div>
       </div>

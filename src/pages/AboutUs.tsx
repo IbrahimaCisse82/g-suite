@@ -3,8 +3,13 @@ import React from 'react';
 import { LandingHeader } from '@/components/landing/LandingHeader';
 import LandingFooter from '@/components/landing/LandingFooter';
 import { Building, Users, Target, Award, Globe, Heart } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const AboutUs = () => {
+  const handleNavigation = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50">
       <LandingHeader />
@@ -145,18 +150,20 @@ const AboutUs = () => {
             Découvrez comment G-Suite peut transformer votre entreprise
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href="/contact"
+            <Link
+              to="/contact"
+              onClick={handleNavigation}
               className="inline-flex items-center px-8 py-3 bg-white text-green-600 font-semibold rounded-lg hover:bg-gray-100 transition-colors"
             >
               Nous contacter
-            </a>
-            <a
-              href="/"
+            </Link>
+            <Link
+              to="/"
+              onClick={handleNavigation}
               className="inline-flex items-center px-8 py-3 border-2 border-white text-white font-semibold rounded-lg hover:bg-white hover:text-green-600 transition-colors"
             >
               Découvrir G-Suite
-            </a>
+            </Link>
           </div>
         </div>
       </section>

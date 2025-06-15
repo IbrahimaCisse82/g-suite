@@ -52,9 +52,9 @@ export const FooterCompanyInfo = ({
             <span className="text-sm">Dakar, Sénégal</span>
           </div>
         </div>
-        {/* Logo GrowHub déplacé à droite des contacts */}
-        <div className="pl-6">
-          <GrowHubLogo size={46} className="bg-white rounded shadow p-1" />
+        {/* Logo GrowHub - agrandi à droite des contacts */}
+        <div className="pl-6 flex items-center">
+          <GrowHubLogo size={64} className="bg-white rounded shadow-lg p-2" />
         </div>
       </div>
     </div>

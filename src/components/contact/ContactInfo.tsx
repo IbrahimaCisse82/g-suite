@@ -46,7 +46,8 @@ export const ContactInfo = () => {
             <div>
               <p className="font-bold text-slate-900">Horaires</p>
               <p className="text-slate-700 font-medium">
-                9h00 - 19h00
+                Lun - Ven: 9h00 - 19h00<br />
+                Sam: 9h00 - 13h00
               </p>
             </div>
           </div>

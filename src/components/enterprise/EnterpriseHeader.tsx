@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
@@ -34,6 +33,8 @@ import {
 } from '@/components/ui/sidebar';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import GsuiteLogo from "/gsuite-logo.png";
+import { Briefcase } from 'lucide-react';
 
 const menuItems = [
   { icon: LayoutDashboard, label: 'Tableau de bord', path: '/dashboard' },
@@ -70,12 +71,10 @@ export const EnterpriseHeader = () => {
     <Sidebar>
       <SidebarHeader>
         <div className="flex items-center space-x-3 p-2">
-          <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center">
-            <Building className="w-6 h-6 text-white" />
-          </div>
+          <img src={GsuiteLogo} alt="G-Suite Logo" className="w-10 h-10 object-contain rounded-md shadow" />
           <div>
             <h1 className="text-xl font-bold text-sidebar-foreground">G-Suite</h1>
-            <p className="text-sm text-sidebar-foreground/70">Gestion d'entreprise</p>
+            <p className="text-sm text-sidebar-foreground/70">Gestion d'entreprise digitale</p>
           </div>
         </div>
       </SidebarHeader>
@@ -166,4 +165,3 @@ export const EnterpriseHeader = () => {
     </Sidebar>
   );
 };
-

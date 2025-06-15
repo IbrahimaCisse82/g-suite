@@ -3,46 +3,46 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { Building, Calculator, Users } from "lucide-react";
+import { Briefcase, Receipt, Handshake } from "lucide-react";
 
 const PLANS = [
   {
     key: "entreprise",
-    name: "Gestion d'Entreprise",
-    desc: "La solution complète pour la gestion comptable et commerciale.",
-    icon: Building,
+    name: "G-Suite Entreprise",
+    desc: "La suite de gestion tout-en-un : comptabilité, facturation, CRM et stock pour votre organisation.",
+    icon: Briefcase,
     color: "from-purple-600 to-indigo-600",
     points: [
-      "Comptabilité et facturation intégrées",
-      "CRM : contacts, fournisseurs, clients",
-      "Gestion du stock avancée",
-      "Trésorerie & rapports dynamiques"
+      "Gestion intégrée de l’entreprise",
+      "Automatisation des processus",
+      "Visualisation en temps réel",
+      "Support premium & personnalisation"
     ]
   },
   {
     key: "comptable",
-    name: "Comptabilité",
-    desc: "Automatisez votre comptabilité en toute tranquillité.",
-    icon: Calculator,
+    name: "G-Suite Comptabilité",
+    desc: "Simplifiez la tenue de vos comptes avec un cockpit financier et une productivité boostée.",
+    icon: Receipt,
     color: "from-blue-600 to-purple-600",
     points: [
-      "Gestion des écritures simplifiée",
-      "Rapports et bilans automatiques",
-      "Suivi trésorerie",
-      "Export expert-comptable"
+      "Gestion comptable intuitive",
+      "Production des bilans & rapports",
+      "Connexion experts-comptables",
+      "Processus compliance automatisés"
     ]
   },
   {
     key: "commerciale",
-    name: "Commerciale",
-    desc: "Optimisez vos ventes et votre gestion commerciale.",
-    icon: Users,
+    name: "G-Suite Commerciale",
+    desc: "Boostez vos ventes et la relation client avec une solution commerciale entièrement connectée.",
+    icon: Handshake,
     color: "from-green-600 to-emerald-600",
     points: [
-      "Clients & fournisseurs",
-      "Facturation automatisée",
-      "Gestion de stock",
-      "Statistiques commerciales"
+      "CRM performant & datas clients",
+      "Facturation et suivi simplifié",
+      "Gestion dynamique des stocks",
+      "Statistiques commerciales avancées"
     ]
   }
 ];
@@ -53,13 +53,13 @@ const PricingSection = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <div className="inline-flex items-center px-4 py-2 rounded-full bg-green-100 text-green-700 text-sm font-medium mb-6">
-            🔑 Offres G-Suite : Demandez votre clé licence !
+            🔑 Découvrez la puissance de G-Suite adaptée à votre métier !
           </div>
           <h2 className="text-4xl font-bold text-gray-900 mb-6">
-            Nos trois solutions
+            Nos trois solutions clés
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Sélectionnez l'offre la plus adaptée à votre besoin.
+            Optez pour la solution la plus pertinente selon la nature et la structure de votre entreprise.
           </p>
         </div>
         <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">

@@ -1,78 +1,50 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { LandingHeader } from '@/components/landing/LandingHeader';
 import LandingFooter from '@/components/landing/LandingFooter';
 import { Button } from '@/components/ui/button';
-import { Users, FileText, ShoppingCart, Package, CheckCircle, ArrowRight, Warehouse, CreditCard } from 'lucide-react';
-
+import { Handshake, FileText, Package, Warehouse, CheckCircle, ArrowRight, Users } from 'lucide-react';
 const CommercialeSolution = () => {
   const features = [
-    'Gestion clients et fournisseurs',
-    'Facturation automatisée',
-    'Gestion des stocks en temps réel',
-    'Suivi des ventes et achats',
-    'Devis et bons de commande',
-    'Relances automatiques',
-    'Catalogue produits complet',
-    'Statistiques commerciales avancées'
+    "CRM et base clients numériques",
+    "Gestion dynamique des ventes et achats",
+    "Facturation automatisée et relances",
+    "Analyses et pilotage commercial",
+    "Gestion de stock en temps réel"
   ];
-
   const modules = [
-    {
-      icon: Users,
-      title: 'Clients & Fournisseurs',
-      description: 'Base de données complète de vos contacts commerciaux'
-    },
-    {
-      icon: FileText,
-      title: 'Facturation',
-      description: 'Création et envoi automatisé de devis et factures'
-    },
-    {
-      icon: Package,
-      title: 'Gestion produits',
-      description: 'Catalogue produits avec prix, références et descriptions'
-    },
-    {
-      icon: Warehouse,
-      title: 'Gestion stocks',
-      description: 'Suivi en temps réel des entrées et sorties de stock'
-    }
+    { icon: Users, title: 'Contacts', description: 'Base unifiée de vos interlocuteurs commerciaux' },
+    { icon: FileText, title: 'Facturation', description: 'Devis, bons, factures rapides' },
+    { icon: Package, title: 'Produits', description: 'Catalogue centralisé, stock synchronisé' },
+    { icon: Warehouse, title: 'Stocks', description: 'Flux et inventaire automatisés' }
   ];
-
   return (
     <div className="min-h-screen bg-background">
       <LandingHeader />
-      
       <main>
-        {/* Hero Section */}
         <section className="bg-gradient-to-br from-green-50 to-emerald-100 py-20">
           <div className="container mx-auto px-4 text-center">
             <div className="max-w-4xl mx-auto">
-              <h1 className="text-5xl font-bold text-gray-900 mb-6">
-                Solution <span className="text-green-600">Commerciale</span>
+              <div className="mx-auto mb-4 w-16 h-16 flex items-center justify-center rounded-full bg-gradient-to-br from-green-500 to-emerald-500">
+                <Handshake className="w-8 h-8 text-white" />
+              </div>
+              <h1 className="text-5xl font-bold text-gray-900 mb-4">
+                G-Suite <span className="text-green-600">Commerciale</span>
               </h1>
-              <p className="text-xl text-gray-600 mb-8">
-                Optimisez votre activité commerciale avec notre solution complète de gestion des ventes
+              <p className="text-xl text-gray-700 mb-6">
+                Optimisez vos opérations commerciales, fidélisez votre clientèle et pilotez vos ventes avec facilité.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link to="/user-login">
+                <Link to="/company-registration?solution=commerciale">
                   <Button size="lg" className="bg-green-600 hover:bg-green-700">
-                    Essayer gratuitement
+                    Demander ma clé licence
                     <ArrowRight className="ml-2 w-4 h-4" />
-                  </Button>
-                </Link>
-                <Link to="/quote-request">
-                  <Button variant="outline" size="lg">
-                    Demander un devis
                   </Button>
                 </Link>
               </div>
             </div>
           </div>
         </section>
-
         {/* Modules Section */}
         <section className="py-20">
           <div className="container mx-auto px-4">
@@ -151,10 +123,8 @@ const CommercialeSolution = () => {
           </div>
         </section>
       </main>
-
       <LandingFooter />
     </div>
   );
 };
-
 export default CommercialeSolution;

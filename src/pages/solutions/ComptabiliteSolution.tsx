@@ -1,44 +1,24 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { LandingHeader } from '@/components/landing/LandingHeader';
 import LandingFooter from '@/components/landing/LandingFooter';
 import { Button } from '@/components/ui/button';
-import { Calculator, FileText, PieChart, TrendingUp, CheckCircle, ArrowRight } from 'lucide-react';
+import { Receipt, FileText, PieChart, TrendingUp, CheckCircle, ArrowRight } from 'lucide-react';
 
 const ComptabiliteSolution = () => {
   const features = [
-    'Comptabilité générale complète',
-    'Plan comptable personnalisable',
-    'Gestion des écritures comptables',
-    'Rapports financiers automatisés',
-    'Bilan et compte de résultat',
-    'Suivi de trésorerie',
-    'Déclarations fiscales simplifiées',
-    'Export comptable expert-comptable'
+    "Saisie et traitement comptable ultra-simplifiés",
+    "Production automatique de bilans, journaux et rapports",
+    "Respect des normes fiscales et conformité",
+    "Connexion directe avec experts & auditeurs",
+    "Archivage et sécurisation cloud"
   ];
 
   const modules = [
-    {
-      icon: Calculator,
-      title: 'Comptabilité générale',
-      description: 'Gestion complète de votre comptabilité avec plan comptable intégré'
-    },
-    {
-      icon: FileText,
-      title: 'Écritures comptables',
-      description: 'Saisie simplifiée et automatisation des écritures récurrentes'
-    },
-    {
-      icon: PieChart,
-      title: 'Rapports financiers',
-      description: 'Bilan, compte de résultat et tableaux de bord en temps réel'
-    },
-    {
-      icon: TrendingUp,
-      title: 'Analyse financière',
-      description: 'Indicateurs de performance et suivi des ratios financiers'
-    }
+    { icon: Receipt, title: 'Tableau de bord', description: 'Vision synthétique de votre comptabilité' },
+    { icon: FileText, title: 'Écritures & Pièces', description: 'Saisie et gestion simplifiée des écritures' },
+    { icon: PieChart, title: 'Rapports & Bilans', description: 'Export instantané, analyses, bilans' },
+    { icon: TrendingUp, title: 'Indicateurs clés', description: 'Suivi des performances et ratios' }
   ];
 
   return (
@@ -50,22 +30,20 @@ const ComptabiliteSolution = () => {
         <section className="bg-gradient-to-br from-blue-50 to-indigo-100 py-20">
           <div className="container mx-auto px-4 text-center">
             <div className="max-w-4xl mx-auto">
-              <h1 className="text-5xl font-bold text-gray-900 mb-6">
-                Solution <span className="text-blue-600">Comptabilité</span>
+              <div className="mx-auto mb-4 w-16 h-16 flex items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-blue-700">
+                <Receipt className="w-8 h-8 text-white" />
+              </div>
+              <h1 className="text-5xl font-bold text-gray-900 mb-4">
+                G-Suite <span className="text-blue-600">Comptabilité</span>
               </h1>
-              <p className="text-xl text-gray-600 mb-8">
-                Gérez votre comptabilité en toute simplicité avec notre solution complète et intuitive
+              <p className="text-xl text-gray-700 mb-6">
+                Automatisez, contrôlez, archivez : la comptabilité nouvelle génération, accessible et performante.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link to="/user-login">
+                <Link to="/company-registration?solution=comptable">
                   <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
-                    Essayer gratuitement
+                    Demander ma clé licence
                     <ArrowRight className="ml-2 w-4 h-4" />
-                  </Button>
-                </Link>
-                <Link to="/quote-request">
-                  <Button variant="outline" size="lg">
-                    Demander un devis
                   </Button>
                 </Link>
               </div>

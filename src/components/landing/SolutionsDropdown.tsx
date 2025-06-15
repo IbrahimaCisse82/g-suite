@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import {
@@ -8,7 +7,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu';
-import { Calculator, Users, Building } from 'lucide-react';
+import { Calculator, Users, Building, Briefcase, Receipt, Handshake } from 'lucide-react';
 
 export const SolutionsDropdown = () => {
   return (
@@ -27,7 +26,7 @@ export const SolutionsDropdown = () => {
                 >
                   <div className="flex items-start space-x-4">
                     <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-200 transition-colors">
-                      <Calculator className="w-5 h-5 text-blue-600" />
+                      <Receipt className="w-5 h-5 text-blue-600" />
                     </div>
                     <div>
                       <h3 className="font-semibold text-gray-900 mb-1">Comptabilité</h3>
@@ -44,7 +43,7 @@ export const SolutionsDropdown = () => {
                 >
                   <div className="flex items-start space-x-4">
                     <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center group-hover:bg-green-200 transition-colors">
-                      <Users className="w-5 h-5 text-green-600" />
+                      <Handshake className="w-5 h-5 text-green-600" />
                     </div>
                     <div>
                       <h3 className="font-semibold text-gray-900 mb-1">Commerciale</h3>
@@ -61,7 +60,7 @@ export const SolutionsDropdown = () => {
                 >
                   <div className="flex items-start space-x-4">
                     <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center group-hover:bg-purple-200 transition-colors">
-                      <Building className="w-5 h-5 text-purple-600" />
+                      <Briefcase className="w-5 h-5 text-purple-600" />
                     </div>
                     <div>
                       <h3 className="font-semibold text-gray-900 mb-1">Gestion d'Entreprise</h3>

@@ -1,4 +1,3 @@
-
 import React from "react";
 import { LandingHeader } from "@/components/landing/LandingHeader";
 import AdvantagesSection from "@/components/landing/AdvantagesSection";
@@ -6,48 +5,48 @@ import TestimonialsSection from "@/components/landing/TestimonialsSection";
 import CTASection from "@/components/landing/CTASection";
 import LandingFooter from "@/components/landing/LandingFooter";
 import { Link } from "react-router-dom";
-import { Building, Calculator, Users } from "lucide-react";
+import { Briefcase, Receipt, Handshake } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import GsuiteLogo from "/gsuite-logo.png";
 
 const OFFERS = [
   {
     key: "entreprise",
-    name: "Gestion d'Entreprise",
-    icon: Building,
+    name: "G-Suite Entreprise",
+    icon: Briefcase,
     color: "from-purple-600 to-indigo-600",
-    desc: "La solution tout-en-un pour gérer compta, commercial, stock et trésorerie.",
+    desc: "Découvrez la plateforme qui centralise gestion, comptabilité et opérations. Pensée pour la performance globale.",
     features: [
-      "Comptabilité intégrée",
-      "Facturation & achats",
-      "CRM (contacts, clients, fournisseurs)",
-      "Gestion de stock avancé",
-      "Trésorerie & tableaux de bord"
+      "Automatisation de la gestion d’entreprise",
+      "Comptabilité & facturation centralisées",
+      "Gestion commerciale et des stocks",
+      "Reporting étendu et support prioritaire"
     ]
   },
   {
     key: "comptable",
-    name: "Comptabilité",
-    icon: Calculator,
+    name: "G-Suite Comptabilité",
+    icon: Receipt,
     color: "from-blue-600 to-purple-600",
-    desc: "Automatisez votre comptabilité et vos obligations légales en toute simplicité.",
+    desc: "Fluidifiez la gestion financière et fiscale de votre entreprise. Un cockpit digital pour les professionnels de la compta.",
     features: [
-      "Gestion des écritures",
-      "Rapports & bilans automatiques",
-      "Suivi de trésorerie",
-      "Export expert-comptable"
+      "Tableau de bord comptable",
+      "Bilans et exports simplifiés",
+      "Suivi règlementaire automatisé",
+      "Connexion expert-comptable"
     ]
   },
   {
     key: "commerciale",
-    name: "Commerciale",
-    icon: Users,
+    name: "G-Suite Commerciale",
+    icon: Handshake,
     color: "from-green-600 to-emerald-600",
-    desc: "Optimisez vos ventes, la gestion de stock et vos opérations commerciales.",
+    desc: "Accélérez vos ventes et gérez votre base clients efficacement. Un CRM moderne, axé sur l’action.",
     features: [
-      "Gestion clients & fournisseurs",
-      "Facturation automatisée",
-      "Gestion de stock",
-      "Suivi des ventes & achats"
+      "CRM et suivi client",
+      "Facturation sans friction",
+      "Gestion des offres et stocks",
+      "Reporting des ventes"
     ]
   }
 ];

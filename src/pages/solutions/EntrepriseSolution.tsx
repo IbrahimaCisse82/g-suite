@@ -1,68 +1,28 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { LandingHeader } from '@/components/landing/LandingHeader';
 import LandingFooter from '@/components/landing/LandingFooter';
 import { Button } from '@/components/ui/button';
-import { Building, Calculator, Users, FileText, ShoppingCart, Package, Warehouse, CreditCard, PieChart, TrendingUp, Settings, CheckCircle, ArrowRight } from 'lucide-react';
+import { Briefcase, Calculator, Users, FileText, ShoppingCart, Package, Warehouse, CreditCard, PieChart, TrendingUp, Settings, CheckCircle, ArrowRight } from 'lucide-react';
 
 const EntrepriseSolution = () => {
   const features = [
-    'Comptabilité générale intégrée',
-    'Gestion commerciale complète',
-    'Facturation et devis automatisés',
-    'Gestion des stocks avancée',
-    'Suivi de trésorerie en temps réel',
-    'Rapports et analyses détaillés',
-    'Gestion multi-utilisateurs',
-    'Sauvegarde automatique cloud',
-    'Support technique prioritaire',
-    'Formation et accompagnement',
-    'Personnalisation avancée',
-    'Intégrations tierces'
+    "Suite complète de gestion centralisée",
+    "Automatisation des processus",
+    "Gestion multiservices (compta, ventes, achats)",
+    "Pilotage en temps réel",
+    "Support prioritaire & cloud sécurisé"
   ];
 
   const modules = [
-    {
-      icon: Calculator,
-      title: 'Comptabilité',
-      description: 'Comptabilité générale, écritures et rapports financiers'
-    },
-    {
-      icon: Users,
-      title: 'Contacts',
-      description: 'Gestion complète clients, fournisseurs et prospects'
-    },
-    {
-      icon: FileText,
-      title: 'Facturation',
-      description: 'Devis, factures, bons de commande automatisés'
-    },
-    {
-      icon: ShoppingCart,
-      title: 'Achats',
-      description: 'Gestion des commandes et relations fournisseurs'
-    },
-    {
-      icon: Package,
-      title: 'Produits',
-      description: 'Catalogue produits avec gestion des variantes'
-    },
-    {
-      icon: Warehouse,
-      title: 'Stock',
-      description: 'Suivi en temps réel des mouvements de stock'
-    },
-    {
-      icon: CreditCard,
-      title: 'Trésorerie',
-      description: 'Suivi des flux financiers et prévisions'
-    },
-    {
-      icon: PieChart,
-      title: 'Rapports',
-      description: 'Tableaux de bord et analyses avancées'
-    }
+    { icon: Calculator, title: 'Comptabilité', description: 'Comptabilité générale & reporting financier' },
+    { icon: Users, title: 'Contacts', description: 'Clients, fournisseurs et partenaires' },
+    { icon: FileText, title: 'Facturation', description: 'Devis, factures et contrats' },
+    { icon: ShoppingCart, title: 'Achats', description: 'Commandes fournisseurs' },
+    { icon: Package, title: 'Produits', description: 'Catalogue produits/services' },
+    { icon: Warehouse, title: 'Stock', description: 'Mouvements et niveaux de stock' },
+    { icon: CreditCard, title: 'Trésorerie', description: 'Suivi des flux, prévisions' },
+    { icon: PieChart, title: 'Rapports', description: 'Analyses, bilans & pilotage avancé' }
   ];
 
   return (
@@ -74,22 +34,20 @@ const EntrepriseSolution = () => {
         <section className="bg-gradient-to-br from-purple-50 to-indigo-100 py-20">
           <div className="container mx-auto px-4 text-center">
             <div className="max-w-4xl mx-auto">
-              <h1 className="text-5xl font-bold text-gray-900 mb-6">
-                Solution <span className="text-purple-600">Gestion d'Entreprise</span>
+              <div className="mx-auto mb-4 w-16 h-16 flex items-center justify-center rounded-full bg-gradient-to-br from-purple-600 to-indigo-600">
+                <Briefcase className="w-8 h-8 text-white" />
+              </div>
+              <h1 className="text-5xl font-bold text-gray-900 mb-4">
+                G-Suite <span className="text-purple-600">Entreprise</span>
               </h1>
-              <p className="text-xl text-gray-600 mb-8">
-                La solution tout-en-un pour gérer votre entreprise : comptabilité, commercial, stocks et bien plus
+              <p className="text-xl text-gray-700 mb-6">
+                Réunissez toute la gestion de votre entreprise dans une seule plateforme intelligente, sécurisée et évolutive.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link to="/user-login">
+                <Link to="/company-registration?solution=entreprise">
                   <Button size="lg" className="bg-purple-600 hover:bg-purple-700">
-                    Essayer gratuitement
+                    Demander ma clé licence
                     <ArrowRight className="ml-2 w-4 h-4" />
-                  </Button>
-                </Link>
-                <Link to="/quote-request">
-                  <Button variant="outline" size="lg">
-                    Demander un devis
                   </Button>
                 </Link>
               </div>
@@ -165,7 +123,7 @@ const EntrepriseSolution = () => {
             <div className="grid md:grid-cols-3 gap-8">
               <div className="text-center">
                 <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Building className="w-8 h-8 text-purple-600" />
+                  <Briefcase className="w-8 h-8 text-purple-600" />
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900 mb-4">Solution intégrée</h3>
                 <p className="text-gray-600">Tous vos processus métier dans une seule plateforme unifiée</p>
@@ -200,7 +158,7 @@ const EntrepriseSolution = () => {
               <p className="text-xl text-purple-100 mb-8">
                 Découvrez la puissance de G-Suite Entreprise et révolutionnez votre façon de travailler
               </p>
-              <Link to="/user-login">
+              <Link to="/company-registration?solution=entreprise">
                 <Button size="lg" variant="secondary">
                   Commencer maintenant
                   <ArrowRight className="ml-2 w-4 h-4" />

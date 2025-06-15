@@ -12,28 +12,32 @@ const mockStats = [
     value: '2 450 000 XOF',
     change: '+12%',
     icon: DollarSign,
-    color: 'text-green-600'
+    color: 'text-green-600',
+    bgColor: 'bg-green-50'
   },
   {
     title: 'Factures en attente',
     value: '8',
     change: '-3',
     icon: FileText,
-    color: 'text-orange-600'
+    color: 'text-orange-600',
+    bgColor: 'bg-orange-50'
   },
   {
     title: 'Produits en stock',
     value: '156',
     change: '+24',
     icon: Package,
-    color: 'text-blue-600'
+    color: 'text-blue-600',
+    bgColor: 'bg-blue-50'
   },
   {
     title: 'Clients actifs',
     value: '42',
     change: '+5',
     icon: Users,
-    color: 'text-purple-600'
+    color: 'text-purple-600',
+    bgColor: 'bg-purple-50'
   }
 ];
 
@@ -43,12 +47,12 @@ const Dashboard = () => {
   if (isLoading) {
     return (
       <Layout>
-        <div className="p-8">
+        <div className="p-8 gradient-bg min-h-full">
           <div className="animate-pulse">
             <div className="h-8 bg-gray-200 rounded w-64 mb-4"></div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="h-32 bg-gray-200 rounded"></div>
+                <div key={i} className="h-32 bg-gray-200 rounded-xl"></div>
               ))}
             </div>
           </div>
@@ -59,107 +63,129 @@ const Dashboard = () => {
 
   return (
     <Layout>
-      <div className="p-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2 flex items-center">
-            <LayoutDashboard className="w-8 h-8 mr-3 text-green-600" />
-            Tableau de bord
-          </h1>
-          <p className="text-muted-foreground">
-            Aperçu de votre activité commerciale
-          </p>
-        </div>
-
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {mockStats.map((stat, index) => {
-            const Icon = stat.icon;
-            return (
-              <Card key={index}>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
-                  <Icon className={`h-4 w-4 ${stat.color}`} />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{stat.value}</div>
-                  <p className="text-xs text-muted-foreground">
-                    <span className={stat.change.startsWith('+') ? 'text-green-600' : 'text-red-600'}>
-                      {stat.change}
-                    </span>
-                    {' '}par rapport au mois dernier
-                  </p>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
-
-        {/* Quick Actions */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Actions rapides</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted cursor-pointer">
-                  <div className="flex items-center space-x-3">
-                    <FileText className="w-5 h-5 text-blue-600" />
-                    <span>Créer une facture</span>
-                  </div>
-                  <TrendingUp className="w-4 h-4 text-muted-foreground" />
-                </div>
-                <div className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted cursor-pointer">
-                  <div className="flex items-center space-x-3">
-                    <Users className="w-5 h-5 text-green-600" />
-                    <span>Ajouter un client</span>
-                  </div>
-                  <TrendingUp className="w-4 h-4 text-muted-foreground" />
-                </div>
-                <div className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted cursor-pointer">
-                  <div className="flex items-center space-x-3">
-                    <Package className="w-5 h-5 text-purple-600" />
-                    <span>Gérer le stock</span>
-                  </div>
-                  <TrendingUp className="w-4 h-4 text-muted-foreground" />
-                </div>
+      <div className="gradient-bg min-h-full">
+        <div className="p-8">
+          <div className="mb-8">
+            <h1 className="text-4xl font-bold text-slate-900 mb-2 flex items-center">
+              <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center mr-4">
+                <LayoutDashboard className="w-6 h-6 text-white" />
               </div>
-            </CardContent>
-          </Card>
+              Tableau de bord
+            </h1>
+            <p className="text-xl text-slate-600">
+              Aperçu de votre activité commerciale
+            </p>
+          </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Activité récente</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3 text-sm">
-                <div className="flex justify-between items-center">
-                  <span>Facture F-2024-001 créée</span>
-                  <span className="text-muted-foreground">Il y a 2h</span>
+          {/* Stats Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            {mockStats.map((stat, index) => {
+              const Icon = stat.icon;
+              return (
+                <Card key={index} className="border-0 shadow-lg card-hover bg-white">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium text-slate-700">{stat.title}</CardTitle>
+                    <div className={`w-10 h-10 rounded-lg ${stat.bgColor} flex items-center justify-center`}>
+                      <Icon className={`h-5 w-5 ${stat.color}`} />
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-3xl font-bold text-slate-900 mb-1">{stat.value}</div>
+                    <p className="text-sm text-slate-600">
+                      <span className={stat.change.startsWith('+') ? 'text-green-600 font-medium' : 'text-red-600 font-medium'}>
+                        {stat.change}
+                      </span>
+                      {' '}par rapport au mois dernier
+                    </p>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+
+          {/* Quick Actions */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card className="border-0 shadow-lg bg-white card-hover">
+              <CardHeader>
+                <CardTitle className="text-xl text-slate-900 flex items-center">
+                  <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center mr-3">
+                    <TrendingUp className="w-4 h-4 text-white" />
+                  </div>
+                  Actions rapides
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between p-4 border border-slate-200 rounded-xl hover:bg-slate-50 cursor-pointer transition-colors group">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center group-hover:bg-blue-100 transition-colors">
+                        <FileText className="w-5 h-5 text-blue-600" />
+                      </div>
+                      <span className="font-medium text-slate-900">Créer une facture</span>
+                    </div>
+                    <TrendingUp className="w-4 h-4 text-slate-400 group-hover:text-slate-600 transition-colors" />
+                  </div>
+                  <div className="flex items-center justify-between p-4 border border-slate-200 rounded-xl hover:bg-slate-50 cursor-pointer transition-colors group">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center group-hover:bg-green-100 transition-colors">
+                        <Users className="w-5 h-5 text-green-600" />
+                      </div>
+                      <span className="font-medium text-slate-900">Ajouter un client</span>
+                    </div>
+                    <TrendingUp className="w-4 h-4 text-slate-400 group-hover:text-slate-600 transition-colors" />
+                  </div>
+                  <div className="flex items-center justify-between p-4 border border-slate-200 rounded-xl hover:bg-slate-50 cursor-pointer transition-colors group">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-purple-50 rounded-lg flex items-center justify-center group-hover:bg-purple-100 transition-colors">
+                        <Package className="w-5 h-5 text-purple-600" />
+                      </div>
+                      <span className="font-medium text-slate-900">Gérer le stock</span>
+                    </div>
+                    <TrendingUp className="w-4 h-4 text-slate-400 group-hover:text-slate-600 transition-colors" />
+                  </div>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span>Client "Entreprise ABC" ajouté</span>
-                  <span className="text-muted-foreground">Il y a 5h</span>
+              </CardContent>
+            </Card>
+
+            <Card className="border-0 shadow-lg bg-white card-hover">
+              <CardHeader>
+                <CardTitle className="text-xl text-slate-900 flex items-center">
+                  <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center mr-3">
+                    <FileText className="w-4 h-4 text-white" />
+                  </div>
+                  Activité récente
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4 text-sm">
+                  <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
+                    <span className="font-medium text-slate-900">Facture F-2024-001 créée</span>
+                    <span className="text-slate-500">Il y a 2h</span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
+                    <span className="font-medium text-slate-900">Client "Entreprise ABC" ajouté</span>
+                    <span className="text-slate-500">Il y a 5h</span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
+                    <span className="font-medium text-slate-900">Stock produit "Ordinateur" mis à jour</span>
+                    <span className="text-slate-500">Hier</span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
+                    <span className="font-medium text-slate-900">Paiement reçu - 150 000 XOF</span>
+                    <span className="text-slate-500">Il y a 2 jours</span>
+                  </div>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span>Stock produit "Ordinateur" mis à jour</span>
-                  <span className="text-muted-foreground">Hier</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span>Paiement reçu - 150 000 XOF</span>
-                  <span className="text-muted-foreground">Il y a 2 jours</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </div>
         </div>
+
+        {/* Initial Setup Modal */}
+        <InitialSetupModal 
+          isOpen={needsSetup} 
+          onComplete={completeSetup}
+        />
       </div>
-
-      {/* Initial Setup Modal */}
-      <InitialSetupModal 
-        isOpen={needsSetup} 
-        onComplete={completeSetup}
-      />
     </Layout>
   );
 };

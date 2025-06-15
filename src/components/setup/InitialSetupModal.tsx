@@ -52,20 +52,22 @@ export const InitialSetupModal = ({ isOpen, onComplete }: InitialSetupModalProps
 
   return (
     <Dialog open={isOpen} onOpenChange={() => {}}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="flex items-center space-x-2 text-2xl">
-            <Building className="w-6 h-6 text-green-600" />
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-white">
+        <DialogHeader className="border-b border-slate-200 pb-6">
+          <DialogTitle className="flex items-center space-x-3 text-2xl text-slate-900">
+            <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center">
+              <Building className="w-5 h-5 text-white" />
+            </div>
             <span>Configuration initiale de votre entreprise</span>
           </DialogTitle>
-          <p className="text-muted-foreground">
+          <p className="text-slate-600 text-lg">
             Bienvenue ! Configurons ensemble les éléments essentiels de votre entreprise.
           </p>
         </DialogHeader>
 
-        <div className="space-y-6">
+        <div className="space-y-8 py-6">
           {/* Progress Steps */}
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between max-w-md mx-auto">
             {steps.map((step, index) => {
               const Icon = step.icon;
               const isCompleted = completedSteps.includes(index);
@@ -74,18 +76,18 @@ export const InitialSetupModal = ({ isOpen, onComplete }: InitialSetupModalProps
               return (
                 <div key={step.id} className="flex items-center">
                   <div className={`
-                    flex items-center justify-center w-12 h-12 rounded-full border-2 
-                    ${isCompleted ? 'bg-green-500 border-green-500 text-white' : 
-                      isCurrent ? 'border-blue-500 text-blue-500' : 'border-gray-300 text-gray-400'}
+                    flex items-center justify-center w-14 h-14 rounded-xl border-2 transition-all
+                    ${isCompleted ? 'bg-green-500 border-green-500 text-white shadow-lg' : 
+                      isCurrent ? 'border-blue-500 text-blue-500 bg-blue-50' : 'border-slate-300 text-slate-400 bg-white'}
                   `}>
                     {isCompleted ? (
-                      <CheckCircle className="w-6 h-6" />
+                      <CheckCircle className="w-7 h-7" />
                     ) : (
-                      <Icon className="w-6 h-6" />
+                      <Icon className="w-7 h-7" />
                     )}
                   </div>
                   {index < steps.length - 1 && (
-                    <ArrowRight className="w-4 h-4 mx-4 text-gray-400" />
+                    <ArrowRight className="w-5 h-5 mx-6 text-slate-400" />
                   )}
                 </div>
               );
@@ -94,42 +96,53 @@ export const InitialSetupModal = ({ isOpen, onComplete }: InitialSetupModalProps
 
           {/* Current Step Content */}
           <Tabs value={steps[currentStep]?.id} className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
+            <TabsList className="grid w-full grid-cols-2 bg-slate-100 p-1 rounded-xl">
               {steps.map((step, index) => (
                 <TabsTrigger 
                   key={step.id} 
                   value={step.id}
                   disabled={index > currentStep && !completedSteps.includes(index)}
                   onClick={() => setCurrentStep(index)}
+                  className="data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-lg font-medium"
                 >
                   {step.title}
                 </TabsTrigger>
               ))}
             </TabsList>
 
-            <TabsContent value="financial">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Configuration des comptes financiers</CardTitle>
-                  <p className="text-sm text-muted-foreground">
+            <TabsContent value="financial" className="mt-6">
+              <Card className="border-0 shadow-lg bg-white">
+                <CardHeader className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-t-lg">
+                  <CardTitle className="flex items-center text-slate-900">
+                    <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center mr-3">
+                      <Wallet className="w-5 h-5 text-white" />
+                    </div>
+                    Configuration des comptes financiers
+                  </CardTitle>
+                  <p className="text-slate-600">
                     Ajoutez au moins un compte pour commencer à gérer vos finances
                   </p>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="p-6">
                   <FinancialAccountForm onSuccess={() => handleStepComplete(0)} />
                 </CardContent>
               </Card>
             </TabsContent>
 
-            <TabsContent value="storage">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Configuration des sites de stockage</CardTitle>
-                  <p className="text-sm text-muted-foreground">
+            <TabsContent value="storage" className="mt-6">
+              <Card className="border-0 shadow-lg bg-white">
+                <CardHeader className="bg-gradient-to-r from-green-50 to-green-100 rounded-t-lg">
+                  <CardTitle className="flex items-center text-slate-900">
+                    <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center mr-3">
+                      <Warehouse className="w-5 h-5 text-white" />
+                    </div>
+                    Configuration des sites de stockage
+                  </CardTitle>
+                  <p className="text-slate-600">
                     Ajoutez vos entrepôts, magasins et autres sites de stockage
                   </p>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="p-6">
                   <StorageSiteForm onSuccess={() => handleStepComplete(1)} />
                 </CardContent>
               </Card>
@@ -137,14 +150,17 @@ export const InitialSetupModal = ({ isOpen, onComplete }: InitialSetupModalProps
           </Tabs>
 
           {/* Action Buttons */}
-          <div className="flex justify-between pt-6 border-t">
-            <div className="text-sm text-muted-foreground">
-              {completedSteps.length} sur {steps.length} étapes terminées
+          <div className="flex justify-between items-center pt-6 border-t border-slate-200">
+            <div className="text-slate-600">
+              <span className="font-medium">{completedSteps.length}</span> sur {steps.length} étapes terminées
             </div>
             
             <div className="space-x-3">
               {allStepsCompleted && (
-                <Button onClick={handleFinishSetup} className="bg-green-600 hover:bg-green-700">
+                <Button 
+                  onClick={handleFinishSetup} 
+                  className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-6 py-3 rounded-lg font-medium shadow-lg hover:shadow-xl transition-all"
+                >
                   <CheckCircle className="w-4 h-4 mr-2" />
                   Terminer la configuration
                 </Button>

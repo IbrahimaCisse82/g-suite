@@ -50,7 +50,7 @@ export const LandingHeader = () => {
           
           <div className="flex items-center space-x-4">
             <Link to="/user-login">
-              <Button variant="outline" size="sm" className="text-slate-600 hover:text-slate-900 border-slate-300">
+              <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white border-green-600">
                 Connexion Entreprise
               </Button>
             </Link>

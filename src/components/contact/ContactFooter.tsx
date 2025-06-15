@@ -12,7 +12,7 @@ export const ContactFooter = () => {
             <GSuiteLogo size={32} />
             <div>
               <h3 className="text-lg font-bold text-white">G-Suite</h3>
-              <p className="text-xs text-slate-300">by GrowHub Sénégal</p>
+              <p className="text-xs text-slate-300">by Grow Hub Sarl</p>
             </div>
           </div>
           <p className="text-slate-300 mb-6 font-medium">
@@ -24,10 +24,11 @@ export const ContactFooter = () => {
             <span className="text-emerald-400">Contact</span>
           </div>
           <div className="mt-8 pt-8 border-t border-slate-700 text-xs text-slate-400 font-medium">
-            Développé par GrowHub Sénégal, cabinet de conseils aux entreprises.
+            Développé par Grow Hub Sarl, cabinet de conseils aux entreprises.
           </div>
         </div>
       </div>
     </footer>
   );
 };
+

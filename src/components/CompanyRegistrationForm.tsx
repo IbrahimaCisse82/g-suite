@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -86,29 +87,29 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
   };
 
   return (
-    <Card className="w-full max-w-2xl mx-auto">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Building className="h-6 w-6" />
+    <Card className="w-full max-w-2xl mx-auto bg-white shadow-lg border border-gray-200">
+      <CardHeader className="bg-gradient-to-r from-emerald-600 to-emerald-700 text-white rounded-t-lg">
+        <CardTitle className="flex items-center gap-2 text-white">
+          <Building className="h-6 w-6 text-white" />
           Créer le profil de votre entreprise
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="text-emerald-100">
           Renseignez les informations de votre entreprise pour demander une clé licence G-Suite.
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-6 bg-white">
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           {/* Choix obligatoire de la solution/module */}
           <div className="space-y-3">
-            <Label>Solution G-Suite souhaitée <span className="text-red-500">*</span></Label>
+            <Label className="text-slate-800 font-semibold">Solution G-Suite souhaitée <span className="text-red-600">*</span></Label>
             <select
-              className="w-full border rounded-md px-3 py-2"
+              className="w-full border-2 border-gray-300 rounded-md px-3 py-2 bg-white text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200"
               value={selectedModule}
               onChange={e => setSelectedModule(e.target.value)}
               required
             >
               {MODULE_OPTIONS.map(opt =>
-                <option key={opt.value} value={opt.value}>{opt.label}</option>
+                <option key={opt.value} value={opt.value} className="text-slate-800">{opt.label}</option>
               )}
             </select>
           </div>
@@ -126,10 +127,10 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
 
           <CompanyRepresentativeInfo form={form} />
 
-          <Button type="submit" className="w-full" disabled={isLoading}>
+          <Button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 border-2 border-emerald-600" disabled={isLoading}>
             {isLoading ? "Création en cours..." : "Demander ma clé licence"}
           </Button>
-          <div className="text-sm text-gray-600 text-center">
+          <div className="text-sm text-slate-700 text-center font-medium bg-slate-50 p-3 rounded-md border border-slate-200">
             Votre demande sera validée sous 24h. Vous recevrez un email avec votre clé licence.
           </div>
         </form>

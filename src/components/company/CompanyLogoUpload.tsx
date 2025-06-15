@@ -10,12 +10,20 @@ interface CompanyLogoUploadProps {
 
 export const CompanyLogoUpload = ({ logoPreview, onLogoChange }: CompanyLogoUploadProps) => {
   return (
-    <div className="space-y-2">
-      <Label htmlFor="logo">Logo de l'entreprise</Label>
+    <div className="space-y-3">
+      <Label htmlFor="logo" className="text-slate-800 font-semibold">Logo de l'entreprise</Label>
       <div className="flex items-center gap-4">
         {logoPreview && (
-          <div className="w-20 h-20 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden">
-            <img src={logoPreview} alt="Logo preview" className="w-full h-full object-cover" />
+          <div className="w-20 h-20 rounded-lg border-2 border-emerald-300 flex items-center justify-center overflow-hidden bg-white shadow-sm">
+            <img 
+              src={logoPreview} 
+              alt="Logo preview" 
+              className="w-full h-full object-cover object-center"
+              style={{ 
+                objectFit: 'cover',
+                objectPosition: 'center'
+              }}
+            />
           </div>
         )}
         <div className="flex-1">
@@ -24,9 +32,9 @@ export const CompanyLogoUpload = ({ logoPreview, onLogoChange }: CompanyLogoUplo
             type="file"
             accept="image/*"
             onChange={onLogoChange}
-            className="cursor-pointer"
+            className="cursor-pointer border-2 border-gray-300 bg-white text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200"
           />
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-sm text-slate-600 mt-1 font-medium">
             Formats acceptés: JPG, PNG, GIF. Taille max: 5MB
           </p>
         </div>

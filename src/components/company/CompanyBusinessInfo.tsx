@@ -47,81 +47,84 @@ export const CompanyBusinessInfo = ({ form }: CompanyBusinessInfoProps) => {
     <>
       {/* Business Sector */}
       <div className="space-y-2">
-        <Label htmlFor="business_sector">Secteur d'activité *</Label>
+        <Label htmlFor="business_sector" className="text-slate-800 font-semibold">Secteur d'activité <span className="text-red-600">*</span></Label>
         <Select 
           value={form.watch('business_sector')} 
           onValueChange={(value) => form.setValue('business_sector', value as BusinessSector)}
         >
-          <SelectTrigger>
+          <SelectTrigger className="border-2 border-gray-300 bg-white text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200">
             <SelectValue placeholder="Sélectionnez votre secteur d'activité" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-white border-2 border-gray-300 shadow-lg">
             {businessSectors.map((sector) => (
-              <SelectItem key={sector.value} value={sector.value}>
+              <SelectItem key={sector.value} value={sector.value} className="text-slate-800 hover:bg-emerald-50">
                 {sector.label}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
         {form.formState.errors.business_sector && (
-          <p className="text-sm text-destructive">{form.formState.errors.business_sector.message}</p>
+          <p className="text-sm text-red-600 font-medium">{form.formState.errors.business_sector.message}</p>
         )}
       </div>
 
       {/* Currency Selection */}
       <div className="space-y-2">
-        <Label htmlFor="currency">Devise *</Label>
+        <Label htmlFor="currency" className="text-slate-800 font-semibold">Devise <span className="text-red-600">*</span></Label>
         <Select 
           value={form.watch('currency')} 
           onValueChange={(value) => form.setValue('currency', value)}
         >
-          <SelectTrigger>
+          <SelectTrigger className="border-2 border-gray-300 bg-white text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200">
             <SelectValue placeholder="Sélectionnez votre devise" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-white border-2 border-gray-300 shadow-lg">
             {currencies.map((currency) => (
-              <SelectItem key={currency.value} value={currency.value}>
+              <SelectItem key={currency.value} value={currency.value} className="text-slate-800 hover:bg-emerald-50">
                 {currency.label}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
         {form.formState.errors.currency && (
-          <p className="text-sm text-destructive">{form.formState.errors.currency.message}</p>
+          <p className="text-sm text-red-600 font-medium">{form.formState.errors.currency.message}</p>
         )}
       </div>
 
       {/* NINEA and RCCM */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label htmlFor="ninea">NINEA</Label>
+          <Label htmlFor="ninea" className="text-slate-800 font-semibold">NINEA</Label>
           <Input
             id="ninea"
             {...form.register('ninea')}
             placeholder="Numéro NINEA"
+            className="border-2 border-gray-300 bg-white text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200"
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="rccm">RCCM</Label>
+          <Label htmlFor="rccm" className="text-slate-800 font-semibold">RCCM</Label>
           <Input
             id="rccm"
             {...form.register('rccm')}
             placeholder="Numéro RCCM"
+            className="border-2 border-gray-300 bg-white text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200"
           />
         </div>
       </div>
 
       {/* Website */}
       <div className="space-y-2">
-        <Label htmlFor="website">Site web</Label>
+        <Label htmlFor="website" className="text-slate-800 font-semibold">Site web</Label>
         <Input
           id="website"
           type="url"
           {...form.register('website')}
           placeholder="https://www.votre-site.com"
+          className="border-2 border-gray-300 bg-white text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200"
         />
         {form.formState.errors.website && (
-          <p className="text-sm text-destructive">{form.formState.errors.website.message}</p>
+          <p className="text-sm text-red-600 font-medium">{form.formState.errors.website.message}</p>
         )}
       </div>
     </>

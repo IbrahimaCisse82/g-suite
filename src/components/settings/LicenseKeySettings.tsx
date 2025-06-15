@@ -3,10 +3,14 @@ import React, { useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Key, BadgeCheck, Clock, X } from "lucide-react";
+import { Key, BadgeCheck, Clock, X, Check } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { usePaidAccountRequests, useCreatePaidAccountRequest } from "@/hooks/useSubscriptions";
 import { Badge } from "@/components/ui/badge";
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
+  DialogFooter, DialogTrigger,
+} from "@/components/ui/dialog";
 
 const MODULE_OPTIONS = [
   { value: "comptabilite", label: "Solution Comptable" },
@@ -20,11 +24,20 @@ const PLAN_NAME_MAP: Record<string, string> = {
   entreprise: "Solution Entreprise",
 };
 
+const PLAN_COLOR_MAP: Record<string, string> = {
+  comptabilite: "bg-blue-50 text-blue-700 border-blue-400",
+  commerciale: "bg-orange-50 text-orange-700 border-orange-400",
+  entreprise: "bg-green-50 text-green-700 border-green-400",
+};
+
 export function LicenseKeySettings() {
   const [selectedModule, setSelectedModule] = useState("");
   const [requestMessage, setRequestMessage] = useState("");
   const createRequestMutation = useCreatePaidAccountRequest();
   const { data: requests = [], isLoading } = usePaidAccountRequests();
+
+  // Pour la validation visuelle et le dialog de confirmation
+  const [dialogOpenId, setDialogOpenId] = useState<string | null>(null);
 
   const handleRequest = async () => {
     if (!selectedModule) {
@@ -53,6 +66,15 @@ export function LicenseKeySettings() {
         variant: "destructive",
       });
     }
+  };
+
+  const handleValidateKey = (req: any) => {
+    toast({
+      title: "Clé validée avec succès",
+      description: `La clé pour ${PLAN_NAME_MAP[req.plan_id as string] || req.subscription_plans?.name} est maintenant active.`,
+      icon: <Check className="text-green-600 w-5 h-5" />,
+    });
+    setDialogOpenId(null);
   };
 
   const getStatusBadge = (status: string) => {
@@ -117,29 +139,65 @@ export function LicenseKeySettings() {
             <div className="text-gray-500">Aucune demande enregistrée.</div>
           ) : (
             <ul className="space-y-4">
-              {requests.map((req) => (
-                <li key={req.id} className="border p-4 rounded">
-                  <div className="flex justify-between items-center gap-2">
-                    <div>
-                      <strong>{PLAN_NAME_MAP[req.plan_id as string]?.toUpperCase() || req.subscription_plans?.name || "Module inconnu"}</strong>
-                      <div className="text-sm text-gray-600">
-                        Demandé le {new Date(req.created_at).toLocaleDateString("fr-FR")}
-                      </div>
-                      {req.request_message && (
-                        <div className="italic text-xs text-gray-700 mt-2">"{req.request_message}"</div>
-                      )}
-                      {/* Si une clé licence est disponible */}
-                      {req.status === "approved" && req.admin_notes && (
-                        <div className="mt-2 p-2 rounded bg-green-50 text-xs">
-                          <span className="font-semibold text-green-700">Clé : </span>
-                          <span className="select-all">{req.admin_notes}</span>
+              {requests.map((req) => {
+                // cherche le nom du module/plan demandé (toujours visible)
+                const planKey = req.plan_id as string;
+                const planName = PLAN_NAME_MAP[planKey] || req.subscription_plans?.name || "Module inconnu";
+                const colorClass = PLAN_COLOR_MAP[planKey] || "bg-gray-100 text-gray-700 border-gray-300";
+                // Affiche le bouton de validation seulement si status=approved ET clé présente
+                const showValidate = req.status === "approved" && req.admin_notes;
+
+                return (
+                  <li key={req.id} className={`border p-4 rounded ${colorClass} border`}>
+                    <div className="flex justify-between items-center gap-2">
+                      <div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <strong className="uppercase">{planName}</strong>
+                          <Badge className="text-xs" variant="outline">{planKey}</Badge>
                         </div>
-                      )}
+                        <div className="text-sm text-gray-600">
+                          Demandé le {new Date(req.created_at).toLocaleDateString("fr-FR")}
+                        </div>
+                        {req.request_message && (
+                          <div className="italic text-xs text-gray-700 mt-2">"{req.request_message}"</div>
+                        )}
+                        {req.status === "approved" && req.admin_notes && (
+                          <div className="mt-2 p-2 rounded border bg-white">
+                            <span className="font-semibold text-green-700">Votre clé : </span>
+                            <span className="select-all">{req.admin_notes}</span>
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex flex-col items-end gap-2">
+                        {getStatusBadge(req.status || "pending")}
+                        {showValidate && (
+                          <Dialog open={dialogOpenId === req.id} onOpenChange={(open) => setDialogOpenId(open ? req.id : null)}>
+                            <DialogTrigger asChild>
+                              <Button size="sm" className="bg-green-700 text-white mt-2">Valider la clé</Button>
+                            </DialogTrigger>
+                            <DialogContent>
+                              <DialogHeader>
+                                <DialogTitle>Validation de la clé</DialogTitle>
+                                <DialogDescription>
+                                  Êtes-vous sûr de vouloir valider la clé ?<br />
+                                  <span className="block mt-3 font-medium">Module : <span className="font-bold">{planName}</span></span>
+                                  <span className="block mt-2">Clé : <span className="select-all text-xs">{req.admin_notes}</span></span>
+                                </DialogDescription>
+                              </DialogHeader>
+                              <DialogFooter>
+                                <Button variant="outline" onClick={() => setDialogOpenId(null)}>Annuler</Button>
+                                <Button onClick={() => handleValidateKey(req)} className="bg-green-700 text-white">
+                                  Confirmer la validation
+                                </Button>
+                              </DialogFooter>
+                            </DialogContent>
+                          </Dialog>
+                        )}
+                      </div>
                     </div>
-                    <div>{getStatusBadge(req.status || "pending")}</div>
-                  </div>
-                </li>
-              ))}
+                  </li>
+                );
+              })}
             </ul>
           )}
         </div>

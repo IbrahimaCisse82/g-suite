@@ -44,9 +44,12 @@ const PartnersSection = () => {
                   alt={`Logo ${partner.name}`}
                   className="max-h-16 max-w-full object-contain group-hover:scale-110 transition-transform duration-300"
                   onError={(e) => {
-                    // Fallback si l'image n'est pas trouvée
-                    e.currentTarget.style.display = 'none';
-                    e.currentTarget.nextElementSibling.style.display = 'flex';
+                    const imgElement = e.currentTarget;
+                    const fallbackElement = imgElement.nextElementSibling as HTMLElement;
+                    imgElement.style.display = 'none';
+                    if (fallbackElement) {
+                      fallbackElement.style.display = 'flex';
+                    }
                   }}
                 />
                 <div 

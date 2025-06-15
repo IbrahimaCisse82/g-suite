@@ -41,7 +41,7 @@ const CTASection = () => {
             <Button 
               size="lg" 
               variant="outline" 
-              className="border-2 border-white text-white hover:bg-white hover:text-green-600 text-lg px-8 py-4 rounded-lg transition-all"
+              className="border-2 border-white text-white bg-transparent hover:bg-white hover:text-green-600 text-lg px-8 py-4 rounded-lg transition-all font-semibold"
               onClick={handleExpertContact}
             >
               <MessageSquare className="mr-2 w-5 h-5" />

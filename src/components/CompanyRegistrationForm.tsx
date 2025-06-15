@@ -79,7 +79,7 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
 
   const onSubmit = async (data: CompanyFormData) => {
     await submitForm(
-      { ...data, plan_type: selectedModule },
+      data, // strictly CompanyFormData type as expected by hook
       logoFile,
       "paid"
     );

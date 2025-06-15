@@ -8,19 +8,21 @@ import {
   ShoppingCart, 
   TrendingUp, 
   Settings,
-  Calculator,
   PieChart,
   CreditCard,
-  Building,
   Package,
   Warehouse,
-  GraduationCap
+  GraduationCap,
+  Globe2,          // Pour Entreprise
+  ShoppingBag,     // Pour Commerciale
+  FileBarChart     // Pour Comptabilité
 } from 'lucide-react';
 import { useProfileAccess } from "@/hooks/useProfileAccess";
+import GsuiteLogo from "/gsuite-logo.png";
 
 const menuItems = [
   { icon: LayoutDashboard, label: 'Tableau de bord', path: '/dashboard', feature: "dashboard" },
-  { icon: Calculator, label: 'Comptabilité générale', path: '/accounting', feature: "accounting" },
+  { icon: FileBarChart, label: 'Comptabilité générale', path: '/accounting', feature: "accounting" }, // Compta
   { icon: Users, label: 'Clients & Fournisseurs', path: '/contacts', feature: "contacts" },
   { icon: FileText, label: 'Facturation', path: '/invoicing', feature: "invoicing" },
   { icon: ShoppingCart, label: 'Achats', path: '/purchases', feature: "purchases" },
@@ -51,12 +53,10 @@ export const Sidebar = () => {
     <div className="w-64 bg-sidebar text-sidebar-foreground flex flex-col border-r border-sidebar-border">
       <div className="p-6 border-b border-sidebar-border">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center">
-            <Building className="w-6 h-6 text-white" />
-          </div>
+          <img src={GsuiteLogo} alt="G-Suite Logo" className="w-10 h-10 object-contain rounded-md shadow" />
           <div>
             <h1 className="text-xl font-bold text-sidebar-foreground">G-Suite</h1>
-            <p className="text-sm text-sidebar-foreground/70">Gestion d'entreprise</p>
+            <p className="text-sm text-sidebar-foreground/70">Gestion d'entreprise digitale</p>
           </div>
         </div>
       </div>

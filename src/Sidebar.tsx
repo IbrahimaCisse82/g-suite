@@ -11,15 +11,18 @@ import {
   Calculator,
   PieChart,
   CreditCard,
-  Building,
   Package,
   Warehouse,
-  GraduationCap
+  GraduationCap,
+  Globe2, // Pour Entreprise
+  ShoppingBag, // Pour Commerciale
+  FileBarChart // Pour Comptabilité
 } from 'lucide-react';
+import GsuiteLogo from "/gsuite-logo.png";
 
 const menuItems = [
   { icon: LayoutDashboard, label: 'Tableau de bord', path: '/dashboard' },
-  { icon: Calculator, label: 'Comptabilité générale', path: '/accounting' },
+  { icon: FileBarChart, label: 'Comptabilité générale', path: '/accounting' }, // Comptabilité
   { icon: Users, label: 'Clients & Fournisseurs', path: '/contacts' },
   { icon: FileText, label: 'Facturation', path: '/invoicing' },
   { icon: ShoppingCart, label: 'Achats', path: '/purchases' },
@@ -39,10 +42,10 @@ export const Sidebar = () => {
     <div className="w-64 bg-slate-900 text-white flex flex-col">
       <div className="p-6 border-b border-slate-700">
         <div className="flex items-center space-x-3">
-          <Building className="w-8 h-8 text-blue-400" />
+          <img src={GsuiteLogo} alt="G-Suite Logo" className="w-10 h-10 object-contain rounded-md shadow" />
           <div>
             <h1 className="text-xl font-bold">G-Suite</h1>
-            <p className="text-sm text-slate-400">Gestion d'entreprise</p>
+            <p className="text-sm text-slate-400">Gestion d'entreprise digitale</p>
           </div>
         </div>
       </div>
@@ -71,7 +74,7 @@ export const Sidebar = () => {
       
       <div className="p-4 border-t border-slate-700">
         <div className="text-xs text-slate-400">
-          © 2024 G-Compta v1.0
+          © 2024 G-Suite v1.0
         </div>
       </div>
     </div>

@@ -14,7 +14,10 @@ import {
   Package,
   Warehouse,
   GraduationCap,
-  LogOut
+  LogOut,
+  Globe2,
+  FileBarChart,
+  ShoppingBag
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { 
@@ -37,8 +40,8 @@ import GsuiteLogo from "/gsuite-logo.png";
 import { Briefcase } from 'lucide-react';
 
 const menuItems = [
-  { icon: LayoutDashboard, label: 'Tableau de bord', path: '/dashboard' },
-  { icon: Calculator, label: 'Comptabilité', path: '/accounting' },
+  { icon: Globe2, label: 'Tableau de bord', path: '/dashboard' }, // Globe2 pour l’aspect global entreprise
+  { icon: FileBarChart, label: 'Comptabilité', path: '/accounting' }, // FileBarChart pour la compta
   { icon: Users, label: 'Contacts', path: '/contacts' },
   { icon: FileText, label: 'Facturation', path: '/invoicing' },
   { icon: ShoppingCart, label: 'Achats', path: '/purchases' },
@@ -47,7 +50,7 @@ const menuItems = [
   { icon: CreditCard, label: 'Trésorerie', path: '/treasury' },
   { icon: PieChart, label: 'Rapports', path: '/reports' },
   { icon: TrendingUp, label: 'Analyse', path: '/analytics' },
-  { icon: GraduationCap, label: 'Formation', path: '/training' },
+  { icon: ShoppingBag, label: 'Commercial', path: '/training' }, // ShoppingBag pour Commerciale
   // Retirer l'entrée "Paramètres" ici (on va l'ajouter avec son sous-menu plus bas)
 ];
 

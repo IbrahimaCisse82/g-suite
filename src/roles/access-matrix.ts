@@ -1,7 +1,10 @@
 
 /**
- * Définition des autorisations par rôle.
+ * Mapping combiné {module: {role: features[]}}
+ * Les clés de modules : "entreprise", "comptable", "commerciale"
+ * Les rôles sont : "manager", "comptable", "commerciale", "logistique", "caissier"
  */
+export type ModuleType = "entreprise" | "comptable" | "commerciale";
 export type Role =
   | "manager"
   | "comptable"
@@ -9,42 +12,53 @@ export type Role =
   | "logistique"
   | "caissier";
 
-// Les clés correspondent aux paths (routes principales)
-export const ACCESS_MATRIX: Record<Role, string[]> = {
-  manager: [
-    // Accès total
-    "dashboard",
-    "accounting",
-    "contacts",
-    "invoicing",
-    "purchases",
-    "products",
-    "stock",
-    "treasury",
-    "reports",
-    "analytics",
-    "training",
-    "settings",
-  ],
-  comptable: [
-    "accounting",
-    "treasury",
-    "training",
-  ],
-  commerciale: [
-    "invoicing",
-    "purchases",
-    "training",
-  ],
-  logistique: [
-    "products",
-    "stock",
-    "training",
-  ],
-  caissier: [
-    "treasury",
-    "training",
-  ],
+export const MODULE_ACCESS_MATRIX: Record<
+  ModuleType,
+  Record<Role, string[]>
+> = {
+  entreprise: {
+    manager: [
+      // Toutes les fonctionnalités
+      "dashboard",
+      "accounting",
+      "contacts",
+      "invoicing",
+      "purchases",
+      "products",
+      "stock",
+      "treasury",
+      "reports",
+      "analytics",
+      "training",
+      "settings",
+    ],
+    comptable: ["accounting", "treasury", "training"],
+    commerciale: ["contacts", "invoicing", "purchases", "training"],
+    logistique: ["products", "stock", "training"],
+    caissier: ["treasury", "training"],
+  },
+  comptable: {
+    manager: ["accounting", "treasury", "training", "settings"],
+    comptable: ["accounting", "treasury", "training"],
+    caissier: ["treasury", "training"],
+    commerciale: [],
+    logistique: [],
+  },
+  commerciale: {
+    manager: [
+      "contacts",
+      "invoicing",
+      "purchases",
+      "products",
+      "stock",
+      "training",
+      "settings",
+    ],
+    commerciale: ["contacts", "invoicing", "purchases", "training"],
+    logistique: ["products", "stock", "training"],
+    comptable: [],
+    caissier: [],
+  },
 };
 
 /**
@@ -62,5 +76,5 @@ export const PATH_FEATURE_MAP: Record<string, string> = {
   "/reports": "reports",
   "/analytics": "analytics",
   "/training": "training",
-  "/settings": "settings", // paramétrage (visible pour manager uniquement)
+  "/settings": "settings", // paramétrage
 };

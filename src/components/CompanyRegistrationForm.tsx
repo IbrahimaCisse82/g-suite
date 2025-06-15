@@ -127,7 +127,7 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
           <div className="space-y-3 p-4 bg-slate-50 rounded-lg border-2 border-slate-200">
             <Label className="text-slate-800 font-bold text-base">Solution G-Suite souhaitée <span className="text-red-600 font-bold">*</span></Label>
             <select
-              className="w-full border-3 border-slate-400 rounded-md px-3 py-3 bg-white text-slate-800 font-semibold focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200"
+              className="w-full border-2 border-slate-400 rounded-md px-3 py-3 bg-white text-slate-800 font-semibold focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 shadow-sm"
               value={selectedModule}
               onChange={e => setSelectedModule(e.target.value)}
               required
@@ -161,7 +161,7 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
             <CompanyRepresentativeInfo form={form} />
           </div>
 
-          <Button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 text-lg border-3 border-emerald-600 shadow-lg" disabled={isLoading}>
+          <Button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 text-lg border-2 border-emerald-600 shadow-lg" disabled={isLoading}>
             {isLoading ? "Création en cours..." : "Demander ma clé licence"}
           </Button>
           <div className="text-sm text-slate-700 text-center font-bold bg-slate-100 p-4 rounded-md border-2 border-slate-300">

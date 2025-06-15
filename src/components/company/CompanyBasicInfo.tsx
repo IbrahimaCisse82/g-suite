@@ -21,7 +21,7 @@ export const CompanyBasicInfo = ({ form }: CompanyBasicInfoProps) => {
           id="name"
           {...form.register('name')}
           placeholder="Nom de votre entreprise"
-          className="border-3 border-slate-400 bg-white text-slate-800 font-semibold focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 py-3"
+          className="border-2 border-slate-400 bg-white text-slate-800 font-semibold focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 py-3 shadow-sm"
         />
         {form.formState.errors.name && (
           <p className="text-sm text-red-600 font-bold">{form.formState.errors.name.message}</p>
@@ -36,7 +36,7 @@ export const CompanyBasicInfo = ({ form }: CompanyBasicInfoProps) => {
             id="address"
             {...form.register('address')}
             placeholder="Adresse complète"
-            className="border-3 border-slate-400 bg-white text-slate-800 font-semibold focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 py-3"
+            className="border-2 border-slate-400 bg-white text-slate-800 font-semibold focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 py-3 shadow-sm"
           />
           {form.formState.errors.address && (
             <p className="text-sm text-red-600 font-bold">{form.formState.errors.address.message}</p>
@@ -48,7 +48,7 @@ export const CompanyBasicInfo = ({ form }: CompanyBasicInfoProps) => {
             id="city"
             {...form.register('city')}
             placeholder="Ville"
-            className="border-3 border-slate-400 bg-white text-slate-800 font-semibold focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 py-3"
+            className="border-2 border-slate-400 bg-white text-slate-800 font-semibold focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 py-3 shadow-sm"
           />
           {form.formState.errors.city && (
             <p className="text-sm text-red-600 font-bold">{form.formState.errors.city.message}</p>
@@ -62,12 +62,12 @@ export const CompanyBasicInfo = ({ form }: CompanyBasicInfoProps) => {
           value={form.watch('country')}
           onValueChange={(value) => form.setValue('country', value)}
         >
-          <SelectTrigger className="border-3 border-slate-400 bg-white text-slate-800 font-semibold focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 py-3">
+          <SelectTrigger className="border-2 border-slate-400 bg-white text-slate-800 font-semibold focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 py-3 shadow-sm">
             <SelectValue placeholder="Sélectionner un pays" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-white border-2 border-slate-400 shadow-lg">
             {COUNTRIES.map((country) => (
-              <SelectItem key={country.code} value={country.name} className="font-semibold">
+              <SelectItem key={country.code} value={country.name} className="font-semibold hover:bg-slate-100">
                 {country.name}
               </SelectItem>
             ))}

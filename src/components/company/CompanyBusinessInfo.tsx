@@ -39,12 +39,12 @@ export const CompanyBusinessInfo = ({ form }: CompanyBusinessInfoProps) => {
           value={form.watch('business_sector')}
           onValueChange={(value) => form.setValue('business_sector', value as any)}
         >
-          <SelectTrigger className="border-3 border-slate-400 bg-white text-slate-800 font-semibold focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 py-3">
+          <SelectTrigger className="border-2 border-slate-400 bg-white text-slate-800 font-semibold focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 py-3 shadow-sm">
             <SelectValue placeholder="Sélectionner un secteur" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-white border-2 border-slate-400 shadow-lg">
             {businessSectors.map((sector) => (
-              <SelectItem key={sector.value} value={sector.value} className="font-semibold">
+              <SelectItem key={sector.value} value={sector.value} className="font-semibold hover:bg-slate-100">
                 {sector.label}
               </SelectItem>
             ))}
@@ -62,12 +62,12 @@ export const CompanyBusinessInfo = ({ form }: CompanyBusinessInfoProps) => {
           value={form.watch('currency')}
           onValueChange={(value) => form.setValue('currency', value)}
         >
-          <SelectTrigger className="border-3 border-slate-400 bg-white text-slate-800 font-semibold focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 py-3">
+          <SelectTrigger className="border-2 border-slate-400 bg-white text-slate-800 font-semibold focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 py-3 shadow-sm">
             <SelectValue placeholder="Sélectionner une devise" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-white border-2 border-slate-400 shadow-lg">
             {CURRENCIES.map((currency) => (
-              <SelectItem key={currency.code} value={currency.code} className="font-semibold">
+              <SelectItem key={currency.code} value={currency.code} className="font-semibold hover:bg-slate-100">
                 {currency.name}
               </SelectItem>
             ))}
@@ -87,7 +87,7 @@ export const CompanyBusinessInfo = ({ form }: CompanyBusinessInfoProps) => {
             id="ninea"
             {...form.register('ninea')}
             placeholder="Numéro NINEA"
-            className="border-3 border-slate-400 bg-white text-slate-800 font-semibold focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 py-3"
+            className="border-2 border-slate-400 bg-white text-slate-800 font-semibold focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 py-3 shadow-sm"
           />
         </div>
         <div className="space-y-2">
@@ -96,7 +96,7 @@ export const CompanyBusinessInfo = ({ form }: CompanyBusinessInfoProps) => {
             id="rccm"
             {...form.register('rccm')}
             placeholder="Numéro RCCM"
-            className="border-3 border-slate-400 bg-white text-slate-800 font-semibold focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 py-3"
+            className="border-2 border-slate-400 bg-white text-slate-800 font-semibold focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 py-3 shadow-sm"
           />
         </div>
       </div>
@@ -108,7 +108,7 @@ export const CompanyBusinessInfo = ({ form }: CompanyBusinessInfoProps) => {
           type="url"
           {...form.register('website')}
           placeholder="https://www.exemple.com"
-          className="border-3 border-slate-400 bg-white text-slate-800 font-semibold focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 py-3"
+          className="border-2 border-slate-400 bg-white text-slate-800 font-semibold focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 py-3 shadow-sm"
         />
         {form.formState.errors.website && (
           <p className="text-sm text-red-600 font-bold">{form.formState.errors.website.message}</p>

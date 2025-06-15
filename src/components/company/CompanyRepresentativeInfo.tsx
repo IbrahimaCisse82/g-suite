@@ -19,13 +19,13 @@ export const CompanyRepresentativeInfo = ({ form }: CompanyRepresentativeInfoPro
           value={form.watch('representative_title')}
           onValueChange={(value) => form.setValue('representative_title', value as 'M.' | 'Mme' | 'Mlle')}
         >
-          <SelectTrigger className="border-3 border-slate-400 bg-white text-slate-800 font-semibold focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 py-3">
+          <SelectTrigger className="border-2 border-slate-400 bg-white text-slate-800 font-semibold focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 py-3 shadow-sm">
             <SelectValue placeholder="Sélectionner une civilité" />
           </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="M." className="font-semibold">M.</SelectItem>
-            <SelectItem value="Mme" className="font-semibold">Mme</SelectItem>
-            <SelectItem value="Mlle" className="font-semibold">Mlle</SelectItem>
+          <SelectContent className="bg-white border-2 border-slate-400 shadow-lg">
+            <SelectItem value="M." className="font-semibold hover:bg-slate-100">M.</SelectItem>
+            <SelectItem value="Mme" className="font-semibold hover:bg-slate-100">Mme</SelectItem>
+            <SelectItem value="Mlle" className="font-semibold hover:bg-slate-100">Mlle</SelectItem>
           </SelectContent>
         </Select>
         {form.formState.errors.representative_title && (
@@ -40,7 +40,7 @@ export const CompanyRepresentativeInfo = ({ form }: CompanyRepresentativeInfoPro
             id="representative_first_name"
             {...form.register('representative_first_name')}
             placeholder="Prénom"
-            className="border-3 border-slate-400 bg-white text-slate-800 font-semibold focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 py-3"
+            className="border-2 border-slate-400 bg-white text-slate-800 font-semibold focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 py-3 shadow-sm"
           />
           {form.formState.errors.representative_first_name && (
             <p className="text-sm text-red-600 font-bold">{form.formState.errors.representative_first_name.message}</p>
@@ -52,7 +52,7 @@ export const CompanyRepresentativeInfo = ({ form }: CompanyRepresentativeInfoPro
             id="representative_last_name"
             {...form.register('representative_last_name')}
             placeholder="Nom"
-            className="border-3 border-slate-400 bg-white text-slate-800 font-semibold focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 py-3"
+            className="border-2 border-slate-400 bg-white text-slate-800 font-semibold focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 py-3 shadow-sm"
           />
           {form.formState.errors.representative_last_name && (
             <p className="text-sm text-red-600 font-bold">{form.formState.errors.representative_last_name.message}</p>

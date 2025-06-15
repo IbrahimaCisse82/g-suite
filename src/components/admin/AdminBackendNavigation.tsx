@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useSecureAdminAuth } from '@/hooks/useSecureAdminAuth';
-import GsuiteLogo from "/gsuite-logo.png";
+import { GSuiteLogo } from '@/components/ui/gsuite-logo';
 
 const adminMenuItems = [
   { icon: Globe2, label: 'Tableau de bord', path: '/admin' },
@@ -33,7 +33,7 @@ export const AdminBackendNavigation = () => {
     <div className="w-64 bg-slate-900 text-white flex flex-col border-r border-slate-700">
       <div className="p-6 border-b border-slate-700">
         <div className="flex items-center space-x-3">
-          <img src={GsuiteLogo} alt="G-Suite Logo" className="w-10 h-10 object-contain rounded-md shadow" />
+          <GSuiteLogo size={40} />
           <div>
             <h1 className="text-xl font-bold text-white">Admin G-Suite</h1>
             <p className="text-sm text-slate-300">Gestion des licences</p>

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
@@ -18,7 +17,7 @@ import {
   FileBarChart     // Pour Comptabilité
 } from 'lucide-react';
 import { useProfileAccess } from "@/hooks/useProfileAccess";
-import GsuiteLogo from "/gsuite-logo.png";
+import { GSuiteLogo } from '@/components/ui/gsuite-logo';
 
 const menuItems = [
   { icon: LayoutDashboard, label: 'Tableau de bord', path: '/dashboard', feature: "dashboard" },
@@ -53,7 +52,7 @@ export const Sidebar = () => {
     <div className="w-64 bg-sidebar text-sidebar-foreground flex flex-col border-r border-sidebar-border">
       <div className="p-6 border-b border-sidebar-border">
         <div className="flex items-center space-x-3">
-          <img src={GsuiteLogo} alt="G-Suite Logo" className="w-10 h-10 object-contain rounded-md shadow" />
+          <GSuiteLogo size={40} />
           <div>
             <h1 className="text-xl font-bold text-sidebar-foreground">G-Suite</h1>
             <p className="text-sm text-sidebar-foreground/70">Gestion d'entreprise digitale</p>

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
@@ -36,7 +37,7 @@ import {
 } from '@/components/ui/sidebar';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import GsuiteLogo from "/gsuite-logo.png";
+import { GSuiteLogo } from '@/components/ui/gsuite-logo';
 import { Briefcase } from 'lucide-react';
 
 const menuItems = [
@@ -74,7 +75,7 @@ export const EnterpriseHeader = () => {
     <Sidebar>
       <SidebarHeader>
         <div className="flex items-center space-x-3 p-2">
-          <img src={GsuiteLogo} alt="G-Suite Logo" className="w-10 h-10 object-contain rounded-md shadow" />
+          <GSuiteLogo size={40} />
           <div>
             <h1 className="text-xl font-bold text-sidebar-foreground">G-Suite</h1>
             <p className="text-sm text-sidebar-foreground/70">Gestion d'entreprise digitale</p>

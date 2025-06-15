@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -273,10 +272,9 @@ export const SecureAdminLoginForm = () => {
 
           <div className="mt-4 p-3 bg-gray-50 border border-gray-200 rounded-lg">
             <p className="text-xs text-gray-600">
-              <strong>Comptes administrateurs disponibles :</strong><br />
-              • i.cisse@growhubsenegal.com<br />
-              • h.ndiaye@growhubsenegal.com<br />
-              <strong>Mot de passe par défaut :</strong> Admin1946
+              <strong>Connexion sécurisée.</strong><br />
+              Veuillez saisir vos identifiants personnels.<br />
+              Contactez le support si vous rencontrez un problème d'accès.
             </p>
           </div>
         </CardContent>

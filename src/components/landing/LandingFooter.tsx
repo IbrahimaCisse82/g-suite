@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Building, Mail, Phone, MapPin, Facebook, Twitter, Linkedin } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -10,6 +11,11 @@ const LandingFooter = () => {
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     }
+  };
+
+  const handleNavigation = (path: string) => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    navigate(path);
   };
 
   const handleEmailClick = () => {
@@ -31,18 +37,6 @@ const LandingFooter = () => {
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const handleDocumentationClick = () => {
-    navigate('/product-documentation');
-  };
-
-  const handleFormationClick = () => {
-    navigate('/formation');
-  };
-
-  const handleAdminClick = () => {
-    navigate('/admin-login');
   };
 
   return (
@@ -110,7 +104,7 @@ const LandingFooter = () => {
               </li>
               <li>
                 <button 
-                  onClick={() => navigate('/security')} 
+                  onClick={() => handleNavigation('/security')} 
                   className="text-slate-300 hover:text-green-400 transition-colors"
                 >
                   Sécurité
@@ -118,7 +112,7 @@ const LandingFooter = () => {
               </li>
               <li>
                 <button 
-                  onClick={() => navigate('/integrations')} 
+                  onClick={() => handleNavigation('/integrations')} 
                   className="text-slate-300 hover:text-green-400 transition-colors"
                 >
                   Intégrations
@@ -126,7 +120,7 @@ const LandingFooter = () => {
               </li>
               <li>
                 <button 
-                  onClick={() => navigate('/mobile')} 
+                  onClick={() => handleNavigation('/mobile')} 
                   className="text-slate-300 hover:text-green-400 transition-colors"
                 >
                   Mobile
@@ -141,7 +135,7 @@ const LandingFooter = () => {
             <ul className="space-y-3">
               <li>
                 <button 
-                  onClick={() => navigate('/help-center')} 
+                  onClick={() => handleNavigation('/help-center')} 
                   className="text-slate-300 hover:text-green-400 transition-colors"
                 >
                   Centre d'aide
@@ -149,7 +143,7 @@ const LandingFooter = () => {
               </li>
               <li>
                 <button 
-                  onClick={handleDocumentationClick} 
+                  onClick={() => handleNavigation('/product-documentation')} 
                   className="text-slate-300 hover:text-green-400 transition-colors"
                 >
                   Documentation
@@ -157,7 +151,7 @@ const LandingFooter = () => {
               </li>
               <li>
                 <button 
-                  onClick={handleFormationClick} 
+                  onClick={() => handleNavigation('/formation')} 
                   className="text-slate-300 hover:text-green-400 transition-colors"
                 >
                   Formation
@@ -165,7 +159,7 @@ const LandingFooter = () => {
               </li>
               <li>
                 <button 
-                  onClick={() => navigate('/contact')} 
+                  onClick={() => handleNavigation('/contact')} 
                   className="text-slate-300 hover:text-green-400 transition-colors"
                 >
                   Contact
@@ -207,31 +201,31 @@ const LandingFooter = () => {
           
           <div className="flex flex-wrap justify-center md:justify-start space-x-6 mt-4 text-sm text-slate-400">
             <button 
-              onClick={() => navigate('/legal-notices')} 
+              onClick={() => handleNavigation('/legal-notices')} 
               className="hover:text-green-400 transition-colors"
             >
               Mentions légales
             </button>
             <button 
-              onClick={() => navigate('/privacy-policy')} 
+              onClick={() => handleNavigation('/privacy-policy')} 
               className="hover:text-green-400 transition-colors"
             >
               Politique de confidentialité
             </button>
             <button 
-              onClick={() => navigate('/terms-of-service')} 
+              onClick={() => handleNavigation('/terms-of-service')} 
               className="hover:text-green-400 transition-colors"
             >
               CGU
             </button>
             <button 
-              onClick={() => navigate('/cookies-policy')} 
+              onClick={() => handleNavigation('/cookies-policy')} 
               className="hover:text-green-400 transition-colors"
             >
               Cookies
             </button>
             <button 
-              onClick={handleAdminClick} 
+              onClick={() => handleNavigation('/admin-login')} 
               className="hover:text-green-400 transition-colors text-xs opacity-50 hover:opacity-100"
             >
               Admin

@@ -24,7 +24,7 @@ export const ContactFooter = () => {
             <span className="text-emerald-400">Contact</span>
           </div>
           <div className="mt-8 pt-8 border-t border-slate-700 text-xs text-slate-400 font-medium">
-            © 2024 G-Suite by GrowHub Sénégal. Tous droits réservés.
+            Développé par GrowHub Sénégal, cabinet de conseils aux entreprises.
           </div>
         </div>
       </div>

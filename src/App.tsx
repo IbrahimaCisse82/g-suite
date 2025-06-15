@@ -1,8 +1,8 @@
+
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { navItems } from "./nav-items";
 import Index from "./pages/Index";
 import Landing from "./pages/Landing";
 import AboutUs from "./pages/AboutUs";
@@ -71,10 +71,7 @@ const App = () => (
           <Route path="/training" element={<TrainingSupport />} />
           <Route path="/training-standalone" element={<TrainingSupportStandalone />} />
           <Route path="/product-documentation" element={<ProductDocumentation />} />
-
-          {navItems.map(({ to, page }) => (
-            <Route key={to} path={to} element={page} />
-          ))}
+          <Route path="/index" element={<Index />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>

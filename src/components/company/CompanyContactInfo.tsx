@@ -1,9 +1,8 @@
-
 import React from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { CompanyFormData } from '@/hooks/useCompanyRegistration';
+import { CompanyFormData } from '@/types/company';
 
 interface CompanyContactInfoProps {
   form: UseFormReturn<CompanyFormData>;

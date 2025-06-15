@@ -1,10 +1,9 @@
-
 import React from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { CompanyFormData } from '@/hooks/useCompanyRegistration';
+import { CompanyFormData } from '@/types/company';
 
 interface CompanyRepresentativeInfoProps {
   form: UseFormReturn<CompanyFormData>;

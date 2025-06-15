@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Building, Mail, Phone, MapPin, Facebook, Twitter, Linkedin } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -180,7 +179,7 @@ const LandingFooter = () => {
         <div className="border-t border-slate-700 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <div className="text-slate-400 text-sm">
-              © 2024 G-Suite by GrowHub Sénégal. Tous droits réservés.
+              Développé par GrowHub Sénégal, cabinet de conseils aux entreprises.
             </div>
             
             {/* Social links */}

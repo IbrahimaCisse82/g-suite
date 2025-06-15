@@ -17,8 +17,6 @@ export const FooterCompanyInfo = ({
   return (
     <div className="md:col-span-2">
       <div className="flex items-center space-x-3 mb-6 cursor-pointer" onClick={onLogoClick}>
-        {/* GrowHub logo visible à gauche */}
-        <GrowHubLogo size={40} className="bg-white rounded shadow p-1" />
         <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center">
           <Building className="w-6 h-6 text-white" />
         </div>
@@ -33,24 +31,30 @@ export const FooterCompanyInfo = ({
         technologiques pour entreprises.
       </p>
       
-      <div className="space-y-3">
-        <button 
-          onClick={onEmailClick}
-          className="flex items-center space-x-3 text-slate-300 hover:text-green-400 transition-colors"
-        >
-          <Mail className="w-4 h-4 flex-shrink-0" />
-          <span className="text-sm">support@g-suite.com</span>
-        </button>
-        <button 
-          onClick={onPhoneClick}
-          className="flex items-center space-x-3 text-slate-300 hover:text-green-400 transition-colors"
-        >
-          <Phone className="w-4 h-4 flex-shrink-0" />
-          <span className="text-sm">+221 78 475 28 58</span>
-        </button>
-        <div className="flex items-center space-x-3 text-slate-300">
-          <MapPin className="w-4 h-4 flex-shrink-0" />
-          <span className="text-sm">Dakar, Sénégal</span>
+      <div className="flex items-center space-y-0 gap-x-5">
+        <div className="flex flex-col space-y-3">
+          <button 
+            onClick={onEmailClick}
+            className="flex items-center space-x-3 text-slate-300 hover:text-green-400 transition-colors"
+          >
+            <Mail className="w-4 h-4 flex-shrink-0" />
+            <span className="text-sm">support@g-suite.com</span>
+          </button>
+          <button 
+            onClick={onPhoneClick}
+            className="flex items-center space-x-3 text-slate-300 hover:text-green-400 transition-colors"
+          >
+            <Phone className="w-4 h-4 flex-shrink-0" />
+            <span className="text-sm">+221 78 475 28 58</span>
+          </button>
+          <div className="flex items-center space-x-3 text-slate-300">
+            <MapPin className="w-4 h-4 flex-shrink-0" />
+            <span className="text-sm">Dakar, Sénégal</span>
+          </div>
+        </div>
+        {/* Logo GrowHub déplacé à droite des contacts */}
+        <div className="pl-6">
+          <GrowHubLogo size={46} className="bg-white rounded shadow p-1" />
         </div>
       </div>
     </div>

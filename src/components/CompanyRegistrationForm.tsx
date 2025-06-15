@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -14,6 +13,7 @@ import { CompanyBasicInfo } from '@/components/company/CompanyBasicInfo';
 import { CompanyContactInfo } from '@/components/company/CompanyContactInfo';
 import { CompanyBusinessInfo } from '@/components/company/CompanyBusinessInfo';
 import { CompanyRepresentativeInfo } from '@/components/company/CompanyRepresentativeInfo';
+import { useSearchParams } from "react-router-dom";
 
 const companySchema = z.object({
   name: z.string().min(2, 'Le nom de l\'entreprise doit contenir au moins 2 caractères'),
@@ -43,7 +43,16 @@ interface CompanyRegistrationFormProps {
 export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormProps) => {
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string>('');
-  const [accountType, setAccountType] = useState<'demo' | 'paid'>('paid');
+  const [searchParams] = useSearchParams();
+  const moduleParam = searchParams.get('solution');
+  const MODULE_OPTIONS = [
+    { value: "entreprise", label: "Gestion d'Entreprise" },
+    { value: "comptable", label: "Comptabilité" },
+    { value: "commerciale", label: "Commerciale" }
+  ];
+  const [selectedModule, setSelectedModule] = useState<string>(
+    moduleParam || "entreprise"
+  );
   const { isLoading, submitForm } = useCompanyRegistration(onSuccess);
 
   const form = useForm<CompanyFormData>({
@@ -69,8 +78,11 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
   };
 
   const onSubmit = async (data: CompanyFormData) => {
-    console.log('Formulaire soumis avec les données:', data);
-    await submitForm(data, logoFile, accountType);
+    await submitForm(
+      { ...data, plan_type: selectedModule },
+      logoFile,
+      "paid"
+    );
   };
 
   return (
@@ -81,38 +93,24 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
           Créer le profil de votre entreprise
         </CardTitle>
         <CardDescription>
-          Renseignez les informations de votre entreprise pour commencer à utiliser G-Compta
+          Renseignez les informations de votre entreprise pour demander une clé licence G-Suite.
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          {/* Sélection du type de compte */}
+          {/* Choix obligatoire de la solution/module */}
           <div className="space-y-3">
-            <Label>Type de compte</Label>
-            <RadioGroup value={accountType} onValueChange={(value) => setAccountType(value as 'demo' | 'paid')}>
-              <div className="flex items-center space-x-2 p-3 border rounded-lg">
-                <RadioGroupItem value="demo" id="demo" />
-                <Label htmlFor="demo" className="flex-1 cursor-pointer">
-                  <div>
-                    <div className="font-medium">Compte démo (5 jours gratuits)</div>
-                    <div className="text-sm text-gray-500">
-                      Accès immédiat à toutes les fonctionnalités
-                    </div>
-                  </div>
-                </Label>
-              </div>
-              <div className="flex items-center space-x-2 p-3 border rounded-lg">
-                <RadioGroupItem value="paid" id="paid" />
-                <Label htmlFor="paid" className="flex-1 cursor-pointer">
-                  <div>
-                    <div className="font-medium">Compte payant</div>
-                    <div className="text-sm text-gray-500">
-                      Demande soumise pour validation (24h)
-                    </div>
-                  </div>
-                </Label>
-              </div>
-            </RadioGroup>
+            <Label>Solution G-Suite souhaitée <span className="text-red-500">*</span></Label>
+            <select
+              className="w-full border rounded-md px-3 py-2"
+              value={selectedModule}
+              onChange={e => setSelectedModule(e.target.value)}
+              required
+            >
+              {MODULE_OPTIONS.map(opt =>
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
+              )}
+            </select>
           </div>
 
           <CompanyLogoUpload 
@@ -129,15 +127,11 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
           <CompanyRepresentativeInfo form={form} />
 
           <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? 'Création en cours...' : 
-             accountType === 'demo' ? 'Créer le compte démo' : 'Soumettre la demande de compte payant'}
+            {isLoading ? "Création en cours..." : "Demander ma clé licence"}
           </Button>
-
-          {accountType === 'paid' && (
-            <div className="text-sm text-gray-600 text-center">
-              Votre demande sera traitée dans les 24 heures. Vous recevrez un email de confirmation.
-            </div>
-          )}
+          <div className="text-sm text-gray-600 text-center">
+            Votre demande sera validée sous 24h. Vous recevrez un email avec votre clé licence.
+          </div>
         </form>
       </CardContent>
     </Card>

@@ -10,34 +10,37 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
   DialogFooter, DialogTrigger,
 } from "@/components/ui/dialog";
+import { useSearchParams } from "react-router-dom";
 
 const MODULE_OPTIONS = [
-  { value: "comptabilite", label: "Solution Comptable" },
-  { value: "commerciale", label: "Solution Commerciale" },
-  { value: "entreprise", label: "Solution Entreprise" },
+  { value: "entreprise", label: "Gestion d'Entreprise" },
+  { value: "comptable", label: "Comptabilité" },
+  { value: "commerciale", label: "Commerciale" },
 ];
 
 const PLAN_NAME_MAP: Record<string, string> = {
-  comptabilite: "Solution Comptable",
-  commerciale: "Solution Commerciale",
-  entreprise: "Solution Entreprise",
+  entreprise: "Gestion d'Entreprise",
+  comptable: "Comptabilité",
+  commerciale: "Commerciale",
 };
 
 const PLAN_COLOR_MAP: Record<string, string> = {
-  comptabilite: "bg-blue-50 text-blue-700 border-blue-400",
-  commerciale: "bg-orange-50 text-orange-700 border-orange-400",
-  entreprise: "bg-green-50 text-green-700 border-green-400",
+  entreprise: "bg-purple-50 text-purple-700 border-purple-400",
+  comptable: "bg-blue-50 text-blue-700 border-blue-400",
+  commerciale: "bg-green-50 text-green-700 border-green-400",
 };
 
 // Ajouter un mapping pour les profils par module/plan
 const PLAN_PROFILES_MAP: Record<string, string[]> = {
   entreprise: ["Manager", "Comptable", "Commerciale", "Logistique", "Caissier"],
-  comptabilite: ["Manager", "Comptable", "Caissier"],
+  comptable: ["Manager", "Comptable", "Caissier"],
   commerciale: ["Manager", "Commerciale", "Logistique"],
 };
 
 export function LicenseKeySettings() {
-  const [selectedModule, setSelectedModule] = useState("");
+  const [searchParams] = useSearchParams();
+  const solutionParam = searchParams.get("solution");
+  const [selectedModule, setSelectedModule] = useState(solutionParam || "");
   const [requestMessage, setRequestMessage] = useState("");
   const createRequestMutation = useCreatePaidAccountRequest();
   const { data: requests = [], isLoading } = usePaidAccountRequests();

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { GSuiteLogo } from '@/components/ui/gsuite-logo';
+// import { GSuiteLogo } from '@/components/ui/gsuite-logo';
 import { Link } from 'react-router-dom';
 
 export const ContactFooter = () => {
@@ -9,7 +9,14 @@ export const ContactFooter = () => {
       <div className="container mx-auto px-4">
         <div className="text-center">
           <div className="flex items-center justify-center space-x-3 mb-4">
-            <GSuiteLogo size={32} />
+            <img
+              src="/lovable-uploads/5b81a087-8ac4-47d8-a1a4-d399127d40f3.png"
+              alt="Logo G-Suite"
+              width={32}
+              height={32}
+              className="object-contain bg-white rounded shadow-lg p-1"
+              draggable={false}
+            />
             <div>
               <h3 className="text-lg font-bold text-white">G-Suite</h3>
               <p className="text-xs text-slate-300">by Grow Hub Sarl</p>
@@ -31,4 +38,3 @@ export const ContactFooter = () => {
     </footer>
   );
 };
-

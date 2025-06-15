@@ -1,9 +1,11 @@
+
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { MobileWrapper } from "@/components/MobileWrapper";
 import Landing from "./pages/Landing";
+import AboutUs from "./pages/AboutUs";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import { Contacts } from "./pages/Contacts";
@@ -47,6 +49,7 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Landing />} />
+            <Route path="/about-us" element={<AboutUs />} />
             <Route path="/index" element={<Index />} />
             
             {/* Solutions Routes */}

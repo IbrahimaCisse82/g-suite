@@ -5,7 +5,6 @@ import { Building } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { SolutionsDropdown } from './SolutionsDropdown';
 import { GSuiteLogo } from '@/components/ui/gsuite-logo';
-import { Briefcase, Handshake, Receipt } from 'lucide-react';
 
 export const LandingHeader = () => {
   const scrollToSection = (sectionId: string) => {
@@ -22,28 +21,28 @@ export const LandingHeader = () => {
           <Link to="/" className="flex items-center space-x-3">
             <GSuiteLogo size={40} />
             <div>
-              <h1 className="text-xl font-bold text-gray-900">G-Suite</h1>
-              <p className="text-sm text-gray-600">Gestion d'entreprise digitale</p>
+              <h1 className="text-xl font-bold text-slate-900">G-Suite</h1>
+              <p className="text-sm text-slate-600">Gestion d'entreprise digitale</p>
             </div>
           </Link>
           
           <nav className="hidden md:flex items-center space-x-6">
             <Link 
               to="/" 
-              className="text-gray-600 hover:text-gray-900 transition-colors"
+              className="text-slate-600 hover:text-slate-900 transition-colors font-medium"
             >
               Accueil
             </Link>
             <SolutionsDropdown />
             <Link 
-              to="/company-registration" 
-              className="text-gray-600 hover:text-gray-900 transition-colors"
+              to="/about-us" 
+              className="text-slate-600 hover:text-slate-900 transition-colors font-medium"
             >
-              Test Gratuit
+              À Propos
             </Link>
             <button 
               onClick={() => scrollToSection('contact')} 
-              className="text-gray-600 hover:text-gray-900 transition-colors"
+              className="text-slate-600 hover:text-slate-900 transition-colors font-medium"
             >
               Contact
             </button>
@@ -51,7 +50,7 @@ export const LandingHeader = () => {
           
           <div className="flex items-center space-x-4">
             <Link to="/user-login">
-              <Button variant="outline" size="sm" className="text-gray-600 hover:text-gray-900">
+              <Button variant="outline" size="sm" className="text-slate-600 hover:text-slate-900 border-slate-300">
                 Connexion Entreprise
               </Button>
             </Link>

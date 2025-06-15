@@ -70,9 +70,13 @@ export function LicenseKeySettings() {
 
   const handleValidateKey = (req: any) => {
     toast({
-      title: "Clé validée avec succès",
+      title: (
+        <span className="inline-flex items-center gap-2">
+          <Check className="text-green-600 w-5 h-5" />
+          Clé validée avec succès
+        </span>
+      ),
       description: `La clé pour ${PLAN_NAME_MAP[req.plan_id as string] || req.subscription_plans?.name} est maintenant active.`,
-      icon: <Check className="text-green-600 w-5 h-5" />,
     });
     setDialogOpenId(null);
   };

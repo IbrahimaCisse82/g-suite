@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { LandingHeader } from '@/components/landing/LandingHeader';
+import LandingFooter from '@/components/landing/LandingFooter';
 import { Play, Clock, Users, CheckCircle, BookOpen, Video } from 'lucide-react';
 
 const Formation = () => {
@@ -193,6 +194,8 @@ const Formation = () => {
           </div>
         </div>
       </section>
+
+      <LandingFooter />
     </div>
   );
 };

@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { LandingHeader } from '@/components/landing/LandingHeader';
+import LandingFooter from '@/components/landing/LandingFooter';
 import { Building, Users, Target, Award, Globe, Heart } from 'lucide-react';
 
 const AboutUs = () => {
@@ -159,6 +160,8 @@ const AboutUs = () => {
           </div>
         </div>
       </section>
+
+      <LandingFooter />
     </div>
   );
 };

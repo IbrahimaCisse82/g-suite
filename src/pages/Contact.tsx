@@ -1,10 +1,10 @@
 
 import React from 'react';
 import { LandingHeader } from '@/components/landing/LandingHeader';
+import LandingFooter from '@/components/landing/LandingFooter';
 import { ContactHero } from '@/components/contact/ContactHero';
 import { ContactForm } from '@/components/contact/ContactForm';
 import { ContactInfo } from '@/components/contact/ContactInfo';
-import { ContactFooter } from '@/components/contact/ContactFooter';
 
 const Contact = () => {
   return (
@@ -21,7 +21,7 @@ const Contact = () => {
         </div>
       </section>
 
-      <ContactFooter />
+      <LandingFooter />
     </div>
   );
 };

@@ -62,9 +62,9 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
   const form = useForm<CompanyFormData>({
     resolver: zodResolver(companySchema),
     defaultValues: {
-      country: 'France',
+      country: 'Sénégal',
       website: '',
-      currency: 'EUR',
+      currency: 'XOF',
       business_sector: 'commerce',
       representative_title: 'M.',
     },

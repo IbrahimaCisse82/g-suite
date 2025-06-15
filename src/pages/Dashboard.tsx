@@ -1,148 +1,165 @@
 
 import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { LayoutDashboard, Users, FileText, Package, TrendingUp, DollarSign } from 'lucide-react';
 import { Layout } from '@/components/Layout';
-import { KPICard } from '../components/KPICard';
-import { RecentTransactions } from '../components/RecentTransactions';
-import { FinancialChart } from '../components/FinancialChart';
-import { Button } from '@/components/ui/button';
-import { 
-  TrendingUp, 
-  TrendingDown, 
-  DollarSign, 
-  Users,
-  FileText,
-  AlertCircle 
-} from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { InitialSetupModal } from '@/components/setup/InitialSetupModal';
+import { useInitialSetup } from '@/hooks/useInitialSetup';
 
-const Dashboard = () => {
-  const navigate = useNavigate();
+const mockStats = [
+  {
+    title: 'Chiffre d\'affaires',
+    value: '2 450 000 XOF',
+    change: '+12%',
+    icon: DollarSign,
+    color: 'text-green-600'
+  },
+  {
+    title: 'Factures en attente',
+    value: '8',
+    change: '-3',
+    icon: FileText,
+    color: 'text-orange-600'
+  },
+  {
+    title: 'Produits en stock',
+    value: '156',
+    change: '+24',
+    icon: Package,
+    color: 'text-blue-600'
+  },
+  {
+    title: 'Clients actifs',
+    value: '42',
+    change: '+5',
+    icon: Users,
+    color: 'text-purple-600'
+  }
+];
 
-  const handleNewInvoice = () => {
-    navigate('/invoicing');
-  };
+export const Dashboard = () => {
+  const { needsSetup, isLoading, completeSetup } = useInitialSetup();
 
-  const handleAddClient = () => {
-    navigate('/contacts');
-  };
-
-  const handleNewEntry = () => {
-    navigate('/accounting');
-  };
+  if (isLoading) {
+    return (
+      <Layout>
+        <div className="p-8">
+          <div className="animate-pulse">
+            <div className="h-8 bg-gray-200 rounded w-64 mb-4"></div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="h-32 bg-gray-200 rounded"></div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
-      <div className="p-8 bg-background text-foreground">
-        {/* Header */}
+      <div className="p-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">Tableau de bord</h1>
-          <p className="text-muted-foreground">Vue d'ensemble de votre activité financière</p>
+          <h1 className="text-3xl font-bold text-foreground mb-2 flex items-center">
+            <LayoutDashboard className="w-8 h-8 mr-3 text-green-600" />
+            Tableau de bord
+          </h1>
+          <p className="text-muted-foreground">
+            Aperçu de votre activité commerciale
+          </p>
         </div>
 
-        {/* KPIs Grid */}
+        {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <KPICard
-            title="Chiffre d'affaires"
-            value="127 450€"
-            change="+12.5%"
-            changeType="positive"
-            icon={TrendingUp}
-            color="blue"
-          />
-          <KPICard
-            title="Bénéfice net"
-            value="38 240€"
-            change="+8.2%"
-            changeType="positive"
-            icon={DollarSign}
-            color="green"
-          />
-          <KPICard
-            title="Charges totales"
-            value="89 210€"
-            change="+4.1%"
-            changeType="negative"
-            icon={TrendingDown}
-            color="red"
-          />
-          <KPICard
-            title="Clients actifs"
-            value="156"
-            change="+5"
-            changeType="positive"
-            icon={Users}
-            color="purple"
-          />
+          {mockStats.map((stat, index) => {
+            const Icon = stat.icon;
+            return (
+              <Card key={index}>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
+                  <Icon className={`h-4 w-4 ${stat.color}`} />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{stat.value}</div>
+                  <p className="text-xs text-muted-foreground">
+                    <span className={stat.change.startsWith('+') ? 'text-green-600' : 'text-red-600'}>
+                      {stat.change}
+                    </span>
+                    {' '}par rapport au mois dernier
+                  </p>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
 
-        {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Financial Chart - 2/3 width */}
-          <div className="lg:col-span-2">
-            <FinancialChart />
-          </div>
-
-          {/* Quick Actions - 1/3 width */}
-          <div className="space-y-6">
-            <div className="bg-card rounded-xl shadow-sm border border-border p-6">
-              <h3 className="text-lg font-semibold text-card-foreground mb-4">Actions rapides</h3>
+        {/* Quick Actions */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Actions rapides</CardTitle>
+            </CardHeader>
+            <CardContent>
               <div className="space-y-3">
-                <Button 
-                  onClick={handleNewInvoice}
-                  className="w-full bg-green-600 hover:bg-green-700 text-white"
-                >
-                  <FileText className="w-5 h-5 mr-2" />
-                  Nouvelle facture
-                </Button>
-                <Button 
-                  onClick={handleAddClient}
-                  variant="outline" 
-                  className="w-full"
-                >
-                  <Users className="w-5 h-5 mr-2" />
-                  Ajouter client
-                </Button>
-                <Button 
-                  onClick={handleNewEntry}
-                  variant="outline" 
-                  className="w-full"
-                >
-                  <TrendingUp className="w-5 h-5 mr-2" />
-                  Saisir écriture
-                </Button>
-              </div>
-            </div>
-
-            {/* Alerts */}
-            <div className="bg-card rounded-xl shadow-sm border border-border p-6">
-              <h3 className="text-lg font-semibold text-card-foreground mb-4">Alertes</h3>
-              <div className="space-y-3">
-                <div className="flex items-start space-x-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                  <AlertCircle className="w-5 h-5 text-yellow-600 mt-0.5" />
-                  <div>
-                    <p className="text-sm font-medium text-yellow-800">5 factures en retard</p>
-                    <p className="text-xs text-yellow-600">Total: 12 450€</p>
+                <div className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted cursor-pointer">
+                  <div className="flex items-center space-x-3">
+                    <FileText className="w-5 h-5 text-blue-600" />
+                    <span>Créer une facture</span>
                   </div>
+                  <TrendingUp className="w-4 h-4 text-muted-foreground" />
                 </div>
-                <div className="flex items-start space-x-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                  <AlertCircle className="w-5 h-5 text-blue-600 mt-0.5" />
-                  <div>
-                    <p className="text-sm font-medium text-blue-800">Déclaration TVA</p>
-                    <p className="text-xs text-blue-600">À faire avant le 20/06</p>
+                <div className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted cursor-pointer">
+                  <div className="flex items-center space-x-3">
+                    <Users className="w-5 h-5 text-green-600" />
+                    <span>Ajouter un client</span>
                   </div>
+                  <TrendingUp className="w-4 h-4 text-muted-foreground" />
+                </div>
+                <div className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted cursor-pointer">
+                  <div className="flex items-center space-x-3">
+                    <Package className="w-5 h-5 text-purple-600" />
+                    <span>Gérer le stock</span>
+                  </div>
+                  <TrendingUp className="w-4 h-4 text-muted-foreground" />
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
+            </CardContent>
+          </Card>
 
-        {/* Recent Transactions */}
-        <div className="mt-8">
-          <RecentTransactions />
+          <Card>
+            <CardHeader>
+              <CardTitle>Activité récente</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3 text-sm">
+                <div className="flex justify-between items-center">
+                  <span>Facture F-2024-001 créée</span>
+                  <span className="text-muted-foreground">Il y a 2h</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span>Client "Entreprise ABC" ajouté</span>
+                  <span className="text-muted-foreground">Il y a 5h</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span>Stock produit "Ordinateur" mis à jour</span>
+                  <span className="text-muted-foreground">Hier</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span>Paiement reçu - 150 000 XOF</span>
+                  <span className="text-muted-foreground">Il y a 2 jours</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
+
+      {/* Initial Setup Modal */}
+      <InitialSetupModal 
+        isOpen={needsSetup} 
+        onComplete={completeSetup}
+      />
     </Layout>
   );
 };
-
-export default Dashboard;

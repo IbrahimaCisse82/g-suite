@@ -130,6 +130,7 @@ export type Database = {
           currency: string | null
           email: string
           id: string
+          initial_setup_completed: boolean | null
           logo_url: string | null
           name: string
           ninea: string | null
@@ -149,6 +150,7 @@ export type Database = {
           currency?: string | null
           email: string
           id?: string
+          initial_setup_completed?: boolean | null
           logo_url?: string | null
           name: string
           ninea?: string | null
@@ -168,6 +170,7 @@ export type Database = {
           currency?: string | null
           email?: string
           id?: string
+          initial_setup_completed?: boolean | null
           logo_url?: string | null
           name?: string
           ninea?: string | null
@@ -392,6 +395,51 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      financial_accounts: {
+        Row: {
+          account_name: string
+          account_number: string | null
+          account_type: string
+          bank_name: string | null
+          branch: string | null
+          company_id: string
+          created_at: string
+          currency: string | null
+          current_balance: number | null
+          id: string
+          is_active: boolean | null
+          updated_at: string
+        }
+        Insert: {
+          account_name: string
+          account_number?: string | null
+          account_type: string
+          bank_name?: string | null
+          branch?: string | null
+          company_id: string
+          created_at?: string
+          currency?: string | null
+          current_balance?: number | null
+          id?: string
+          is_active?: boolean | null
+          updated_at?: string
+        }
+        Update: {
+          account_name?: string
+          account_number?: string | null
+          account_type?: string
+          bank_name?: string | null
+          branch?: string | null
+          company_id?: string
+          created_at?: string
+          currency?: string | null
+          current_balance?: number | null
+          id?: string
+          is_active?: boolean | null
+          updated_at?: string
+        }
+        Relationships: []
       }
       invoice_lines: {
         Row: {
@@ -1012,6 +1060,57 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      storage_sites: {
+        Row: {
+          address: string | null
+          capacity_m2: number | null
+          city: string | null
+          company_id: string
+          country: string | null
+          created_at: string
+          id: string
+          is_active: boolean | null
+          manager_name: string | null
+          phone: string | null
+          postal_code: string | null
+          site_name: string
+          site_type: string
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          capacity_m2?: number | null
+          city?: string | null
+          company_id: string
+          country?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          manager_name?: string | null
+          phone?: string | null
+          postal_code?: string | null
+          site_name: string
+          site_type: string
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          capacity_m2?: number | null
+          city?: string | null
+          company_id?: string
+          country?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          manager_name?: string | null
+          phone?: string | null
+          postal_code?: string | null
+          site_name?: string
+          site_type?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       subscription_plans: {
         Row: {

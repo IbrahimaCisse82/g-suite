@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -103,11 +102,7 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
   };
 
   const onSubmit = async (data: CompanyFormData) => {
-    await submitForm(
-      data, // strictly CompanyFormData type as expected by hook
-      logoFile,
-      "paid"
-    );
+    await submitForm(data, logoFile, selectedModule);
   };
 
   return (
@@ -162,10 +157,10 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
           </div>
 
           <Button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 text-lg border-2 border-emerald-600 shadow-lg" disabled={isLoading}>
-            {isLoading ? "Création en cours..." : "Demander ma clé licence"}
+            {isLoading ? "Envoi de la demande..." : "Demander ma clé licence"}
           </Button>
           <div className="text-sm text-slate-700 text-center font-bold bg-slate-100 p-4 rounded-md border-2 border-slate-300">
-            Votre demande sera validée sous 24h. Vous recevrez un email avec votre clé licence.
+            Votre demande sera traitée sous 24h. Vous recevrez un email de confirmation et votre clé licence.
           </div>
         </form>
       </CardContent>

@@ -29,49 +29,59 @@ export const ContactsTable = ({ contacts, onEdit, onDelete }: ContactsTableProps
       both: 'outline'
     } as const;
     
-    return <Badge variant={variants[type as keyof typeof variants]}>{type}</Badge>;
+    return <Badge variant={variants[type as keyof typeof variants]} className="badge-readable font-semibold">{type}</Badge>;
   };
 
   return (
-    <div className="rounded-lg border">
+    <div className="rounded-lg border bg-white shadow-sm">
       <Table>
         <TableHeader>
-          <TableRow>
-            <TableHead>Nom</TableHead>
-            <TableHead>Type</TableHead>
-            <TableHead>Contact</TableHead>
-            <TableHead>Ville</TableHead>
-            <TableHead>Actions</TableHead>
+          <TableRow className="bg-slate-50">
+            <TableHead className="font-semibold text-slate-900">Nom</TableHead>
+            <TableHead className="font-semibold text-slate-900">Type</TableHead>
+            <TableHead className="font-semibold text-slate-900">Contact</TableHead>
+            <TableHead className="font-semibold text-slate-900">Ville</TableHead>
+            <TableHead className="font-semibold text-slate-900">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {contacts.map((contact) => (
-            <TableRow key={contact.id}>
-              <TableCell className="font-medium">{contact.name}</TableCell>
+            <TableRow key={contact.id} className="hover:bg-slate-50">
+              <TableCell className="font-semibold text-slate-900">{contact.name}</TableCell>
               <TableCell>{getTypeBadge(contact.type)}</TableCell>
               <TableCell>
                 <div className="space-y-1">
                   {contact.email && (
-                    <div className="flex items-center text-sm text-gray-600">
-                      <Mail className="w-3 h-3 mr-1" />
+                    <div className="flex items-center text-sm text-slate-700 font-medium">
+                      <Mail className="w-3 h-3 mr-1 text-slate-600" />
                       {contact.email}
                     </div>
                   )}
                   {contact.phone && (
-                    <div className="flex items-center text-sm text-gray-600">
-                      <Phone className="w-3 h-3 mr-1" />
+                    <div className="flex items-center text-sm text-slate-700 font-medium">
+                      <Phone className="w-3 h-3 mr-1 text-slate-600" />
                       {contact.phone}
                     </div>
                   )}
                 </div>
               </TableCell>
-              <TableCell>{contact.city}</TableCell>
+              <TableCell className="font-medium text-slate-800">{contact.city}</TableCell>
               <TableCell>
                 <div className="flex space-x-2">
-                  <Button variant="outline" size="sm" onClick={() => onEdit(contact)}>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => onEdit(contact)}
+                    className="border-slate-300 text-slate-700 hover:bg-slate-100 hover:text-slate-900"
+                  >
                     <Edit className="w-4 h-4" />
                   </Button>
-                  <Button variant="outline" size="sm" onClick={() => onDelete(contact.id)}>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => onDelete(contact.id)}
+                    className="border-red-300 text-red-700 hover:bg-red-50 hover:text-red-800"
+                  >
                     <Trash2 className="w-4 h-4" />
                   </Button>
                 </div>

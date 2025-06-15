@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Building, Mail, Phone, MapPin } from 'lucide-react';
 import { GrowHubLogo } from './GrowHubLogo';
@@ -27,10 +26,9 @@ export const FooterCompanyInfo = ({
       </div>
       <p className="text-slate-300 mb-6 leading-relaxed">
         G-Suite révolutionne la gestion d'entreprise en Afrique avec une suite complète 
-        d'outils modernes et intuitifs. Développé par Grow Hub Sarl, leader en solutions 
+        d'outils modernes et intuitifs. Développé par Grow Hub Sarl, votre partenaire en solutions 
         technologiques pour entreprises.
       </p>
-      
       <div className="flex items-center space-y-0 gap-x-5">
         <div className="flex flex-col space-y-3">
           <button 
@@ -60,4 +58,3 @@ export const FooterCompanyInfo = ({
     </div>
   );
 };
-

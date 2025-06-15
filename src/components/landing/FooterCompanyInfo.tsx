@@ -22,12 +22,12 @@ export const FooterCompanyInfo = ({
         </div>
         <div>
           <h3 className="text-xl font-bold">G-Suite</h3>
-          <p className="text-sm text-slate-400">by GrowHub Sénégal</p>
+          <p className="text-sm text-slate-400">by Grow Hub Sarl</p>
         </div>
       </div>
       <p className="text-slate-300 mb-6 leading-relaxed">
         G-Suite révolutionne la gestion d'entreprise en Afrique avec une suite complète 
-        d'outils modernes et intuitifs. Développé par GrowHub Sénégal, leader en solutions 
+        d'outils modernes et intuitifs. Développé par Grow Hub Sarl, leader en solutions 
         technologiques pour entreprises.
       </p>
       
@@ -60,3 +60,4 @@ export const FooterCompanyInfo = ({
     </div>
   );
 };
+

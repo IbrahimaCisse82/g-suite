@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -21,8 +20,7 @@ export const ContactInfo = () => {
             <div>
               <p className="font-bold text-slate-900">Adresse</p>
               <p className="text-slate-700 font-medium">
-                Dakar, Sénégal<br />
-                Plateau - Centre ville
+                Dakar, Sénégal
               </p>
             </div>
           </div>
@@ -48,8 +46,7 @@ export const ContactInfo = () => {
             <div>
               <p className="font-bold text-slate-900">Horaires</p>
               <p className="text-slate-700 font-medium">
-                Lun - Ven: 8h00 - 18h00<br />
-                Sam: 9h00 - 13h00
+                9h00 - 19h00
               </p>
             </div>
           </div>

@@ -54,7 +54,7 @@ export const FooterCompanyInfo = ({
         </div>
         {/* Logo GrowHub - agrandi à droite des contacts */}
         <div className="pl-6 flex items-center">
-          <GrowHubLogo size={64} className="bg-white rounded shadow-lg p-2" />
+          <GrowHubLogo size={96} className="bg-white rounded shadow-lg p-2" />
         </div>
       </div>
     </div>

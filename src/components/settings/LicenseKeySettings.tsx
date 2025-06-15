@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Key, BadgeCheck, Clock, X } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
@@ -29,7 +28,11 @@ export function LicenseKeySettings() {
 
   const handleRequest = async () => {
     if (!selectedModule) {
-      toast.error("Veuillez choisir un module");
+      toast({
+        title: "Module non sélectionné",
+        description: "Veuillez choisir un module.",
+        variant: "destructive",
+      });
       return;
     }
     try {
@@ -37,11 +40,18 @@ export function LicenseKeySettings() {
         planId: selectedModule,
         message: requestMessage,
       });
-      toast.success("Demande de clé envoyée");
+      toast({
+        title: "Demande envoyée",
+        description: "Demande de clé envoyée avec succès.",
+      });
       setSelectedModule("");
       setRequestMessage("");
     } catch (e) {
-      toast.error("Erreur lors de la demande");
+      toast({
+        title: "Erreur lors de la demande",
+        description: "Une erreur s'est produite lors de l’envoi de la demande.",
+        variant: "destructive",
+      });
     }
   };
 

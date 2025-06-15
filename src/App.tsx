@@ -16,7 +16,7 @@ import { Treasury } from "./pages/Treasury";
 import { Accounting } from "./pages/Accounting";
 import { Reports } from "./pages/Reports";
 import { Analytics } from "./pages/Analytics";
-import { Settings } from "./pages/Settings";
+import Settings from "./pages/Settings";
 import CompanyRegistration from "./pages/CompanyRegistration";
 import QuoteRequest from "./pages/QuoteRequest";
 import NotFound from "./pages/NotFound";
@@ -65,7 +65,7 @@ const App = () => (
             <Route path="/training" element={<TrainingSupport />} />
             <Route path="/formation" element={<TrainingSupportStandalone />} />
             <Route path="/product-documentation" element={<ProductDocumentation />} />
-            <Route path="/settings" element={<Settings />} />
+            <Route path="/settings/*" element={<Settings />} />
             <Route path="/subscription-settings" element={<SubscriptionSettings />} />
             
             {/* Company Registration and User Login */}

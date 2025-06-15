@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -34,6 +33,10 @@ import UserLogin from "./pages/UserLogin";
 import ComptabiliteSolution from "./pages/solutions/ComptabiliteSolution";
 import CommercialeSolution from "./pages/solutions/CommercialeSolution";
 import EntrepriseSolution from "./pages/solutions/EntrepriseSolution";
+import SettingsLayout from "./pages/SettingsLayout";
+import ProfileSettingsPage from "./pages/settings/ProfileSettings";
+import UserManagementSettingsPage from "./pages/settings/UserManagementSettings";
+import LicenseKeySettingsPage from "./pages/settings/LicenseKeySettings";
 
 const queryClient = new QueryClient();
 
@@ -65,7 +68,7 @@ const App = () => (
             <Route path="/training" element={<TrainingSupport />} />
             <Route path="/formation" element={<TrainingSupportStandalone />} />
             <Route path="/product-documentation" element={<ProductDocumentation />} />
-            <Route path="/settings/*" element={<Settings />} />
+            
             <Route path="/subscription-settings" element={<SubscriptionSettings />} />
             
             {/* Company Registration and User Login */}
@@ -84,6 +87,14 @@ const App = () => (
             
             {/* Trial activation route */}
             <Route path="/activate-trial/:token" element={<TrialActivation />} />
+            
+            {/* Section Paramètres */}
+            <Route path="/settings" element={<SettingsLayout />}>
+              <Route index element={<Settings />} /> {/* /settings résumé */}
+              <Route path="profile" element={<ProfileSettingsPage />} />
+              <Route path="users" element={<UserManagementSettingsPage />} />
+              <Route path="licenses" element={<LicenseKeySettingsPage />} />
+            </Route>
             
             <Route path="*" element={<NotFound />} />
           </Routes>

@@ -13,11 +13,11 @@ const LandingFooter = () => {
   };
 
   const handleEmailClick = () => {
-    window.location.href = 'mailto:contact@growhubsenegal.com';
+    window.location.href = 'mailto:support@g-suite.com';
   };
 
   const handlePhoneClick = () => {
-    window.location.href = 'tel:+221770000000';
+    window.location.href = 'tel:+221784752858';
   };
 
   const handleSocialClick = (platform: string) => {
@@ -72,14 +72,14 @@ const LandingFooter = () => {
                 className="flex items-center space-x-3 text-slate-300 hover:text-green-400 transition-colors"
               >
                 <Mail className="w-4 h-4 flex-shrink-0" />
-                <span className="text-sm">contact@growhubsenegal.com</span>
+                <span className="text-sm">support@g-suite.com</span>
               </button>
               <button 
                 onClick={handlePhoneClick}
                 className="flex items-center space-x-3 text-slate-300 hover:text-green-400 transition-colors"
               >
                 <Phone className="w-4 h-4 flex-shrink-0" />
-                <span className="text-sm">+221 77 XXX XX XX</span>
+                <span className="text-sm">+221 78 475 28 58</span>
               </button>
               <div className="flex items-center space-x-3 text-slate-300">
                 <MapPin className="w-4 h-4 flex-shrink-0" />

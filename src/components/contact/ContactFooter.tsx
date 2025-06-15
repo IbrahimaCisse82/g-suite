@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { GSuiteLogo } from '@/components/ui/gsuite-logo';
 import { Link } from 'react-router-dom';
 
 export const ContactFooter = () => {
@@ -9,7 +8,7 @@ export const ContactFooter = () => {
       <div className="container mx-auto px-4">
         <div className="text-center">
           <div className="flex items-center justify-center space-x-3 mb-4">
-            <GSuiteLogo size={32} />
+            {/* Logo supprimé */}
             <div>
               <h3 className="text-lg font-bold text-white">G-Suite</h3>
               <p className="text-xs text-slate-300">by Grow Hub Sarl</p>

@@ -1,50 +1,62 @@
 
-import React, { useState } from "react";
+import React from "react";
+import { useLocation, useNavigate, Outlet } from "react-router-dom";
 import { Layout } from "@/components/Layout";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { CompanyProfileSettings } from "@/components/settings/CompanyProfileSettings";
-import { UserManagementSettings } from "@/components/settings/UserManagementSettings";
-import { LicenseManagementSettings } from "@/components/settings/LicenseManagementSettings";
-import { BadgeCheck, Users, Building } from "lucide-react";
+import { BadgeCheck, Users, Building, Key } from "lucide-react";
 
-export const Settings = () => {
-  const [selectedTab, setSelectedTab] = useState("profile");
+// Simple sidebar navigation for sub-settings
+const settingsNav = [
+  {
+    path: "/settings/profile",
+    icon: <Building className="w-5 h-5" />,
+    name: "Profil de l'entreprise",
+  },
+  {
+    path: "/settings/users",
+    icon: <Users className="w-5 h-5" />,
+    name: "Utilisateurs",
+  },
+  {
+    path: "/settings/licenses",
+    icon: <Key className="w-5 h-5" />,
+    name: "Clés de licence",
+  },
+];
+
+export default function Settings() {
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
 
   return (
     <Layout>
-      <div className="p-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Paramètres</h1>
-          <p className="text-gray-600 mt-2">Configurez votre application</p>
+      <div className="flex flex-col md:flex-row gap-8 md:gap-16 p-6 max-w-5xl mx-auto">
+        {/* Sidebar navigation */}
+        <nav className="md:w-56 flex-shrink-0 md:border-r md:border-border mt-2">
+          <ul className="flex md:flex-col gap-2">
+            {settingsNav.map(({ path, icon, name }) => (
+              <li key={path}>
+                <button
+                  onClick={() => navigate(path)}
+                  className={[
+                    "w-full flex items-center gap-2 px-4 py-2 rounded transition-all",
+                    pathname === path
+                      ? "bg-green-100 text-green-700 font-semibold"
+                      : "hover:bg-muted"
+                  ].join(" ")}
+                  aria-current={pathname === path ? "page" : undefined}
+                >
+                  {icon}
+                  {name}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        {/* Main content */}
+        <div className="flex-1 min-w-0">
+          <Outlet />
         </div>
-
-        <Tabs value={selectedTab} onValueChange={setSelectedTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3 mb-4">
-            <TabsTrigger value="profile" className="flex items-center gap-2">
-              <Building className="w-4 h-4" />
-              Profil de l'entreprise
-            </TabsTrigger>
-            <TabsTrigger value="users" className="flex items-center gap-2">
-              <Users className="w-4 h-4" />
-              Utilisateurs
-            </TabsTrigger>
-            <TabsTrigger value="licenses" className="flex items-center gap-2">
-              <BadgeCheck className="w-4 h-4" />
-              Licences
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="profile">
-            <CompanyProfileSettings />
-          </TabsContent>
-          <TabsContent value="users">
-            <UserManagementSettings />
-          </TabsContent>
-          <TabsContent value="licenses">
-            <LicenseManagementSettings />
-          </TabsContent>
-        </Tabs>
       </div>
     </Layout>
   );
-};
+}

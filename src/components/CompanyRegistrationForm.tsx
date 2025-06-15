@@ -31,7 +31,9 @@ const companySchema = z.object({
     'enseignement', 'sante_action_sociale', 'arts_spectacles', 'autres_services'
   ]),
   currency: z.string().min(1, 'Veuillez sélectionner une devise'),
-  representative_title: z.enum(['M.', 'Mme', 'Mlle'], 'Veuillez sélectionner une civilité'),
+  representative_title: z.enum(['M.', 'Mme', 'Mlle'], {
+    required_error: 'Veuillez sélectionner une civilité'
+  }),
   representative_first_name: z.string().min(2, 'Le prénom doit contenir au moins 2 caractères'),
   representative_last_name: z.string().min(2, 'Le nom doit contenir au moins 2 caractères'),
   ninea: z.string().optional(),

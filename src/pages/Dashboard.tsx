@@ -37,7 +37,7 @@ const mockStats = [
   }
 ];
 
-export const Dashboard = () => {
+const Dashboard = () => {
   const { needsSetup, isLoading, completeSetup } = useInitialSetup();
 
   if (isLoading) {
@@ -163,3 +163,5 @@ export const Dashboard = () => {
     </Layout>
   );
 };
+
+export default Dashboard;

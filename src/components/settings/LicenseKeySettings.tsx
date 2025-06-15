@@ -29,6 +29,13 @@ const PLAN_COLOR_MAP: Record<string, string> = {
   entreprise: "bg-green-50 text-green-700 border-green-400",
 };
 
+// Ajouter un mapping pour les profils par module/plan
+const PLAN_PROFILES_MAP: Record<string, string[]> = {
+  entreprise: ["Manager", "Comptable", "Commerciale", "Logistique", "Caissier"],
+  comptabilite: ["Manager", "Comptable", "Caissier"],
+  commerciale: ["Manager", "Commerciale", "Logistique"],
+};
+
 export function LicenseKeySettings() {
   const [selectedModule, setSelectedModule] = useState("");
   const [requestMessage, setRequestMessage] = useState("");
@@ -145,6 +152,9 @@ export function LicenseKeySettings() {
                 // Affiche le bouton de validation seulement si status=approved ET clé présente
                 const showValidate = req.status === "approved" && req.admin_notes;
 
+                // Liste des profils utilisateurs autorisés selon le plan
+                const allowedProfiles = PLAN_PROFILES_MAP[planKey] || [];
+
                 return (
                   <li key={req.id} className={`border p-4 rounded ${colorClass} border`}>
                     <div className="flex justify-between items-center gap-2">
@@ -153,6 +163,20 @@ export function LicenseKeySettings() {
                           <strong className="uppercase">{planName}</strong>
                           <Badge className="text-xs" variant="outline">{planKey}</Badge>
                         </div>
+                        {/* Start - Affichage des profils autorisés */}
+                        {allowedProfiles.length > 0 && (
+                          <div className="flex flex-wrap gap-2 mb-1 mt-1">
+                            {allowedProfiles.map((profile) => (
+                              <span
+                                key={profile}
+                                className="inline-block text-xs font-medium rounded px-2 py-1 bg-gray-200 text-gray-700"
+                              >
+                                {profile}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                        {/* End - Affichage des profils autorisés */}
                         <div className="text-sm text-gray-600">
                           Demandé le {new Date(req.created_at).toLocaleDateString("fr-FR")}
                         </div>

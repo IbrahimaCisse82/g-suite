@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -15,6 +15,7 @@ import { CompanyContactInfo } from '@/components/company/CompanyContactInfo';
 import { CompanyBusinessInfo } from '@/components/company/CompanyBusinessInfo';
 import { CompanyRepresentativeInfo } from '@/components/company/CompanyRepresentativeInfo';
 import { useSearchParams } from "react-router-dom";
+import { getCountryByName } from '@/utils/countryData';
 
 const companySchema = z.object({
   name: z.string().min(2, 'Le nom de l\'entreprise doit contenir au moins 2 caractères'),
@@ -30,6 +31,7 @@ const companySchema = z.object({
     'enseignement', 'sante_action_sociale', 'arts_spectacles', 'autres_services'
   ]),
   currency: z.string().min(1, 'Veuillez sélectionner une devise'),
+  representative_title: z.enum(['M.', 'Mme', 'Mlle'], 'Veuillez sélectionner une civilité'),
   representative_first_name: z.string().min(2, 'Le prénom doit contenir au moins 2 caractères'),
   representative_last_name: z.string().min(2, 'Le nom doit contenir au moins 2 caractères'),
   ninea: z.string().optional(),
@@ -61,10 +63,30 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
     defaultValues: {
       country: 'France',
       website: '',
-      currency: 'XOF',
+      currency: 'EUR',
       business_sector: 'commerce',
+      representative_title: 'M.',
     },
   });
+
+  // Gérer le changement de pays automatiquement
+  useEffect(() => {
+    const subscription = form.watch((value, { name }) => {
+      if (name === 'country' && value.country) {
+        const countryData = getCountryByName(value.country);
+        if (countryData) {
+          form.setValue('currency', countryData.currency);
+          // Mettre à jour l'indicatif si le téléphone est vide ou commence par un autre indicatif
+          const currentPhone = form.getValues('phone');
+          if (!currentPhone || currentPhone.startsWith('+')) {
+            form.setValue('phone', countryData.phoneCode + ' ');
+          }
+        }
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [form]);
 
   const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -87,50 +109,60 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
   };
 
   return (
-    <Card className="w-full max-w-2xl mx-auto bg-white shadow-lg border border-gray-200">
-      <CardHeader className="bg-gradient-to-r from-emerald-600 to-emerald-700 text-white rounded-t-lg">
-        <CardTitle className="flex items-center gap-2 text-white">
+    <Card className="w-full max-w-2xl mx-auto bg-white shadow-xl border-2 border-slate-300">
+      <CardHeader className="bg-gradient-to-r from-emerald-600 to-emerald-700 text-white rounded-t-lg border-b-4 border-emerald-800">
+        <CardTitle className="flex items-center gap-2 text-white font-bold text-xl">
           <Building className="h-6 w-6 text-white" />
           Créer le profil de votre entreprise
         </CardTitle>
-        <CardDescription className="text-emerald-100">
+        <CardDescription className="text-emerald-100 font-semibold">
           Renseignez les informations de votre entreprise pour demander une clé licence G-Suite.
         </CardDescription>
       </CardHeader>
       <CardContent className="p-6 bg-white">
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           {/* Choix obligatoire de la solution/module */}
-          <div className="space-y-3">
-            <Label className="text-slate-800 font-semibold">Solution G-Suite souhaitée <span className="text-red-600">*</span></Label>
+          <div className="space-y-3 p-4 bg-slate-50 rounded-lg border-2 border-slate-200">
+            <Label className="text-slate-800 font-bold text-base">Solution G-Suite souhaitée <span className="text-red-600 font-bold">*</span></Label>
             <select
-              className="w-full border-2 border-gray-300 rounded-md px-3 py-2 bg-white text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200"
+              className="w-full border-3 border-slate-400 rounded-md px-3 py-3 bg-white text-slate-800 font-semibold focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200"
               value={selectedModule}
               onChange={e => setSelectedModule(e.target.value)}
               required
             >
               {MODULE_OPTIONS.map(opt =>
-                <option key={opt.value} value={opt.value} className="text-slate-800">{opt.label}</option>
+                <option key={opt.value} value={opt.value} className="text-slate-800 font-semibold">{opt.label}</option>
               )}
             </select>
           </div>
 
-          <CompanyLogoUpload 
-            logoPreview={logoPreview} 
-            onLogoChange={handleLogoChange} 
-          />
+          <div className="border-2 border-slate-200 rounded-lg p-4">
+            <CompanyLogoUpload 
+              logoPreview={logoPreview} 
+              onLogoChange={handleLogoChange} 
+            />
+          </div>
 
-          <CompanyBasicInfo form={form} />
+          <div className="border-2 border-slate-200 rounded-lg p-4 space-y-4">
+            <CompanyBasicInfo form={form} />
+          </div>
 
-          <CompanyContactInfo form={form} />
+          <div className="border-2 border-slate-200 rounded-lg p-4 space-y-4">
+            <CompanyContactInfo form={form} />
+          </div>
 
-          <CompanyBusinessInfo form={form} />
+          <div className="border-2 border-slate-200 rounded-lg p-4 space-y-4">
+            <CompanyBusinessInfo form={form} />
+          </div>
 
-          <CompanyRepresentativeInfo form={form} />
+          <div className="border-2 border-slate-200 rounded-lg p-4 space-y-4">
+            <CompanyRepresentativeInfo form={form} />
+          </div>
 
-          <Button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 border-2 border-emerald-600" disabled={isLoading}>
+          <Button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 text-lg border-3 border-emerald-600 shadow-lg" disabled={isLoading}>
             {isLoading ? "Création en cours..." : "Demander ma clé licence"}
           </Button>
-          <div className="text-sm text-slate-700 text-center font-medium bg-slate-50 p-3 rounded-md border border-slate-200">
+          <div className="text-sm text-slate-700 text-center font-bold bg-slate-100 p-4 rounded-md border-2 border-slate-300">
             Votre demande sera validée sous 24h. Vous recevrez un email avec votre clé licence.
           </div>
         </form>

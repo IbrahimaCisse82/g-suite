@@ -15,6 +15,7 @@ export interface CompanyFormData {
   email: string;
   business_sector: BusinessSector;
   currency: string;
+  representative_title: 'M.' | 'Mme' | 'Mlle';
   representative_first_name: string;
   representative_last_name: string;
   ninea?: string;

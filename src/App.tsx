@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { MobileWrapper } from "@/components/MobileWrapper";
 import Landing from "./pages/Landing";
 import AboutUs from "./pages/AboutUs";
+import Contact from "./pages/Contact";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import { Contacts } from "./pages/Contacts";

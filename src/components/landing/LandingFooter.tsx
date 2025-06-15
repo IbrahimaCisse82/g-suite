@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Building, Mail, Phone, MapPin, Facebook, Twitter, Linkedin } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -166,7 +165,7 @@ const LandingFooter = () => {
               </li>
               <li>
                 <button 
-                  onClick={handleEmailClick} 
+                  onClick={() => navigate('/contact')} 
                   className="text-slate-300 hover:text-green-400 transition-colors"
                 >
                   Contact

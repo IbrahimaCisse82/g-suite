@@ -40,12 +40,12 @@ export const LandingHeader = () => {
             >
               À Propos
             </Link>
-            <button 
-              onClick={() => scrollToSection('contact')} 
+            <Link 
+              to="/contact" 
               className="text-slate-600 hover:text-slate-900 transition-colors font-medium"
             >
               Contact
-            </button>
+            </Link>
           </nav>
           
           <div className="flex items-center space-x-4">

@@ -16,9 +16,10 @@ export const MODULE_ACCESS_MATRIX: Record<
   ModuleType,
   Record<Role, string[]>
 > = {
+  // SOLUTION ENTREPRISE
   entreprise: {
+    // Manager : toutes les fonctionnalités
     manager: [
-      // Toutes les fonctionnalités
       "dashboard",
       "accounting",
       "contacts",
@@ -32,19 +33,59 @@ export const MODULE_ACCESS_MATRIX: Record<
       "training",
       "settings",
     ],
-    comptable: ["accounting", "treasury", "training"],
-    commerciale: ["contacts", "invoicing", "purchases", "training"],
-    logistique: ["products", "stock", "training"],
-    caissier: ["treasury", "training"],
+    // Comptable : comptabilité, trésorerie, formation
+    comptable: [
+      "accounting",
+      "treasury",
+      "training",
+    ],
+    // Commercial : contacts, facturation, achats, formation
+    commerciale: [
+      "contacts",
+      "invoicing",
+      "purchases",
+      "training",
+    ],
+    // Logisticien : produits, stock, formation
+    logistique: [
+      "products",
+      "stock",
+      "training",
+    ],
+    // Caissier : trésorerie, formation
+    caissier: [
+      "treasury",
+      "training",
+    ],
   },
+  // SOLUTION COMPTABLE
   comptable: {
-    manager: ["accounting", "treasury", "training", "settings"],
-    comptable: ["accounting", "treasury", "training"],
-    caissier: ["treasury", "training"],
+    // Manager : comptabilité, trésorerie, formation, paramètres
+    manager: [
+      "accounting",
+      "treasury",
+      "training",
+      "settings",
+    ],
+    // Comptable : comptabilité, trésorerie, formation
+    comptable: [
+      "accounting",
+      "treasury",
+      "training",
+    ],
+    // Commercial : aucun accès
     commerciale: [],
+    // Logisticien : aucun accès
     logistique: [],
+    // Caissier : trésorerie, formation
+    caissier: [
+      "treasury",
+      "training",
+    ],
   },
+  // SOLUTION COMMERCIALE
   commerciale: {
+    // Manager : contacts, facturation, achats, produits, stock, formation, paramètres
     manager: [
       "contacts",
       "invoicing",
@@ -54,9 +95,22 @@ export const MODULE_ACCESS_MATRIX: Record<
       "training",
       "settings",
     ],
-    commerciale: ["contacts", "invoicing", "purchases", "training"],
-    logistique: ["products", "stock", "training"],
+    // Comptable : aucun accès
     comptable: [],
+    // Commercial : contacts, facturation, achats, formation
+    commerciale: [
+      "contacts",
+      "invoicing",
+      "purchases",
+      "training",
+    ],
+    // Logisticien : produits, stock, formation
+    logistique: [
+      "products",
+      "stock",
+      "training",
+    ],
+    // Caissier : aucun accès
     caissier: [],
   },
 };
@@ -76,5 +130,5 @@ export const PATH_FEATURE_MAP: Record<string, string> = {
   "/reports": "reports",
   "/analytics": "analytics",
   "/training": "training",
-  "/settings": "settings", // paramétrage
+  "/settings": "settings",
 };

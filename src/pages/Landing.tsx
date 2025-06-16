@@ -7,6 +7,7 @@ import PricingSection from "@/components/landing/PricingSection";
 import AdvantagesSection from "@/components/landing/AdvantagesSection";
 import TrustedCompaniesSection from "@/components/landing/TrustedCompaniesSection";
 import PartnersSection from "@/components/landing/PartnersSection";
+import SolutionsComparisonSection from "@/components/landing/SolutionsComparisonSection";
 import TestimonialsSection from "@/components/landing/TestimonialsSection";
 import CTASection from "@/components/landing/CTASection";
 import LandingFooter from "@/components/landing/LandingFooter";
@@ -21,6 +22,7 @@ const Landing = () => {
       <PricingSection />
       <AdvantagesSection />
       <PartnersSection />
+      <SolutionsComparisonSection />
       <TestimonialsSection />
       <CTASection />
       <LandingFooter />

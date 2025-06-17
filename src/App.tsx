@@ -52,6 +52,7 @@ const App = () => (
           <Route path="/cookies-policy" element={<CookiesPolicy />} />
           
           <Route path="/login" element={<UserLogin />} />
+          <Route path="/user-login" element={<UserLogin />} />
           <Route path="/admin-login" element={<AdminLogin />} />
           <Route path="/dashboard" element={<Dashboard />} />
 

@@ -79,6 +79,12 @@ export const LoginForm: React.FC<LoginFormProps> = ({
               </div>
             </div>
 
+            <div className="text-right">
+              <Link to="/forgot-password" className="text-sm text-green-600 hover:text-green-700">
+                Mot de passe oublié ?
+              </Link>
+            </div>
+
             <Button 
               type="submit" 
               className="w-full bg-green-600 hover:bg-green-700 text-white" 

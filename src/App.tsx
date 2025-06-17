@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -31,6 +30,8 @@ import TrainingSupport from "./pages/TrainingSupport";
 import TrainingSupportStandalone from "./pages/TrainingSupportStandalone";
 import ProductDocumentation from "./pages/ProductDocumentation";
 import Formation from "./pages/Formation";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 const queryClient = new QueryClient();
 
@@ -53,6 +54,8 @@ const App = () => (
           
           <Route path="/login" element={<UserLogin />} />
           <Route path="/user-login" element={<UserLogin />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/admin-login" element={<AdminLogin />} />
           <Route path="/dashboard" element={<Dashboard />} />
 

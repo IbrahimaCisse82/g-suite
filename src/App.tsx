@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -53,6 +52,9 @@ import AdminBackofficeSettings from "./pages/AdminBackofficeSettings";
 import ComptabiliteSolution from "./pages/solutions/ComptabiliteSolution";
 import CommercialeSolution from "./pages/solutions/CommercialeSolution";
 import EntrepriseSolution from "./pages/solutions/EntrepriseSolution";
+import AdminBackofficeSolutionComptabilite from "./pages/AdminBackofficeSolutionComptabilite";
+import AdminBackofficeSolutionCommerciale from "./pages/AdminBackofficeSolutionCommerciale";
+import AdminBackofficeSolutionEntreprise from "./pages/AdminBackofficeSolutionEntreprise";
 
 const queryClient = new QueryClient();
 
@@ -110,6 +112,11 @@ const App = () => (
           <Route path="/admin-backoffice/companies" element={<AdminBackofficeCompanies />} />
           <Route path="/admin-backoffice/stats" element={<AdminBackofficeStats />} />
           <Route path="/admin-backoffice/settings" element={<AdminBackofficeSettings />} />
+          
+          {/* Solutions Backoffice Routes */}
+          <Route path="/admin-backoffice/solution/comptabilite" element={<AdminBackofficeSolutionComptabilite />} />
+          <Route path="/admin-backoffice/solution/commerciale" element={<AdminBackofficeSolutionCommerciale />} />
+          <Route path="/admin-backoffice/solution/entreprise" element={<AdminBackofficeSolutionEntreprise />} />
           
           {/* Solutions Routes */}
           <Route path="/solutions/comptabilite" element={<ComptabiliteSolution />} />

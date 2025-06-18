@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
@@ -160,8 +159,8 @@ export const AdminBackofficeNavigation = () => {
               
               return (
                 <div key={solution.id} className="space-y-1">
-                  <button
-                    onClick={() => toggleSolution(solution.id)}
+                  <Link
+                    to={`/admin-backoffice/solution/${solution.id}`}
                     className="w-full flex items-center justify-between px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-all duration-200"
                   >
                     <div className="flex items-center space-x-3">
@@ -171,29 +170,7 @@ export const AdminBackofficeNavigation = () => {
                         {solution.companies.length}
                       </Badge>
                     </div>
-                    {isExpanded ? (
-                      <ChevronDown className="w-4 h-4 text-gray-600" />
-                    ) : (
-                      <ChevronRight className="w-4 h-4 text-gray-600" />
-                    )}
-                  </button>
-                  
-                  {isExpanded && (
-                    <div className="ml-6 space-y-1">
-                      {solution.companies.map((company) => (
-                        <Link
-                          key={company.id}
-                          to={`/admin-backoffice/company/${company.id}`}
-                          className="block px-4 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-all duration-200"
-                        >
-                          <div className="flex flex-col">
-                            <span className="font-medium text-gray-900">{company.name}</span>
-                            <span className="text-xs text-gray-500">Admin: {company.admin}</span>
-                          </div>
-                        </Link>
-                      ))}
-                    </div>
-                  )}
+                  </Link>
                 </div>
               );
             })}

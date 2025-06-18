@@ -1,0 +1,163 @@
+
+import React from 'react';
+import { AdminBackofficeLayout } from '@/components/admin/AdminBackofficeLayout';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Globe2, Building2, User, Calendar } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+
+const AdminBackofficeSolutionEntreprise = () => {
+  const entrepriseCompanies = [
+    {
+      id: '7',
+      name: 'SARL Tech Solutions',
+      admin: 'Jean Dupont',
+      email: 'jean@techsolutions.fr',
+      licenseExpiry: '2025-12-31',
+      status: 'active',
+      users: 25,
+      createdAt: '2023-01-15'
+    },
+    {
+      id: '8',
+      name: 'Groupe Industriel Sénégal',
+      admin: 'Moussa Diop',
+      email: 'moussa@industrielsenegal.sn',
+      licenseExpiry: '2025-07-30',
+      status: 'active',
+      users: 45,
+      createdAt: '2023-05-20'
+    },
+    {
+      id: '9',
+      name: 'Holdings & Partners',
+      admin: 'Khadidja Touré',
+      email: 'khadidja@holdingspartners.sn',
+      licenseExpiry: '2025-10-15',
+      status: 'active',
+      users: 18,
+      createdAt: '2023-11-10'
+    }
+  ];
+
+  return (
+    <AdminBackofficeLayout>
+      <div className="p-8">
+        <div className="mb-6">
+          <div className="flex items-center space-x-3 mb-2">
+            <Globe2 className="w-8 h-8 text-purple-600" />
+            <h1 className="text-3xl font-bold text-gray-900">Solution Entreprise</h1>
+          </div>
+          <p className="text-gray-600">Gestion des entreprises utilisant la solution entreprise</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600">Total Entreprises</p>
+                  <p className="text-2xl font-bold text-purple-600">{entrepriseCompanies.length}</p>
+                </div>
+                <Building2 className="w-8 h-8 text-purple-600" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600">Licences Actives</p>
+                  <p className="text-2xl font-bold text-green-600">
+                    {entrepriseCompanies.filter(c => c.status === 'active').length}
+                  </p>
+                </div>
+                <Globe2 className="w-8 h-8 text-green-600" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600">Licences Expirées</p>
+                  <p className="text-2xl font-bold text-red-600">
+                    {entrepriseCompanies.filter(c => c.status === 'expired').length}
+                  </p>
+                </div>
+                <Calendar className="w-8 h-8 text-red-600" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600">Total Utilisateurs</p>
+                  <p className="text-2xl font-bold text-purple-600">
+                    {entrepriseCompanies.reduce((sum, c) => sum + c.users, 0)}
+                  </p>
+                </div>
+                <User className="w-8 h-8 text-purple-600" />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Entreprises - Solution Entreprise</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b">
+                    <th className="text-left p-4">Entreprise</th>
+                    <th className="text-left p-4">Administrateur</th>
+                    <th className="text-left p-4">Email</th>
+                    <th className="text-left p-4">Utilisateurs</th>
+                    <th className="text-left p-4">Expiration Licence</th>
+                    <th className="text-left p-4">Statut</th>
+                    <th className="text-left p-4">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {entrepriseCompanies.map((company) => (
+                    <tr key={company.id} className="border-b hover:bg-gray-50">
+                      <td className="p-4 font-medium">{company.name}</td>
+                      <td className="p-4 text-gray-600">{company.admin}</td>
+                      <td className="p-4 text-gray-600">{company.email}</td>
+                      <td className="p-4">
+                        <Badge variant="outline">{company.users} utilisateurs</Badge>
+                      </td>
+                      <td className="p-4">{new Date(company.licenseExpiry).toLocaleDateString('fr-FR')}</td>
+                      <td className="p-4">
+                        <Badge className={company.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}>
+                          {company.status === 'active' ? 'Active' : 'Expirée'}
+                        </Badge>
+                      </td>
+                      <td className="p-4">
+                        <div className="flex space-x-2">
+                          <Button size="sm" variant="outline">Voir Détails</Button>
+                          <Button size="sm" className="bg-green-600 hover:bg-green-700">
+                            Renouveler
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </AdminBackofficeLayout>
+  );
+};
+
+export default AdminBackofficeSolutionEntreprise;

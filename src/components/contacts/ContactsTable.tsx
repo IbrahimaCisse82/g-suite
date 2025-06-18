@@ -67,8 +67,8 @@ export const ContactsTable = ({ contacts, onEdit, onDelete }: ContactsTableProps
         <TableBody>
           {contacts.map((contact) => (
             <TableRow key={contact.id} className="hover:bg-slate-50">
-              <TableCell className="font-mono text-sm text-slate-600">
-                {contact.contact_number || 'N/A'}
+              <TableCell className="font-mono text-sm font-bold text-blue-600">
+                {contact.contact_number || 'En attente...'}
               </TableCell>
               <TableCell className="font-semibold text-slate-900">{contact.name}</TableCell>
               <TableCell>{getTypeBadge(contact.type || 'client')}</TableCell>

@@ -22,7 +22,7 @@ const contactSchema = z.object({
 type ContactFormData = z.infer<typeof contactSchema>;
 
 interface ContactFormProps {
-  onSubmit: (data: Omit<ContactFormData, 'contact_number'>) => void;
+  onSubmit: (data: ContactFormData) => void;
   onCancel: () => void;
   loading?: boolean;
 }
@@ -39,7 +39,7 @@ export const ContactForm = ({ onSubmit, onCancel, loading }: ContactFormProps) =
   const typeValue = watch('type');
 
   const onFormSubmit = (data: ContactFormData) => {
-    console.log('Submitting contact data:', data);
+    console.log('Form submission triggered with data:', data);
     onSubmit(data);
   };
 
@@ -56,13 +56,16 @@ export const ContactForm = ({ onSubmit, onCancel, loading }: ContactFormProps) =
           <div>
             <Label htmlFor="type" className="text-readable-primary">Type *</Label>
             <Select 
-              onValueChange={(value) => setValue('type', value as 'client' | 'fournisseur')} 
+              onValueChange={(value) => {
+                console.log('Type changed to:', value);
+                setValue('type', value as 'client' | 'fournisseur');
+              }} 
               value={typeValue}
             >
               <SelectTrigger className="bg-white text-readable-primary">
                 <SelectValue placeholder="Sélectionner un type" />
               </SelectTrigger>
-              <SelectContent className="bg-white">
+              <SelectContent className="bg-white z-50">
                 <SelectItem value="client" className="text-readable-primary">Client</SelectItem>
                 <SelectItem value="fournisseur" className="text-readable-primary">Fournisseur</SelectItem>
               </SelectContent>
@@ -105,7 +108,12 @@ export const ContactForm = ({ onSubmit, onCancel, loading }: ContactFormProps) =
           <Button type="button" variant="outline" onClick={onCancel} className="text-readable-primary">
             Annuler
           </Button>
-          <Button type="submit" disabled={loading} className="bg-green-600 hover:bg-green-700">
+          <Button 
+            type="submit" 
+            disabled={loading} 
+            className="bg-green-600 hover:bg-green-700"
+            onClick={() => console.log('Submit button clicked')}
+          >
             {loading ? 'Ajout...' : 'Ajouter'}
           </Button>
         </div>

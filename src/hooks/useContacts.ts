@@ -1,4 +1,3 @@
-
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import type { Database } from '@/integrations/supabase/types';
@@ -21,7 +20,7 @@ export const useContacts = () => {
   });
 };
 
-// Fonction pour générer le prochain numéro de contact
+// Fonction pour générer le prochain numéro de contact avec 6 caractères
 const generateContactNumber = async (type: string, companyId: string): Promise<string> => {
   const prefix = type === 'client' ? 'C' : type === 'fournisseur' ? 'F' : 'CT';
   
@@ -39,13 +38,13 @@ const generateContactNumber = async (type: string, companyId: string): Promise<s
 
   let nextNumber = 1;
   if (data && data.length > 0 && data[0].contact_number) {
-    // Extraire le numéro de la chaîne (ex: "C001" -> 1)
+    // Extraire le numéro de la chaîne (ex: "C000001" -> 1)
     const currentNumber = parseInt(data[0].contact_number.substring(1));
     nextNumber = currentNumber + 1;
   }
 
-  // Formater avec des zéros en préfixe (ex: 1 -> "001")
-  return `${prefix}${nextNumber.toString().padStart(3, '0')}`;
+  // Formater avec des zéros en préfixe pour avoir 6 caractères (ex: 1 -> "000001")
+  return `${prefix}${nextNumber.toString().padStart(6, '0')}`;
 };
 
 export const useCreateContact = () => {

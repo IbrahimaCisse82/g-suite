@@ -24,7 +24,7 @@ export const Contacts = () => {
       await createContact.mutateAsync(contactData);
       toast({
         title: 'Contact ajouté',
-        description: 'Le contact a été ajouté avec succès',
+        description: 'Le contact a été ajouté avec succès avec un numéro généré automatiquement',
       });
       setIsDialogOpen(false);
     } catch (error) {
@@ -68,7 +68,7 @@ export const Contacts = () => {
           <div className="flex justify-between items-center mb-6">
             <div>
               <h1 className="text-3xl font-bold text-readable-primary">Clients & Fournisseurs</h1>
-              <p className="text-readable-secondary mt-2">Gérez vos contacts commerciaux avec numérotation unique</p>
+              <p className="text-readable-secondary mt-2">Gérez vos contacts commerciaux avec numérotation automatique</p>
             </div>
             <Button onClick={() => setIsDialogOpen(true)} className="bg-green-600 hover:bg-green-700">
               <Plus className="w-4 h-4 mr-2" />
@@ -141,7 +141,12 @@ export const Contacts = () => {
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogContent className="max-w-2xl bg-white">
               <DialogHeader>
-                <DialogTitle className="text-readable-primary">Nouveau contact</DialogTitle>
+                <DialogTitle className="text-readable-primary">
+                  Nouveau contact
+                </DialogTitle>
+                <p className="text-sm text-readable-secondary">
+                  Le numéro de contact sera généré automatiquement selon le type sélectionné
+                </p>
               </DialogHeader>
               <ContactForm 
                 onSubmit={handleCreateContact}

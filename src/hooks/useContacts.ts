@@ -21,11 +21,38 @@ export const useContacts = () => {
   });
 };
 
+// Fonction pour générer le prochain numéro de contact
+const generateContactNumber = async (type: string, companyId: string): Promise<string> => {
+  const prefix = type === 'client' ? 'C' : type === 'fournisseur' ? 'F' : 'CT';
+  
+  // Récupérer le dernier numéro pour ce type et cette entreprise
+  const { data, error } = await supabase
+    .from('contacts')
+    .select('contact_number')
+    .eq('company_id', companyId)
+    .eq('type', type)
+    .like('contact_number', `${prefix}%`)
+    .order('contact_number', { ascending: false })
+    .limit(1);
+
+  if (error) throw error;
+
+  let nextNumber = 1;
+  if (data && data.length > 0 && data[0].contact_number) {
+    // Extraire le numéro de la chaîne (ex: "C001" -> 1)
+    const currentNumber = parseInt(data[0].contact_number.substring(1));
+    nextNumber = currentNumber + 1;
+  }
+
+  // Formater avec des zéros en préfixe (ex: 1 -> "001")
+  return `${prefix}${nextNumber.toString().padStart(3, '0')}`;
+};
+
 export const useCreateContact = () => {
   const queryClient = useQueryClient();
   
   return useMutation({
-    mutationFn: async (contact: ContactInsert) => {
+    mutationFn: async (contact: Omit<ContactInsert, 'company_id' | 'contact_number'>) => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('User not authenticated');
 
@@ -37,9 +64,16 @@ export const useCreateContact = () => {
 
       if (!profile?.company_id) throw new Error('No company associated with user');
 
+      // Générer automatiquement le numéro de contact
+      const contactNumber = await generateContactNumber(contact.type || 'client', profile.company_id);
+
       const { data, error } = await supabase
         .from('contacts')
-        .insert({ ...contact, company_id: profile.company_id })
+        .insert({ 
+          ...contact, 
+          company_id: profile.company_id,
+          contact_number: contactNumber
+        })
         .select()
         .single();
 

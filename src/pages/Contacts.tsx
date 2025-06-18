@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Users } from 'lucide-react';
 import { ContactsTable } from '@/components/contacts/ContactsTable';
@@ -20,13 +20,71 @@ export const Contacts = () => {
   const contactsHandlers = useContactsHandlers();
 
   // Vérifier l'état d'authentification au chargement
-  React.useEffect(() => {
+  useEffect(() => {
     const checkAuth = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setAuthStatus(user ? 'authenticated' : 'unauthenticated');
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        
+        if (error) {
+          console.error('Error checking session:', error);
+          setAuthStatus('unauthenticated');
+          return;
+        }
+
+        if (session?.user) {
+          // Vérifier que l'utilisateur a un profil avec une entreprise
+          const { data: profile, error: profileError } = await supabase
+            .from('profiles')
+            .select('company_id')
+            .eq('id', session.user.id)
+            .single();
+
+          if (profileError || !profile?.company_id) {
+            console.log('No company profile found for user');
+            setAuthStatus('unauthenticated');
+            return;
+          }
+
+          setAuthStatus('authenticated');
+        } else {
+          setAuthStatus('unauthenticated');
+        }
+      } catch (error) {
+        console.error('Auth check error:', error);
+        setAuthStatus('unauthenticated');
+      }
     };
     
     checkAuth();
+
+    // Écouter les changements d'état d'authentification
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        if (session?.user) {
+          try {
+            const { data: profile, error: profileError } = await supabase
+              .from('profiles')
+              .select('company_id')
+              .eq('id', session.user.id)
+              .single();
+
+            if (profileError || !profile?.company_id) {
+              setAuthStatus('unauthenticated');
+              return;
+            }
+
+            setAuthStatus('authenticated');
+          } catch (error) {
+            console.error('Profile check error:', error);
+            setAuthStatus('unauthenticated');
+          }
+        } else {
+          setAuthStatus('unauthenticated');
+        }
+      }
+    );
+
+    return () => subscription.unsubscribe();
   }, []);
 
   const handleLogin = () => {
@@ -34,15 +92,13 @@ export const Contacts = () => {
   };
 
   // Gestion de l'authentification
-  const authGuard = (
-    <ContactsAuthGuard 
-      authStatus={authStatus} 
-      onLogin={handleLogin}
-    />
-  );
-
   if (authStatus !== 'authenticated') {
-    return authGuard;
+    return (
+      <ContactsAuthGuard 
+        authStatus={authStatus} 
+        onLogin={handleLogin}
+      />
+    );
   }
 
   // Gestion des erreurs de chargement
@@ -53,7 +109,12 @@ export const Contacts = () => {
 
   // Chargement
   if (isLoading) {
-    return authGuard; // Reuse the loading state from AuthGuard
+    return (
+      <ContactsAuthGuard 
+        authStatus="checking" 
+        onLogin={handleLogin}
+      />
+    );
   }
 
   return (

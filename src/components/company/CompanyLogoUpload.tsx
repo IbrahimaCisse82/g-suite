@@ -14,14 +14,16 @@ export const CompanyLogoUpload = ({ logoPreview, onLogoChange }: CompanyLogoUplo
       <Label htmlFor="logo" className="text-slate-800 font-bold text-base">Logo de l'entreprise</Label>
       <div className="flex items-center gap-4">
         {logoPreview && (
-          <div className="w-20 h-20 rounded-lg border-2 border-slate-400 flex items-center justify-center overflow-hidden bg-white shadow-sm">
+          <div className="w-20 h-20 rounded-lg border-2 border-slate-400 flex items-center justify-center overflow-hidden bg-white shadow-sm p-1">
             <img 
               src={logoPreview} 
               alt="Logo preview" 
-              className="w-full h-full object-cover object-center"
+              className="max-w-full max-h-full object-contain"
               style={{ 
-                objectFit: 'cover',
-                objectPosition: 'center'
+                width: 'auto',
+                height: 'auto',
+                maxWidth: '100%',
+                maxHeight: '100%'
               }}
             />
           </div>

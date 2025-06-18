@@ -46,6 +46,12 @@ const TrustedCompaniesSection = () => {
                     src={company.logo_url}
                     alt={`Logo ${company.name}`}
                     className="max-h-12 max-w-full object-contain filter grayscale group-hover:grayscale-0 transition-all duration-300"
+                    style={{ 
+                      width: 'auto',
+                      height: 'auto',
+                      maxWidth: '100%',
+                      maxHeight: '100%'
+                    }}
                   />
                 ) : (
                   <div className="w-full h-12 bg-slate-200 rounded flex items-center justify-center">

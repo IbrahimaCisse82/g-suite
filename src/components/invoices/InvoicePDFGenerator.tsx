@@ -1,3 +1,4 @@
+
 import { useCompanyProfile } from '@/hooks/useCompanyData';
 
 export const useInvoicePDFGenerator = () => {
@@ -50,6 +51,15 @@ export const useInvoicePDFGenerator = () => {
               color: white;
               font-size: 24px;
               font-weight: bold;
+              overflow: hidden;
+              padding: 4px;
+            }
+            .logo img {
+              max-width: 100%;
+              max-height: 100%;
+              object-fit: contain;
+              width: auto;
+              height: auto;
             }
             .company-info {
               flex-grow: 1;
@@ -141,7 +151,7 @@ export const useInvoicePDFGenerator = () => {
         <body>
           <div class="header">
             <div class="logo">
-              ${company?.logo_url ? `<img src="${company.logo_url}" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">` : company?.name?.charAt(0) || 'E'}
+              ${company?.logo_url ? `<img src="${company.logo_url}" alt="Logo">` : company?.name?.charAt(0) || 'E'}
             </div>
             <div class="company-info">
               <h1 class="company-name">${company?.name || 'Nom de l\'entreprise'}</h1>

@@ -95,9 +95,14 @@ export const StorageSiteForm = ({ onSuccess }: StorageSiteFormProps) => {
       const sitesToInsert = validSites.map(site => ({
         company_id: profile.company_id,
         name: site.name,
+        site_type: site.site_type,
         address: site.address,
         city: site.city,
-        country: site.country
+        postal_code: site.postal_code,
+        country: site.country,
+        phone: site.phone,
+        manager_name: site.manager_name,
+        capacity_m2: site.capacity_m2
       }));
 
       const { error } = await supabase

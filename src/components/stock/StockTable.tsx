@@ -58,10 +58,10 @@ export const StockTable = ({ stock, onStockMovement }: StockTableProps) => {
               <TableCell className="font-medium">{item.products?.name}</TableCell>
               <TableCell>{item.products?.sku || '-'}</TableCell>
               <TableCell>{item.products?.product_categories?.name}</TableCell>
-              <TableCell>{item.quantity_in_stock}</TableCell>
+              <TableCell>{item.quantity_in_stock || 0}</TableCell>
               <TableCell>{item.minimum_stock_level || 0}</TableCell>
               <TableCell>
-                {formatPrice(item.quantity_in_stock * (item.products?.unit_price || 0))}
+                {formatPrice((item.quantity_in_stock || 0) * (item.products?.unit_price || 0))}
               </TableCell>
               <TableCell>{getStockStatus(item)}</TableCell>
               <TableCell>

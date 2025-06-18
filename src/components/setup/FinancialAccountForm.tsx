@@ -86,8 +86,12 @@ export const FinancialAccountForm = ({ onSuccess }: FinancialAccountFormProps) =
       if (!profile?.company_id) throw new Error('Entreprise non trouvée');
 
       const accountsToInsert = validAccounts.map(account => ({
-        ...account,
-        company_id: profile.company_id
+        company_id: profile.company_id,
+        account_name: account.account_name,
+        account_type: account.account_type,
+        account_number: account.account_number,
+        currency: account.currency,
+        current_balance: account.current_balance
       }));
 
       const { error } = await supabase

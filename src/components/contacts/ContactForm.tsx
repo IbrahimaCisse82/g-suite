@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -40,7 +39,7 @@ export const ContactForm = ({ onSubmit, onCancel, loading }: ContactFormProps) =
 
   const generatePreviewNumber = (type: string) => {
     const prefix = type === 'client' ? 'C' : 'F';
-    return `${prefix}000001 (généré automatiquement)`;
+    return `${prefix}000001`;
   };
 
   const onFormSubmit = (data: ContactFormData) => {
@@ -57,9 +56,6 @@ export const ContactForm = ({ onSubmit, onCancel, loading }: ContactFormProps) =
           <div className="mt-1 text-blue-700 font-mono text-lg font-bold">
             {generatePreviewNumber(typeValue || 'client')}
           </div>
-          <p className="text-sm text-blue-600 mt-1">
-            Ce numéro sera automatiquement assigné lors de la création
-          </p>
         </div>
 
         <div className="grid grid-cols-2 gap-4">

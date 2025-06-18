@@ -25,11 +25,22 @@ export const ContactsTable = ({ contacts, onEdit, onDelete }: ContactsTableProps
   const getTypeBadge = (type: string) => {
     const variants = {
       client: 'default',
-      fournisseur: 'secondary',
-      both: 'outline'
+      fournisseur: 'secondary'
     } as const;
     
-    return <Badge variant={variants[type as keyof typeof variants]} className="badge-readable font-semibold">{type}</Badge>;
+    const labels = {
+      client: 'Client',
+      fournisseur: 'Fournisseur'
+    } as const;
+    
+    return (
+      <Badge 
+        variant={variants[type as keyof typeof variants]} 
+        className="badge-readable font-semibold"
+      >
+        {labels[type as keyof typeof labels] || type}
+      </Badge>
+    );
   };
 
   return (
@@ -37,6 +48,7 @@ export const ContactsTable = ({ contacts, onEdit, onDelete }: ContactsTableProps
       <Table>
         <TableHeader>
           <TableRow className="bg-slate-50">
+            <TableHead className="font-semibold text-slate-900">N° Contact</TableHead>
             <TableHead className="font-semibold text-slate-900">Nom</TableHead>
             <TableHead className="font-semibold text-slate-900">Type</TableHead>
             <TableHead className="font-semibold text-slate-900">Contact</TableHead>
@@ -47,8 +59,11 @@ export const ContactsTable = ({ contacts, onEdit, onDelete }: ContactsTableProps
         <TableBody>
           {contacts.map((contact) => (
             <TableRow key={contact.id} className="hover:bg-slate-50">
+              <TableCell className="font-mono text-sm text-slate-600">
+                {contact.contact_number || 'N/A'}
+              </TableCell>
               <TableCell className="font-semibold text-slate-900">{contact.name}</TableCell>
-              <TableCell>{getTypeBadge(contact.type)}</TableCell>
+              <TableCell>{getTypeBadge(contact.type || 'client')}</TableCell>
               <TableCell>
                 <div className="space-y-1">
                   {contact.email && (

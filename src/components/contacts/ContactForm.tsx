@@ -14,7 +14,8 @@ type ContactInsert = Database['public']['Tables']['contacts']['Insert'];
 
 const contactSchema = z.object({
   name: z.string().min(1, 'Le nom est requis'),
-  type: z.enum(['client', 'fournisseur', 'both']),
+  contact_number: z.string().min(1, 'Le numéro de contact est requis'),
+  type: z.enum(['client', 'fournisseur']),
   email: z.string().email('Email invalide').optional().or(z.literal('')),
   phone: z.string().optional(),
   address: z.string().optional(),
@@ -44,6 +45,7 @@ export const ContactForm = ({ onSubmit, onCancel, loading }: ContactFormProps) =
     // Transform the form data to match the expected type
     const submitData: Omit<ContactInsert, 'company_id'> = {
       name: data.name,
+      contact_number: data.contact_number,
       type: data.type,
       email: data.email || null,
       phone: data.phone || null,
@@ -65,19 +67,24 @@ export const ContactForm = ({ onSubmit, onCancel, loading }: ContactFormProps) =
           </div>
           
           <div>
-            <Label htmlFor="type" className="text-readable-primary">Type *</Label>
-            <Select onValueChange={(value) => setValue('type', value as any)}>
-              <SelectTrigger className="bg-white text-readable-primary">
-                <SelectValue placeholder="Sélectionner un type" />
-              </SelectTrigger>
-              <SelectContent className="bg-white">
-                <SelectItem value="client" className="text-readable-primary">Client</SelectItem>
-                <SelectItem value="fournisseur" className="text-readable-primary">Fournisseur</SelectItem>
-                <SelectItem value="both" className="text-readable-primary">Client & Fournisseur</SelectItem>
-              </SelectContent>
-            </Select>
-            {errors.type && <p className="text-sm text-red-500">{errors.type.message}</p>}
+            <Label htmlFor="contact_number" className="text-readable-primary">Numéro de contact *</Label>
+            <Input {...register('contact_number')} placeholder="Ex: C001, F001" className="bg-white text-readable-primary" />
+            {errors.contact_number && <p className="text-sm text-red-500">{errors.contact_number.message}</p>}
           </div>
+        </div>
+
+        <div>
+          <Label htmlFor="type" className="text-readable-primary">Type *</Label>
+          <Select onValueChange={(value) => setValue('type', value as any)}>
+            <SelectTrigger className="bg-white text-readable-primary">
+              <SelectValue placeholder="Sélectionner un type" />
+            </SelectTrigger>
+            <SelectContent className="bg-white">
+              <SelectItem value="client" className="text-readable-primary">Client</SelectItem>
+              <SelectItem value="fournisseur" className="text-readable-primary">Fournisseur</SelectItem>
+            </SelectContent>
+          </Select>
+          {errors.type && <p className="text-sm text-red-500">{errors.type.message}</p>}
         </div>
 
         <div className="grid grid-cols-2 gap-4">

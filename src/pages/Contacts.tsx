@@ -68,7 +68,7 @@ export const Contacts = () => {
           <div className="flex justify-between items-center mb-6">
             <div>
               <h1 className="text-3xl font-bold text-readable-primary">Clients & Fournisseurs</h1>
-              <p className="text-readable-secondary mt-2">Gérez vos contacts commerciaux</p>
+              <p className="text-readable-secondary mt-2">Gérez vos contacts commerciaux avec numérotation unique</p>
             </div>
             <Button onClick={() => setIsDialogOpen(true)} className="bg-green-600 hover:bg-green-700">
               <Plus className="w-4 h-4 mr-2" />
@@ -94,7 +94,7 @@ export const Contacts = () => {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-readable-primary">
-                  {contacts.filter(c => c.type === 'client' || c.type === 'both').length}
+                  {contacts.filter(c => c.type === 'client').length}
                 </div>
               </CardContent>
             </Card>
@@ -106,7 +106,7 @@ export const Contacts = () => {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-readable-primary">
-                  {contacts.filter(c => c.type === 'fournisseur' || c.type === 'both').length}
+                  {contacts.filter(c => c.type === 'fournisseur').length}
                 </div>
               </CardContent>
             </Card>

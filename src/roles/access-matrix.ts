@@ -31,88 +31,77 @@ export const MODULE_ACCESS_MATRIX: Record<
       "reports",
       "analytics",
       "budget",
-      "training",
       "settings",
     ],
-    // Comptable : comptabilité, trésorerie, budget, formation
+    // Comptable : comptabilité, trésorerie, budget
     comptable: [
       "accounting",
       "treasury",
       "budget",
-      "training",
     ],
-    // Commercial : contacts, facturation, achats, formation
+    // Commercial : contacts, facturation, achats
     commercial: [
       "contacts",
       "invoicing",
       "purchases",
-      "training",
     ],
-    // Logisticien : produits, stock, formation
+    // Logisticien : produits, stock
     logistique: [
       "products",
       "stock",
-      "training",
     ],
-    // Caissier : trésorerie, formation
+    // Caissier : trésorerie
     caissier: [
       "treasury",
-      "training",
     ],
   },
   // SOLUTION COMPTABLE
   comptable: {
-    // Manager : comptabilité, trésorerie, budget, formation, paramètres
+    // Manager : comptabilité, trésorerie, budget, paramètres
     manager: [
       "accounting",
       "treasury",
       "budget",
-      "training",
       "settings",
     ],
-    // Comptable : comptabilité, trésorerie, budget, formation
+    // Comptable : comptabilité, trésorerie, budget
     comptable: [
       "accounting",
       "treasury",
       "budget",
-      "training",
     ],
     // Commercial : aucun accès
     commercial: [],
     // Logisticien : aucun accès
     logistique: [],
-    // Caissier : trésorerie, formation
+    // Caissier : trésorerie
     caissier: [
       "treasury",
-      "training",
     ],
   },
   // SOLUTION COMMERCIALE
   commercial: {
-    // Manager : contacts, facturation, achats, produits, stock, formation, paramètres
+    // Manager : contacts, facturation, achats, produits, stock, paramètres
     manager: [
       "contacts",
       "invoicing",
       "purchases",
       "products",
       "stock",
-      "training",
       "settings",
     ],
     // Comptable : aucun accès
     comptable: [],
-    // Commercial : contacts, facturation, achats, formation
+    // Commercial : contacts, facturation, achats
     commercial: [
       "contacts",
       "invoicing",
       "purchases",
-      "training",
     ],
-    // Logisticien : produits, stock, formation
+    // Logisticien : produits, stock
     logistique: [
       "products",
       "stock",
-      "training",
     ],
     // Caissier : aucun accès
     caissier: [],
@@ -134,6 +123,5 @@ export const PATH_FEATURE_MAP: Record<string, string> = {
   "/reports": "reports",
   "/analytics": "analytics",
   "/budget": "budget",
-  "/training": "training",
   "/settings": "settings",
 };

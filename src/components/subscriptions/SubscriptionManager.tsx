@@ -6,6 +6,10 @@ import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { useSubscriptionPlans, usePaidAccountRequests, useCreatePaidAccountRequest, useCurrentSubscription } from '@/hooks/useSubscriptions';
+import { useUserLimits } from '@/hooks/useUserLimits';
+import { useCompanyProfile } from '@/hooks/useCompanyData';
+import { SubscriptionPlanCard } from './SubscriptionPlanCard';
+import { UserLimitIndicator } from './UserLimitIndicator';
 import { Crown, Check, Clock, X, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -17,6 +21,8 @@ export const SubscriptionManager = () => {
   const { data: plans, isLoading: plansLoading } = useSubscriptionPlans();
   const { data: requests, isLoading: requestsLoading } = usePaidAccountRequests();
   const { data: currentSubscription } = useCurrentSubscription();
+  const { data: profile } = useCompanyProfile();
+  const { data: userLimits } = useUserLimits(profile?.company_id);
   const createRequestMutation = useCreatePaidAccountRequest();
 
   const handleCreateRequest = async () => {
@@ -69,7 +75,7 @@ export const SubscriptionManager = () => {
               <span>Abonnement actuel</span>
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-4">
             <div className="flex justify-between items-center">
               <div>
                 <h3 className="text-lg font-semibold">{currentSubscription.subscription_plans?.name}</h3>
@@ -81,6 +87,15 @@ export const SubscriptionManager = () => {
                 Actif
               </Badge>
             </div>
+            
+            {/* Indicateur de limite d'utilisateurs */}
+            {userLimits && (
+              <UserLimitIndicator 
+                currentUsers={userLimits.currentUsers}
+                maxUsers={userLimits.maxUsers}
+                planName={userLimits.planName}
+              />
+            )}
           </CardContent>
         </Card>
       )}
@@ -108,7 +123,7 @@ export const SubscriptionManager = () => {
                     <option value="">Choisir un plan...</option>
                     {plans?.map((plan) => (
                       <option key={plan.id} value={plan.id}>
-                        {plan.name} - {plan.price.toLocaleString()} XOF
+                        {plan.name} - {plan.price.toLocaleString()} XOF ({plan.max_users} utilisateurs max)
                       </option>
                     ))}
                   </select>
@@ -140,30 +155,13 @@ export const SubscriptionManager = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {plans?.map((plan) => (
-            <Card key={plan.id} className={plan.plan_type === 'premium' ? 'border-green-500 relative' : ''}>
-              {plan.plan_type === 'premium' && (
-                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                  <Badge className="bg-green-500 text-white">Recommandé</Badge>
-                </div>
-              )}
-              <CardHeader>
-                <CardTitle>{plan.name}</CardTitle>
-                <div className="text-3xl font-bold">
-                  {plan.price.toLocaleString()} XOF
-                  <span className="text-sm font-normal text-muted-foreground">/{plan.duration_months} mois</span>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  {plan.features && Object.entries(plan.features as Record<string, any>).map(([key, value]) => (
-                    <div key={key} className="flex items-center space-x-2">
-                      <Check className="w-4 h-4 text-green-500" />
-                      <span className="text-sm">{key}: {String(value)}</span>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+            <SubscriptionPlanCard 
+              key={plan.id}
+              plan={plan}
+              onSelect={setSelectedPlan}
+              isSelected={selectedPlan === plan.id}
+              currentPlan={currentSubscription?.subscription_plan_id === plan.id}
+            />
           ))}
         </div>
       </div>

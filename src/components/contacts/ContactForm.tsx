@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -27,8 +28,9 @@ interface ContactFormProps {
 }
 
 export const ContactForm = ({ onSubmit, onCancel, loading }: ContactFormProps) => {
-  const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm<ContactFormData>({
+  const { register, handleSubmit, setValue, watch, formState: { errors, isValid } } = useForm<ContactFormData>({
     resolver: zodResolver(contactSchema),
+    mode: 'onChange',
     defaultValues: {
       country: 'Sénégal',
       type: 'client',
@@ -154,7 +156,7 @@ export const ContactForm = ({ onSubmit, onCancel, loading }: ContactFormProps) =
           </Button>
           <Button 
             type="submit" 
-            disabled={loading} 
+            disabled={loading || !isValid} 
             className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6"
           >
             {loading ? 'Ajout en cours...' : 'Ajouter le contact'}

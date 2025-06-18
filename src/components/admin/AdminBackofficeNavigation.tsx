@@ -42,11 +42,11 @@ const companiesBySolution = {
 const backofficeMenuItems = [
   { icon: Home, label: 'Dashboard', path: '/admin-backoffice', active: true },
   { icon: Users, label: 'Gestion Utilisateurs', path: '/admin-backoffice/users', active: true },
-  { icon: Building2, label: 'Gestion Entreprises', path: '/admin-backoffice/companies', active: false },
-  { icon: Shield, label: 'Rôles & Permissions', path: '/admin-backoffice/roles', active: false },
-  { icon: Database, label: 'Base de données', path: '/admin-backoffice/database', active: false },
-  { icon: BarChart3, label: 'Statistiques', path: '/admin-backoffice/stats', active: false },
-  { icon: Settings, label: 'Configuration', path: '/admin-backoffice/settings', active: false },
+  { icon: Building2, label: 'Gestion Entreprises', path: '/admin-backoffice/companies', active: true },
+  { icon: Shield, label: 'Rôles & Permissions', path: '/admin-backoffice/roles', active: true },
+  { icon: Database, label: 'Base de données', path: '/admin-backoffice/database', active: true },
+  { icon: BarChart3, label: 'Statistiques', path: '/admin-backoffice/stats', active: true },
+  { icon: Settings, label: 'Configuration', path: '/admin-backoffice/settings', active: true },
 ];
 
 const solutions = [
@@ -128,20 +128,13 @@ export const AdminBackofficeNavigation = () => {
               className={`flex items-center justify-between space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${
                 isActive 
                   ? 'bg-green-600 text-white shadow-md' 
-                  : item.active 
-                    ? 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
-                    : 'text-gray-400 cursor-not-allowed'
+                  : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
               }`}
             >
               <div className="flex items-center space-x-3">
                 <Icon className="w-5 h-5" />
                 <span className="font-medium">{item.label}</span>
               </div>
-              {!item.active && (
-                <Badge variant="secondary" className="text-xs bg-gray-200 text-gray-600">
-                  Bientôt
-                </Badge>
-              )}
             </Link>
           );
         })}

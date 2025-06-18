@@ -1,4 +1,5 @@
 
+
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -46,7 +47,13 @@ export const ContactForm = ({ onSubmit, onCancel, loading }: ContactFormProps) =
 
   const onFormSubmit = (data: ContactFormData) => {
     console.log('Form submission triggered with data:', data);
-    onSubmit(data);
+    console.log('Calling onSubmit function...');
+    try {
+      onSubmit(data);
+      console.log('onSubmit called successfully');
+    } catch (error) {
+      console.error('Error calling onSubmit:', error);
+    }
   };
 
   return (
@@ -166,3 +173,4 @@ export const ContactForm = ({ onSubmit, onCancel, loading }: ContactFormProps) =
     </div>
   );
 };
+

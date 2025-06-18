@@ -44,6 +44,7 @@ import { ChartOfAccounts } from "./pages/ChartOfAccounts";
 import { FinancialStatements } from "./pages/FinancialStatements";
 import { JournalEntries } from "./pages/JournalEntries";
 import CompanyRegistration from "./pages/CompanyRegistration";
+import { AdminUserManagement } from "./pages/AdminUserManagement";
 
 const queryClient = new QueryClient();
 
@@ -93,6 +94,7 @@ const App = () => (
           </Route>
 
           <Route path="/subscriptions" element={<SubscriptionSettings />} />
+          <Route path="/admin-users" element={<AdminUserManagement />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/formation" element={<Formation />} />
           <Route path="/training" element={<TrainingSupport />} />

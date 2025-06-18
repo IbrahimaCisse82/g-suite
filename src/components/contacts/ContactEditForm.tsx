@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -8,6 +8,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import type { Database } from '@/integrations/supabase/types';
+
+type Contact = Database['public']['Tables']['contacts']['Row'];
 
 const contactSchema = z.object({
   name: z.string().min(1, 'Le nom est requis'),
@@ -21,59 +24,44 @@ const contactSchema = z.object({
 
 type ContactFormData = z.infer<typeof contactSchema>;
 
-interface ContactFormProps {
-  onSubmit: (data: ContactFormData) => Promise<void>;
+interface ContactEditFormProps {
+  contact: Contact;
+  onSubmit: (data: ContactFormData) => void;
   onCancel: () => void;
   loading?: boolean;
 }
 
-export const ContactForm = ({ onSubmit, onCancel, loading }: ContactFormProps) => {
-  const { register, handleSubmit, setValue, watch, formState: { errors, isValid }, reset } = useForm<ContactFormData>({
+export const ContactEditForm = ({ contact, onSubmit, onCancel, loading }: ContactEditFormProps) => {
+  const { register, handleSubmit, setValue, watch, formState: { errors, isValid } } = useForm<ContactFormData>({
     resolver: zodResolver(contactSchema),
     mode: 'onChange',
     defaultValues: {
-      country: 'Sénégal',
-      type: 'client',
+      name: contact.name || '',
+      type: (contact.type as 'client' | 'fournisseur') || 'client',
+      email: contact.email || '',
+      phone: contact.phone || '',
+      address: contact.address || '',
+      city: contact.city || '',
+      country: contact.country || 'Sénégal',
     },
   });
 
   const typeValue = watch('type');
 
-  const generatePreviewNumber = (type: string) => {
-    const prefix = type === 'client' ? 'C' : 'F';
-    return `${prefix}000001`;
-  };
-
   const onFormSubmit = async (data: ContactFormData) => {
-    if (loading) {
-      console.log('Form submission blocked - already in progress');
-      return;
-    }
-    
-    console.log('Contact form submission triggered with data:', data);
-    
-    try {
-      await onSubmit(data);
-      console.log('Contact form submitted successfully');
-      reset(); // Reset form after successful submission
-    } catch (error) {
-      console.error('Error in contact form submission:', error);
-      // Error handling is done in the parent component
-    }
+    console.log('Edit form submission triggered with data:', data);
+    await onSubmit(data);
   };
 
   return (
     <div className="bg-white">
       <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4">
-        {/* Prévisualisation du numéro */}
+        {/* Affichage du numéro de contact existant */}
         <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
           <Label className="text-blue-800 font-semibold">Numéro de contact</Label>
           <div className="mt-1 text-blue-700 font-mono text-lg font-bold">
-            {generatePreviewNumber(typeValue || 'client')}
+            {contact.contact_number || 'Non défini'}
           </div>
-          <p className="text-xs text-blue-600 mt-1">
-            Le numéro définitif sera généré automatiquement
-          </p>
         </div>
 
         <div className="grid grid-cols-2 gap-4">
@@ -83,7 +71,6 @@ export const ContactForm = ({ onSubmit, onCancel, loading }: ContactFormProps) =
               {...register('name')} 
               className="bg-white text-readable-primary"
               placeholder="Nom du contact"
-              disabled={loading}
             />
             {errors.name && <p className="text-sm text-red-500">{errors.name.message}</p>}
           </div>
@@ -91,12 +78,8 @@ export const ContactForm = ({ onSubmit, onCancel, loading }: ContactFormProps) =
           <div>
             <Label htmlFor="type" className="text-readable-primary">Type *</Label>
             <Select 
-              onValueChange={(value) => {
-                console.log('Type changed to:', value);
-                setValue('type', value as 'client' | 'fournisseur');
-              }} 
+              onValueChange={(value) => setValue('type', value as 'client' | 'fournisseur')} 
               value={typeValue}
-              disabled={loading}
             >
               <SelectTrigger className="bg-white text-readable-primary">
                 <SelectValue placeholder="Sélectionner un type" />
@@ -118,7 +101,6 @@ export const ContactForm = ({ onSubmit, onCancel, loading }: ContactFormProps) =
               {...register('email')} 
               className="bg-white text-readable-primary"
               placeholder="email@exemple.com"
-              disabled={loading}
             />
             {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
           </div>
@@ -129,7 +111,6 @@ export const ContactForm = ({ onSubmit, onCancel, loading }: ContactFormProps) =
               {...register('phone')} 
               className="bg-white text-readable-primary"
               placeholder="+221 XX XXX XX XX"
-              disabled={loading}
             />
           </div>
         </div>
@@ -140,7 +121,6 @@ export const ContactForm = ({ onSubmit, onCancel, loading }: ContactFormProps) =
             {...register('address')} 
             className="bg-white text-readable-primary"
             placeholder="Adresse complète"
-            disabled={loading}
           />
         </div>
 
@@ -151,7 +131,6 @@ export const ContactForm = ({ onSubmit, onCancel, loading }: ContactFormProps) =
               {...register('city')} 
               className="bg-white text-readable-primary"
               placeholder="Ville"
-              disabled={loading}
             />
           </div>
           
@@ -160,7 +139,6 @@ export const ContactForm = ({ onSubmit, onCancel, loading }: ContactFormProps) =
             <Input 
               {...register('country')} 
               className="bg-white text-readable-primary"
-              disabled={loading}
             />
           </div>
         </div>
@@ -180,7 +158,7 @@ export const ContactForm = ({ onSubmit, onCancel, loading }: ContactFormProps) =
             disabled={loading || !isValid} 
             className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6"
           >
-            {loading ? 'Ajout en cours...' : 'Ajouter le contact'}
+            {loading ? 'Modification en cours...' : 'Modifier le contact'}
           </Button>
         </div>
       </form>

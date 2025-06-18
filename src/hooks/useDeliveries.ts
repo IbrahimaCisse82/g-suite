@@ -113,51 +113,6 @@ export const useCompleteDelivery = () => {
 
       if (deliveryError) throw deliveryError;
 
-      // Débiter le stock pour chaque produit livré
-      const { data: deliveryLines } = await supabase
-        .from('delivery_lines')
-        .select('product_id, quantity_delivered')
-        .eq('delivery_id', deliveryId);
-
-      if (deliveryLines) {
-        for (const line of deliveryLines) {
-          // Récupérer le stock actuel
-          const { data: currentStock } = await supabase
-            .from('product_stock')
-            .select('quantity_in_stock')
-            .eq('product_id', line.product_id)
-            .eq('company_id', profile.company_id)
-            .single();
-
-          if (currentStock) {
-            const newQuantity = currentStock.quantity_in_stock - line.quantity_delivered;
-            
-            // Mettre à jour le stock
-            await supabase
-              .from('product_stock')
-              .update({ 
-                quantity_in_stock: newQuantity,
-                last_stock_update: new Date().toISOString()
-              })
-              .eq('product_id', line.product_id)
-              .eq('company_id', profile.company_id);
-
-            // Enregistrer le mouvement
-            await supabase
-              .from('stock_movements')
-              .insert([{
-                company_id: profile.company_id,
-                product_id: line.product_id,
-                movement_type: 'out',
-                quantity: line.quantity_delivered,
-                reference_type: 'delivery',
-                reference_id: deliveryId,
-                notes: 'Sortie automatique suite à livraison'
-              }]);
-          }
-        }
-      }
-
       return { deliveryId };
     },
     onSuccess: () => {

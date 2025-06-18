@@ -10,7 +10,7 @@ import { useStockReportPDFGenerator } from './StockReportPDFGenerator';
 
 export const StockReport = () => {
   const { data: profile } = useCompanyProfile();
-  const { data: stock = [] } = useStock();
+  const { data: stockData = [] } = useStock();
   const { generatePrintableReport, formatPrice, calculateTotalStockValue } = useStockReportPDFGenerator();
 
   if (!profile) {
@@ -29,8 +29,12 @@ export const StockReport = () => {
     );
   }
 
+  // Transform the stock data to match expected format
+  const stock = stockData || [];
   const totalValue = calculateTotalStockValue(stock);
-  const lowStockCount = stock.filter(item => item.quantity_in_stock <= item.minimum_stock_level).length;
+  const lowStockCount = stock.filter(item => 
+    item.quantity_in_stock <= item.minimum_stock_level
+  ).length;
 
   return (
     <Card>

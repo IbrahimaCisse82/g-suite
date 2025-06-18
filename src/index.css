@@ -31,7 +31,7 @@
     --destructive: 239 68 68;
     --destructive-foreground: 255 255 255;
 
-    --border: 229 231 235;
+    --border: 209 213 219;
     --input: 248 250 252;
     --ring: 34 197 94;
 
@@ -117,16 +117,26 @@
     touch-action: manipulation;
     overscroll-behavior: none;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-    color: rgb(17 24 39);
+    color: rgb(17 24 39) !important;
   }
 
-  /* Force dark text colors for better readability */
+  /* Force dark text colors for better readability - NO YELLOW TEXT */
   h1, h2, h3, h4, h5, h6 {
     color: rgb(17 24 39) !important;
   }
 
-  p, span, div, td, th, label {
-    color: rgb(17 24 39);
+  p, span, div, td, th, label, button, input, textarea, select {
+    color: rgb(17 24 39) !important;
+  }
+
+  /* Ensure form elements have black text */
+  .form-control, .form-input, .form-select, .form-textarea {
+    color: rgb(17 24 39) !important;
+  }
+
+  /* Dialog and modal text colors */
+  [role="dialog"] *, [role="alertdialog"] *, .modal *, .dialog * {
+    color: rgb(17 24 39) !important;
   }
 
   /* Optimisations pour iOS */
@@ -182,7 +192,7 @@
     @apply bg-gray-100 hover:bg-gray-200 text-gray-900 px-8 py-4 rounded-xl font-semibold transition-all duration-200;
   }
 
-  /* Amélioration de la lisibilité du texte */
+  /* Amélioration de la lisibilité du texte - FORCE BLACK TEXT */
   .text-readable-primary {
     color: rgb(17 24 39) !important;
   }
@@ -195,20 +205,33 @@
     color: rgb(75 85 99) !important;
   }
 
-  /* Styles spécifiques pour les tableaux */
-  .table-text {
-    @apply text-gray-900 font-medium;
+  /* Override any yellow text colors */
+  .text-yellow-500, .text-yellow-600, .text-yellow-400, .text-yellow-700, .text-yellow-800, .text-yellow-900 {
     color: rgb(17 24 39) !important;
+  }
+
+  /* Styles spécifiques pour les tableaux - NO YELLOW */
+  .table-text {
+    color: rgb(17 24 39) !important;
+    font-weight: 500;
   }
   
   .table-text-secondary {
-    @apply text-gray-800;
     color: rgb(31 41 55) !important;
   }
   
   .table-text-muted {
-    @apply text-gray-700;
     color: rgb(55 65 81) !important;
+  }
+
+  /* Replace yellow borders with light gray */
+  .border-yellow-200, .border-yellow-300, .border-yellow-400 {
+    border-color: rgb(209 213 219) !important;
+  }
+
+  /* Replace yellow backgrounds with light gray */
+  .bg-yellow-50, .bg-yellow-100 {
+    background-color: rgb(249 250 251) !important;
   }
 
   /* Professional shadows */
@@ -243,6 +266,11 @@
 
   .hover-glow {
     @apply transition-all duration-300 hover:shadow-lg hover:shadow-green-500/25;
+  }
+
+  /* Force black text in all components */
+  .card *, .dialog *, .popover *, .tooltip *, .dropdown-menu *, .select *, .input *, .textarea *, .button * {
+    color: rgb(17 24 39) !important;
   }
 }
 
@@ -281,4 +309,3 @@
 .animate-fade-in-up {
   animation: fadeInUp 0.6s ease-out;
 }
-

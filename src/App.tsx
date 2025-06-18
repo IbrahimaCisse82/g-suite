@@ -34,11 +34,11 @@ import ProductDocumentation from "./pages/ProductDocumentation";
 import Formation from "./pages/Formation";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
-import Contacts from "./pages/Contacts";
+import { Contacts } from "./pages/Contacts";
 import Invoicing from "./pages/Invoicing";
-import Purchases from "./pages/Purchases";
-import Treasury from "./pages/Treasury";
-import Analytics from "./pages/Analytics";
+import { Purchases } from "./pages/Purchases";
+import { Treasury } from "./pages/Treasury";
+import { Analytics } from "./pages/Analytics";
 import Budget from "./pages/Budget";
 
 const queryClient = new QueryClient();

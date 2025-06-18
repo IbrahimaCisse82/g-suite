@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -71,8 +72,8 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
 
   // Gérer le changement de pays automatiquement
   useEffect(() => {
-    const subscription = form.watch((value, { name, type }) => {
-      if (name === 'country' && value.country) {
+    const subscription = form.watch((value) => {
+      if (value.country) {
         const countryData = getCountryByName(value.country);
         if (countryData) {
           form.setValue('currency', countryData.currency);

@@ -1,5 +1,3 @@
-
-
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -29,7 +27,7 @@ interface ContactFormProps {
 }
 
 export const ContactForm = ({ onSubmit, onCancel, loading }: ContactFormProps) => {
-  const { register, handleSubmit, setValue, watch, formState: { errors, isValid } } = useForm<ContactFormData>({
+  const { register, handleSubmit, setValue, watch, formState: { errors, isValid, isSubmitting } } = useForm<ContactFormData>({
     resolver: zodResolver(contactSchema),
     mode: 'onChange',
     defaultValues: {
@@ -45,11 +43,16 @@ export const ContactForm = ({ onSubmit, onCancel, loading }: ContactFormProps) =
     return `${prefix}000001`;
   };
 
-  const onFormSubmit = (data: ContactFormData) => {
+  const onFormSubmit = async (data: ContactFormData) => {
+    if (loading || isSubmitting) {
+      console.log('Form submission already in progress, ignoring...');
+      return;
+    }
+    
     console.log('Form submission triggered with data:', data);
     console.log('Calling onSubmit function...');
     try {
-      onSubmit(data);
+      await onSubmit(data);
       console.log('onSubmit called successfully');
     } catch (error) {
       console.error('Error calling onSubmit:', error);
@@ -157,20 +160,19 @@ export const ContactForm = ({ onSubmit, onCancel, loading }: ContactFormProps) =
             variant="outline" 
             onClick={onCancel} 
             className="text-readable-primary border-gray-300 hover:bg-gray-50"
-            disabled={loading}
+            disabled={loading || isSubmitting}
           >
             Annuler
           </Button>
           <Button 
             type="submit" 
-            disabled={loading || !isValid} 
+            disabled={loading || isSubmitting || !isValid} 
             className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6"
           >
-            {loading ? 'Ajout en cours...' : 'Ajouter le contact'}
+            {loading || isSubmitting ? 'Ajout en cours...' : 'Ajouter le contact'}
           </Button>
         </div>
       </form>
     </div>
   );
 };
-

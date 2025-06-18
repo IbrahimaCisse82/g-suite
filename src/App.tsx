@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -42,6 +41,7 @@ import { Analytics } from "./pages/Analytics";
 import Budget from "./pages/Budget";
 import { ChartOfAccounts } from "./pages/ChartOfAccounts";
 import { FinancialStatements } from "./pages/FinancialStatements";
+import { JournalEntries } from "./pages/JournalEntries";
 
 const queryClient = new QueryClient();
 

@@ -46,7 +46,9 @@ const menuItems = [
     label: 'Comptabilité', 
     path: '/accounting',
     subItems: [
-      { label: 'Plan comptable', path: '/chart-of-accounts' }
+      { label: 'Plan comptable', path: '/chart-of-accounts' },
+      { label: 'États financiers', path: '/financial-statements' },
+      { label: 'Écritures comptables', path: '/journal-entries' }
     ]
   },
   { icon: Users, label: 'Contacts', path: '/contacts' },

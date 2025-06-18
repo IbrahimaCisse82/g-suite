@@ -38,6 +38,11 @@ export const ContactForm = ({ onSubmit, onCancel, loading }: ContactFormProps) =
 
   const typeValue = watch('type');
 
+  const generatePreviewNumber = (type: string) => {
+    const prefix = type === 'client' ? 'C' : 'F';
+    return `${prefix}000001 (généré automatiquement)`;
+  };
+
   const onFormSubmit = (data: ContactFormData) => {
     console.log('Form submission triggered with data:', data);
     onSubmit(data);
@@ -46,10 +51,25 @@ export const ContactForm = ({ onSubmit, onCancel, loading }: ContactFormProps) =
   return (
     <div className="bg-white">
       <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4">
+        {/* Affichage du numéro qui sera généré */}
+        <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+          <Label className="text-blue-800 font-semibold">Numéro de contact</Label>
+          <div className="mt-1 text-blue-700 font-mono text-lg font-bold">
+            {generatePreviewNumber(typeValue || 'client')}
+          </div>
+          <p className="text-sm text-blue-600 mt-1">
+            Ce numéro sera automatiquement assigné lors de la création
+          </p>
+        </div>
+
         <div className="grid grid-cols-2 gap-4">
           <div>
             <Label htmlFor="name" className="text-readable-primary">Nom *</Label>
-            <Input {...register('name')} className="bg-white text-readable-primary" />
+            <Input 
+              {...register('name')} 
+              className="bg-white text-readable-primary"
+              placeholder="Nom du contact"
+            />
             {errors.name && <p className="text-sm text-red-500">{errors.name.message}</p>}
           </div>
           
@@ -61,6 +81,7 @@ export const ContactForm = ({ onSubmit, onCancel, loading }: ContactFormProps) =
                 setValue('type', value as 'client' | 'fournisseur');
               }} 
               value={typeValue}
+              defaultValue="client"
             >
               <SelectTrigger className="bg-white text-readable-primary">
                 <SelectValue placeholder="Sélectionner un type" />
@@ -77,44 +98,70 @@ export const ContactForm = ({ onSubmit, onCancel, loading }: ContactFormProps) =
         <div className="grid grid-cols-2 gap-4">
           <div>
             <Label htmlFor="email" className="text-readable-primary">Email</Label>
-            <Input type="email" {...register('email')} className="bg-white text-readable-primary" />
+            <Input 
+              type="email" 
+              {...register('email')} 
+              className="bg-white text-readable-primary"
+              placeholder="email@exemple.com"
+            />
             {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
           </div>
           
           <div>
             <Label htmlFor="phone" className="text-readable-primary">Téléphone</Label>
-            <Input {...register('phone')} className="bg-white text-readable-primary" />
+            <Input 
+              {...register('phone')} 
+              className="bg-white text-readable-primary"
+              placeholder="+221 XX XXX XX XX"
+            />
           </div>
         </div>
 
         <div>
           <Label htmlFor="address" className="text-readable-primary">Adresse</Label>
-          <Textarea {...register('address')} className="bg-white text-readable-primary" />
+          <Textarea 
+            {...register('address')} 
+            className="bg-white text-readable-primary"
+            placeholder="Adresse complète"
+          />
         </div>
 
         <div className="grid grid-cols-2 gap-4">
           <div>
             <Label htmlFor="city" className="text-readable-primary">Ville</Label>
-            <Input {...register('city')} className="bg-white text-readable-primary" />
+            <Input 
+              {...register('city')} 
+              className="bg-white text-readable-primary"
+              placeholder="Ville"
+            />
           </div>
           
           <div>
             <Label htmlFor="country" className="text-readable-primary">Pays</Label>
-            <Input {...register('country')} className="bg-white text-readable-primary" />
+            <Input 
+              {...register('country')} 
+              className="bg-white text-readable-primary"
+              defaultValue="Sénégal"
+            />
           </div>
         </div>
 
-        <div className="flex justify-end space-x-2">
-          <Button type="button" variant="outline" onClick={onCancel} className="text-readable-primary">
+        <div className="flex justify-end space-x-2 pt-4">
+          <Button 
+            type="button" 
+            variant="outline" 
+            onClick={onCancel} 
+            className="text-readable-primary border-gray-300 hover:bg-gray-50"
+            disabled={loading}
+          >
             Annuler
           </Button>
           <Button 
             type="submit" 
             disabled={loading} 
-            className="bg-green-600 hover:bg-green-700"
-            onClick={() => console.log('Submit button clicked')}
+            className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6"
           >
-            {loading ? 'Ajout...' : 'Ajouter'}
+            {loading ? 'Ajout en cours...' : 'Ajouter le contact'}
           </Button>
         </div>
       </form>

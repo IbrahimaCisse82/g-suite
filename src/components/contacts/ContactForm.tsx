@@ -19,10 +19,7 @@ const contactSchema = z.object({
   phone: z.string().optional(),
   address: z.string().optional(),
   city: z.string().optional(),
-  postal_code: z.string().optional(),
   country: z.string().optional(),
-  siret: z.string().optional(),
-  tax_number: z.string().optional(),
 });
 
 type ContactFormData = z.infer<typeof contactSchema>;
@@ -52,10 +49,7 @@ export const ContactForm = ({ onSubmit, onCancel, loading }: ContactFormProps) =
       phone: data.phone || null,
       address: data.address || null,
       city: data.city || null,
-      postal_code: data.postal_code || null,
       country: data.country || null,
-      siret: data.siret || null,
-      tax_number: data.tax_number || null,
     };
     onSubmit(submitData);
   };
@@ -103,32 +97,15 @@ export const ContactForm = ({ onSubmit, onCancel, loading }: ContactFormProps) =
         <Textarea {...register('address')} />
       </div>
 
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 gap-4">
         <div>
           <Label htmlFor="city">Ville</Label>
           <Input {...register('city')} />
         </div>
         
         <div>
-          <Label htmlFor="postal_code">Code postal</Label>
-          <Input {...register('postal_code')} />
-        </div>
-        
-        <div>
           <Label htmlFor="country">Pays</Label>
           <Input {...register('country')} />
-        </div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <Label htmlFor="siret">SIRET</Label>
-          <Input {...register('siret')} />
-        </div>
-        
-        <div>
-          <Label htmlFor="tax_number">Numéro de TVA</Label>
-          <Input {...register('tax_number')} />
         </div>
       </div>
 

@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Building } from 'lucide-react';
-import { useCompanyRegistration, type CompanyFormData } from '@/hooks/useCompanyRegistration';
+import { useCompanyRegistration } from '@/hooks/useCompanyRegistration';
 import { CompanyLogoUpload } from '@/components/company/CompanyLogoUpload';
 import { CompanyBasicInfo } from '@/components/company/CompanyBasicInfo';
 import { CompanyContactInfo } from '@/components/company/CompanyContactInfo';
@@ -15,6 +15,7 @@ import { CompanyBusinessInfo } from '@/components/company/CompanyBusinessInfo';
 import { CompanyRepresentativeInfo } from '@/components/company/CompanyRepresentativeInfo';
 import { useSearchParams } from "react-router-dom";
 import { getCountryByName } from '@/utils/countryData';
+import type { CompanyFormData } from '@/types/company';
 
 const companySchema = z.object({
   name: z.string().min(2, 'Le nom de l\'entreprise doit contenir au moins 2 caractères'),
@@ -143,19 +144,19 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
           </div>
 
           <div className="border-2 border-slate-200 rounded-lg p-4 space-y-4">
-            <CompanyBasicInfo form={form} />
+            <CompanyBasicInfo form={form as any} />
           </div>
 
           <div className="border-2 border-slate-200 rounded-lg p-4 space-y-4">
-            <CompanyContactInfo form={form} />
+            <CompanyContactInfo form={form as any} />
           </div>
 
           <div className="border-2 border-slate-200 rounded-lg p-4 space-y-4">
-            <CompanyBusinessInfo form={form} />
+            <CompanyBusinessInfo form={form as any} />
           </div>
 
           <div className="border-2 border-slate-200 rounded-lg p-4 space-y-4">
-            <CompanyRepresentativeInfo form={form} />
+            <CompanyRepresentativeInfo form={form as any} />
           </div>
 
           <Button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 text-lg border-2 border-emerald-600 shadow-lg" disabled={isLoading}>

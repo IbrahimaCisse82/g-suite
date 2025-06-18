@@ -13,13 +13,7 @@ export const useCompanyProfile = () => {
         .from('profiles')
         .select(`
           *,
-          companies (
-            *,
-            company_subscriptions!inner (
-              *,
-              subscription_plans (*)
-            )
-          )
+          companies (*)
         `)
         .eq('id', user.id)
         .single();

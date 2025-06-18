@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { 
   Table, 
@@ -54,7 +55,8 @@ export const PurchasesTable = ({ purchases, onView, onEdit, onDelete, onReceive 
     const printWindow = window.open('', '_blank');
     if (!printWindow) return;
 
-    const company = profile?.companies;
+    // Get the first company from the companies array
+    const company = Array.isArray(profile?.companies) ? profile.companies[0] : profile?.companies;
     const reportDate = new Date().toLocaleDateString('fr-FR');
 
     const htmlContent = `

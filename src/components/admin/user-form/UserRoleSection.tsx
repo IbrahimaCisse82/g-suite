@@ -7,7 +7,7 @@ import { Shield } from 'lucide-react';
 
 interface UserRoleSectionProps {
   formData: {
-    role: 'manager' | 'comptable' | 'budget' | 'logistique' | 'caissier';
+    role: 'manager' | 'comptable' | 'commercial' | 'logistique' | 'caissier';
     isActive: boolean;
   };
   errors: Record<string, string>;
@@ -16,8 +16,8 @@ interface UserRoleSectionProps {
 
 const roleOptions = [
   { value: 'manager', label: 'Manager', description: 'Accès complet à toutes les fonctionnalités' },
-  { value: 'comptable', label: 'Comptable', description: 'Accès à la comptabilité et trésorerie' },
-  { value: 'budget', label: 'Budget', description: 'Accès aux contacts, facturation et budget' },
+  { value: 'comptable', label: 'Comptable', description: 'Accès à la comptabilité, trésorerie et budget' },
+  { value: 'commercial', label: 'Commercial', description: 'Accès aux contacts, facturation et achats' },
   { value: 'logistique', label: 'Logistique', description: 'Accès aux produits et stock' },
   { value: 'caissier', label: 'Caissier', description: 'Accès à la trésorerie uniquement' },
 ];

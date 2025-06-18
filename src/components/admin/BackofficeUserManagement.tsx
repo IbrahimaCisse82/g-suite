@@ -13,7 +13,7 @@ interface User {
   email: string;
   firstName: string;
   lastName: string;
-  role: 'manager' | 'comptable' | 'budget' | 'logistique' | 'caissier';
+  role: 'manager' | 'comptable' | 'commercial' | 'logistique' | 'caissier';
   phone?: string;
   isActive: boolean;
   lastLogin?: string;

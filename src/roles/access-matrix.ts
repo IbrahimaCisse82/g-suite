@@ -1,14 +1,14 @@
 
 /**
  * Mapping combiné {module: {role: features[]}}
- * Les clés de modules : "entreprise", "comptable", "budget"
- * Les rôles sont : "manager", "comptable", "budget", "logistique", "caissier"
+ * Les clés de modules : "entreprise", "comptable", "commercial"
+ * Les rôles sont : "manager", "comptable", "commercial", "logistique", "caissier"
  */
-export type ModuleType = "entreprise" | "comptable" | "budget";
+export type ModuleType = "entreprise" | "comptable" | "commercial";
 export type Role =
   | "manager"
   | "comptable"
-  | "budget"
+  | "commercial"
   | "logistique"
   | "caissier";
 
@@ -34,18 +34,18 @@ export const MODULE_ACCESS_MATRIX: Record<
       "training",
       "settings",
     ],
-    // Comptable : comptabilité, trésorerie, formation
+    // Comptable : comptabilité, trésorerie, budget, formation
     comptable: [
       "accounting",
       "treasury",
+      "budget",
       "training",
     ],
-    // Budget : contacts, facturation, achats, budget, formation
-    budget: [
+    // Commercial : contacts, facturation, achats, formation
+    commercial: [
       "contacts",
       "invoicing",
       "purchases",
-      "budget",
       "training",
     ],
     // Logisticien : produits, stock, formation
@@ -62,21 +62,23 @@ export const MODULE_ACCESS_MATRIX: Record<
   },
   // SOLUTION COMPTABLE
   comptable: {
-    // Manager : comptabilité, trésorerie, formation, paramètres
+    // Manager : comptabilité, trésorerie, budget, formation, paramètres
     manager: [
       "accounting",
       "treasury",
+      "budget",
       "training",
       "settings",
     ],
-    // Comptable : comptabilité, trésorerie, formation
+    // Comptable : comptabilité, trésorerie, budget, formation
     comptable: [
       "accounting",
       "treasury",
+      "budget",
       "training",
     ],
-    // Budget : aucun accès
-    budget: [],
+    // Commercial : aucun accès
+    commercial: [],
     // Logisticien : aucun accès
     logistique: [],
     // Caissier : trésorerie, formation
@@ -85,27 +87,25 @@ export const MODULE_ACCESS_MATRIX: Record<
       "training",
     ],
   },
-  // SOLUTION BUDGET
-  budget: {
-    // Manager : contacts, facturation, achats, produits, stock, budget, formation, paramètres
+  // SOLUTION COMMERCIALE
+  commercial: {
+    // Manager : contacts, facturation, achats, produits, stock, formation, paramètres
     manager: [
       "contacts",
       "invoicing",
       "purchases",
       "products",
       "stock",
-      "budget",
       "training",
       "settings",
     ],
     // Comptable : aucun accès
     comptable: [],
-    // Budget : contacts, facturation, achats, budget, formation
-    budget: [
+    // Commercial : contacts, facturation, achats, formation
+    commercial: [
       "contacts",
       "invoicing",
       "purchases",
-      "budget",
       "training",
     ],
     // Logisticien : produits, stock, formation

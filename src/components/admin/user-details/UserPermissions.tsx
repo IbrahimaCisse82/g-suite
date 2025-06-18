@@ -10,7 +10,7 @@ interface UserPermissionsProps {
 const roleLabels = {
   manager: 'Manager',
   comptable: 'Comptable',
-  budget: 'Budget',
+  commercial: 'Commercial',
   logistique: 'Logistique',
   caissier: 'Caissier'
 };
@@ -27,19 +27,20 @@ const rolePermissions = {
     'Trésorerie',
     'Rapports',
     'Analyse',
+    'Budget',
     'Formation',
     'Paramètres'
   ],
   comptable: [
     'Comptabilité générale',
     'Trésorerie',
+    'Budget',
     'Formation'
   ],
-  budget: [
+  commercial: [
     'Clients & Fournisseurs',
     'Facturation',
     'Achats',
-    'Budget',
     'Formation'
   ],
   logistique: [

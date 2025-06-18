@@ -12,7 +12,7 @@ interface User {
   lastName: string;
   email: string;
   phone: string;
-  role: 'manager' | 'comptable' | 'budget' | 'logistique' | 'caissier';
+  role: 'manager' | 'comptable' | 'commercial' | 'logistique' | 'caissier';
   isActive: boolean;
   lastLogin: string;
   createdAt: string;
@@ -22,7 +22,7 @@ interface UserFormData {
   email: string;
   firstName: string;
   lastName: string;
-  role: 'manager' | 'comptable' | 'budget' | 'logistique' | 'caissier';
+  role: 'manager' | 'comptable' | 'commercial' | 'logistique' | 'caissier';
   phone?: string;
   isActive: boolean;
   lastLogin?: string;
@@ -61,7 +61,7 @@ const UsersSettings = () => {
       lastName: "Dubois",
       email: "pierre.dubois@exemple.com", 
       phone: "+33 1 55 44 33 22",
-      role: "budget",
+      role: "commercial",
       isActive: false,
       lastLogin: "2024-01-10 08:15",
       createdAt: "2023-12-15"
@@ -71,7 +71,7 @@ const UsersSettings = () => {
   const roleLabels = {
     manager: 'Manager',
     comptable: 'Comptable',
-    budget: 'Budget',
+    commercial: 'Commercial',
     logistique: 'Logistique',
     caissier: 'Caissier'
   };
@@ -79,7 +79,7 @@ const UsersSettings = () => {
   const roleColors = {
     manager: 'bg-purple-100 text-purple-800',
     comptable: 'bg-blue-100 text-blue-800',
-    budget: 'bg-green-100 text-green-800',
+    commercial: 'bg-green-100 text-green-800',
     logistique: 'bg-orange-100 text-orange-800',
     caissier: 'bg-yellow-100 text-yellow-800'
   };
@@ -96,19 +96,20 @@ const UsersSettings = () => {
       'Trésorerie',
       'Rapports',
       'Analyse',
+      'Budget',
       'Formation',
       'Paramètres'
     ],
     comptable: [
       'Comptabilité générale',
       'Trésorerie',
+      'Budget',
       'Formation'
     ],
-    budget: [
+    commercial: [
       'Clients & Fournisseurs',
       'Facturation',
       'Achats',
-      'Budget',
       'Formation'
     ],
     logistique: [

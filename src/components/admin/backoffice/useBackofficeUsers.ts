@@ -6,7 +6,7 @@ interface User {
   email: string;
   firstName: string;
   lastName: string;
-  role: 'manager' | 'comptable' | 'budget' | 'logistique' | 'caissier';
+  role: 'manager' | 'comptable' | 'commercial' | 'logistique' | 'caissier';
   phone?: string;
   isActive: boolean;
   lastLogin?: string;
@@ -44,10 +44,10 @@ const mockUsers: User[] = [
   },
   {
     id: '3',
-    email: 'manager@commerce.sn',
+    email: 'commercial@commerce.sn',
     firstName: 'Amadou',
     lastName: 'Diallo',
-    role: 'manager',
+    role: 'commercial',
     phone: '+221 77 123 45 67',
     isActive: false,
     lastLogin: '2024-01-10 08:15',
@@ -60,7 +60,7 @@ const mockUsers: User[] = [
 const roleLabels = {
   manager: 'Manager',
   comptable: 'Comptable',
-  budget: 'Budget',
+  commercial: 'Commercial',
   logistique: 'Logistique',
   caissier: 'Caissier'
 };

@@ -11,9 +11,9 @@ interface FormData {
   country: string;
   phone?: string;
   email: string;
-  business_sector: string;
+  business_sector: "agriculture" | "industrie" | "construction" | "commerce" | "transport" | "hebergement_restauration" | "information_communication" | "activites_financieres" | "immobilier" | "activites_specialisees" | "administration_publique" | "enseignement" | "sante_action_sociale" | "arts_spectacles" | "autres_services";
   currency: string;
-  representative_title: string;
+  representative_title: "M." | "Mme" | "Mlle";
   representative_first_name: string;
   representative_last_name: string;
   ninea?: string;

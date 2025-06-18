@@ -1,12 +1,29 @@
+
 import React from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { CompanyFormData } from '@/types/company';
+
+interface FormData {
+  name: string;
+  address: string;
+  city: string;
+  country: string;
+  phone?: string;
+  email: string;
+  business_sector: "agriculture" | "industrie" | "construction" | "commerce" | "transport" | "hebergement_restauration" | "information_communication" | "activites_financieres" | "immobilier" | "activites_specialisees" | "administration_publique" | "enseignement" | "sante_action_sociale" | "arts_spectacles" | "autres_services";
+  currency: string;
+  representative_title: "M." | "Mme" | "Mlle";
+  representative_first_name: string;
+  representative_last_name: string;
+  ninea?: string;
+  rccm?: string;
+  website?: string;
+}
 
 interface CompanyRepresentativeInfoProps {
-  form: UseFormReturn<CompanyFormData>;
+  form: UseFormReturn<FormData>;
 }
 
 export const CompanyRepresentativeInfo = ({ form }: CompanyRepresentativeInfoProps) => {
@@ -16,7 +33,7 @@ export const CompanyRepresentativeInfo = ({ form }: CompanyRepresentativeInfoPro
         <Label htmlFor="representative_title" className="text-slate-800 font-bold text-base">Civilité du représentant <span className="text-red-600 font-bold">*</span></Label>
         <Select
           value={form.watch('representative_title')}
-          onValueChange={(value) => form.setValue('representative_title', value as 'M.' | 'Mme' | 'Mlle')}
+          onValueChange={(value) => form.setValue('representative_title', value as FormData['representative_title'])}
         >
           <SelectTrigger className="border-2 border-slate-400 bg-white text-slate-800 font-semibold focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 py-3 shadow-sm">
             <SelectValue placeholder="Sélectionner une civilité" />

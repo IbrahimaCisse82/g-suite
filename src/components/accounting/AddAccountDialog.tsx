@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
 
@@ -20,6 +21,22 @@ interface AddAccountDialogProps {
   onClose: () => void;
   onAddAccount: (account: Omit<ChartOfAccount, 'id' | 'isHidden'>) => void;
 }
+
+const accountTypes = [
+  'Client',
+  'Fournisseur',
+  'Salarie',
+  'Banque',
+  'Amortis/Provision',
+  'Résultat-Bilan',
+  'Charge',
+  'Produit',
+  'Resulat-Gestion',
+  'Immobilisation',
+  'Capitaux',
+  'Stock',
+  'Titre'
+];
 
 export const AddAccountDialog = ({ isOpen, onClose, onAddAccount }: AddAccountDialogProps) => {
   const [newAccount, setNewAccount] = useState({
@@ -66,11 +83,18 @@ export const AddAccountDialog = ({ isOpen, onClose, onAddAccount }: AddAccountDi
           </div>
           <div>
             <label className="block text-sm font-medium mb-2">Nature du compte *</label>
-            <Input
-              value={newAccount.accountType}
-              onChange={(e) => setNewAccount({...newAccount, accountType: e.target.value})}
-              placeholder="ex: Créances clients"
-            />
+            <Select value={newAccount.accountType} onValueChange={(value) => setNewAccount({...newAccount, accountType: value})}>
+              <SelectTrigger>
+                <SelectValue placeholder="Sélectionnez la nature du compte" />
+              </SelectTrigger>
+              <SelectContent className="bg-white z-50">
+                {accountTypes.map((type) => (
+                  <SelectItem key={type} value={type}>
+                    {type}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <div className="flex items-center space-x-2">
             <Checkbox

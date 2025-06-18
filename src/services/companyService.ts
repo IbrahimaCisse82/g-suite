@@ -13,7 +13,7 @@ export const createCompany = async (data: CompanyFormData) => {
       phone: data.phone,
       email: data.email,
       business_sector: data.business_sector,
-      currency: data.currency,
+      currency: data.currency || 'XOF',
       representative_first_name: data.representative_first_name,
       representative_last_name: data.representative_last_name,
       ninea: data.ninea,

@@ -1,4 +1,3 @@
-
 import { useCompanyProfile } from '@/hooks/useCompanyData';
 
 export const useInvoicePDFGenerator = () => {

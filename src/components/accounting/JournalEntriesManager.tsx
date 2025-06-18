@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -220,14 +219,14 @@ export const JournalEntriesManager = () => {
         <Card>
           <CardContent className="p-4">
             <div className="text-2xl font-bold text-purple-600">
-              {ecritures.reduce((sum, e) => sum + e.totalDebit, 0).toLocaleString('fr-FR')}€
+              {ecritures.reduce((sum, e) => sum + e.totalDebit, 0).toLocaleString('fr-FR')} FCFA
             </div>
             <div className="text-sm text-gray-600">Total mouvements</div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Boutons d'action */}
+      {/* Boutons d'action et dialogue principal */}
       <div className="flex justify-between items-center">
         <div className="flex gap-2">
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -384,13 +383,13 @@ export const JournalEntriesManager = () => {
                       <div>
                         <span className="font-medium">Total Débit: </span>
                         <span className="font-bold text-blue-600">
-                          {totalDebit.toLocaleString('fr-FR')}€
+                          {totalDebit.toLocaleString('fr-FR')} FCFA
                         </span>
                       </div>
                       <div>
                         <span className="font-medium">Total Crédit: </span>
                         <span className="font-bold text-green-600">
-                          {totalCredit.toLocaleString('fr-FR')}€
+                          {totalCredit.toLocaleString('fr-FR')} FCFA
                         </span>
                       </div>
                       <div>
@@ -479,8 +478,8 @@ export const JournalEntriesManager = () => {
                     <TableCell>{new Date(ecriture.date).toLocaleDateString('fr-FR')}</TableCell>
                     <TableCell>{ecriture.libelle}</TableCell>
                     <TableCell>{ecriture.reference}</TableCell>
-                    <TableCell>{ecriture.totalDebit.toLocaleString('fr-FR')}€</TableCell>
-                    <TableCell>{ecriture.totalCredit.toLocaleString('fr-FR')}€</TableCell>
+                    <TableCell>{ecriture.totalDebit.toLocaleString('fr-FR')} FCFA</TableCell>
+                    <TableCell>{ecriture.totalCredit.toLocaleString('fr-FR')} FCFA</TableCell>
                     <TableCell>
                       <Badge 
                         variant={

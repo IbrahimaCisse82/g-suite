@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { Label } from '@/components/ui/label';
@@ -75,7 +74,7 @@ export const CompanyBusinessInfo = ({ form }: CompanyBusinessInfoProps) => {
       <div className="space-y-2">
         <Label htmlFor="currency" className="text-slate-800 font-bold text-base">Devise de travail <span className="text-red-600 font-bold">*</span></Label>
         <Select
-          value={form.watch('currency')}
+          value={form.watch('currency') || 'XOF'}
           onValueChange={(value) => form.setValue('currency', value)}
         >
           <SelectTrigger className="border-2 border-slate-400 bg-white text-slate-800 font-semibold focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 py-3 shadow-sm">

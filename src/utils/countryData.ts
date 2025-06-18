@@ -68,8 +68,8 @@ export const getCountryByName = (countryName: string): CountryData | undefined =
 };
 
 export const CURRENCIES = [
-  { code: 'XOF', name: 'Franc CFA BCEAO (XOF)' },
-  { code: 'XAF', name: 'Franc CFA BEAC (XAF)' },
+  { code: 'XOF', name: 'Franc CFA BCEAO (XOF) - FCFA' },
+  { code: 'XAF', name: 'Franc CFA BEAC (XAF) - FCFA' },
   { code: 'EUR', name: 'Euro (EUR)' },
   { code: 'USD', name: 'Dollar américain (USD)' },
   { code: 'ZAR', name: 'Rand sud-africain (ZAR)' },

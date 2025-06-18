@@ -31,8 +31,8 @@ export const FinancialStatementsDetails = ({ etat }: FinancialStatementsDetailsP
                   <span>{compte.numero} - {compte.libelle}</span>
                   <span className={compte.numero.startsWith('6') ? 'text-red-600' : 'text-green-600'}>
                     {compte.numero.startsWith('6') 
-                      ? `-${compte.soldeDebiteur.toLocaleString('fr-FR')}€`
-                      : `+${compte.soldeCrediteur.toLocaleString('fr-FR')}€`
+                      ? `-${compte.soldeDebiteur.toLocaleString('fr-FR')} FCFA`
+                      : `+${compte.soldeCrediteur.toLocaleString('fr-FR')} FCFA`
                     }
                   </span>
                 </div>
@@ -52,7 +52,7 @@ export const FinancialStatementsDetails = ({ etat }: FinancialStatementsDetailsP
                 etat.fluxTresorerie.map((compte, index) => (
                   <div key={index} className="flex justify-between text-sm">
                     <span>{compte.numero} - {compte.libelle}</span>
-                    <span>{(compte.soldeDebiteur - compte.soldeCrediteur).toLocaleString('fr-FR')}€</span>
+                    <span>{(compte.soldeDebiteur - compte.soldeCrediteur).toLocaleString('fr-FR')} FCFA</span>
                   </div>
                 ))
               ) : (

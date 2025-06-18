@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
@@ -18,7 +17,8 @@ import {
   LogOut,
   Globe2,
   FileBarChart,
-  DollarSign
+  DollarSign,
+  BookOpen
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { 
@@ -41,7 +41,14 @@ import { GSuiteLogo } from '@/components/ui/gsuite-logo';
 
 const menuItems = [
   { icon: Globe2, label: 'Tableau de bord', path: '/dashboard' },
-  { icon: FileBarChart, label: 'Comptabilité', path: '/accounting' },
+  { 
+    icon: FileBarChart, 
+    label: 'Comptabilité', 
+    path: '/accounting',
+    subItems: [
+      { label: 'Plan comptable', path: '/chart-of-accounts' }
+    ]
+  },
   { icon: Users, label: 'Contacts', path: '/contacts' },
   { icon: FileText, label: 'Facturation', path: '/invoicing' },
   { icon: ShoppingCart, label: 'Achats', path: '/purchases' },
@@ -66,8 +73,8 @@ export const EnterpriseHeader = () => {
     }
   };
 
-  // Helper pour savoir si un chemin est "actif" ou dans un sous-menu de paramètres
   const isSettingsBase = location.pathname.startsWith('/settings');
+  const isAccountingBase = location.pathname.startsWith('/accounting') || location.pathname.startsWith('/chart-of-accounts');
 
   return (
     <Sidebar>
@@ -88,19 +95,39 @@ export const EnterpriseHeader = () => {
               {menuItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = location.pathname === item.path;
+                const hasSubItems = item.subItems && item.subItems.length > 0;
+                const isParentActive = item.path === '/accounting' && isAccountingBase;
                 
                 return (
                   <SidebarMenuItem key={item.path}>
-                    <SidebarMenuButton asChild isActive={isActive}>
+                    <SidebarMenuButton asChild isActive={isActive || isParentActive}>
                       <Link to={item.path}>
                         <Icon className="w-5 h-5" />
                         <span className="font-medium">{item.label}</span>
                       </Link>
                     </SidebarMenuButton>
+                    {hasSubItems && (
+                      <SidebarMenuSub>
+                        {item.subItems.map((subItem) => (
+                          <SidebarMenuSubItem key={subItem.path}>
+                            <SidebarMenuSubButton
+                              asChild
+                              isActive={location.pathname === subItem.path}
+                            >
+                              <Link to={subItem.path}>
+                                <BookOpen className="w-4 h-4" />
+                                {subItem.label}
+                              </Link>
+                            </SidebarMenuSubButton>
+                          </SidebarMenuSubItem>
+                        ))}
+                      </SidebarMenuSub>
+                    )}
                   </SidebarMenuItem>
                 );
               })}
-              {/* Bloc Paramètres avec sous-menu */}
+              
+              {/* Settings menu with sub-items */}
               <SidebarMenuItem>
                 <SidebarMenuButton
                   isActive={isSettingsBase}

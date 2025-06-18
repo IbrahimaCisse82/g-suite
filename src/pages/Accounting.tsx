@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Plus, Search, Filter, Eye, Edit, Trash2 } from 'lucide-react';
+import { Plus, Search, Filter, Eye, Edit, Trash2, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Layout } from '@/components/Layout';
 import { toast } from 'sonner';
+import { Link } from 'react-router-dom';
 
 const accounts = [
   { code: '411000', name: 'Clients', debit: 15420.50, credit: 0, balance: 15420.50 },
@@ -79,6 +80,12 @@ export const Accounting = () => {
                   <Plus className="w-4 h-4 mr-2" />
                   Nouvelle écriture
                 </Button>
+                <Link to="/chart-of-accounts">
+                  <Button variant="outline">
+                    <BookOpen className="w-4 h-4 mr-2" />
+                    Plan comptable
+                  </Button>
+                </Link>
                 <Button variant="outline" onClick={handleFilter}>
                   <Filter className="w-4 h-4 mr-2" />
                   Filtres

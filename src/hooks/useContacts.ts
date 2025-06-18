@@ -24,6 +24,8 @@ export const useContacts = () => {
       console.log('Contacts fetched successfully:', data?.length || 0, 'contacts');
       return data || [];
     },
+    staleTime: 0, // Toujours refetch pour avoir les données à jour
+    refetchOnWindowFocus: true,
   });
 };
 
@@ -33,14 +35,14 @@ const generateContactNumber = async (type: string, companyId: string): Promise<s
   
   const prefix = type === 'client' ? 'C' : type === 'fournisseur' ? 'F' : 'CT';
   
+  // Récupérer tous les contacts existants du même type pour calculer le prochain numéro
   const { data, error } = await supabase
     .from('contacts')
     .select('contact_number')
     .eq('company_id', companyId)
     .eq('type', type)
     .like('contact_number', `${prefix}%`)
-    .order('contact_number', { ascending: false })
-    .limit(1);
+    .order('contact_number', { ascending: false });
 
   if (error) {
     console.error('Error generating contact number:', error);
@@ -48,10 +50,18 @@ const generateContactNumber = async (type: string, companyId: string): Promise<s
   }
 
   let nextNumber = 1;
-  if (data && data.length > 0 && data[0].contact_number) {
-    const currentNumber = parseInt(data[0].contact_number.substring(1));
-    if (!isNaN(currentNumber)) {
-      nextNumber = currentNumber + 1;
+  if (data && data.length > 0) {
+    // Trouver le plus grand numéro existant
+    const numbers = data
+      .map(contact => {
+        if (!contact.contact_number) return 0;
+        const numStr = contact.contact_number.substring(1);
+        return parseInt(numStr) || 0;
+      })
+      .filter(num => num > 0);
+    
+    if (numbers.length > 0) {
+      nextNumber = Math.max(...numbers) + 1;
     }
   }
 
@@ -104,8 +114,14 @@ export const useCreateContact = () => {
       console.log('Contact created successfully:', data);
       return data;
     },
-    onSuccess: () => {
-      console.log('Invalidating contacts query...');
+    onSuccess: (newContact) => {
+      console.log('Contact created, updating cache...');
+      // Mettre à jour immédiatement le cache
+      queryClient.setQueryData(['contacts'], (oldData: Contact[] | undefined) => {
+        if (!oldData) return [newContact];
+        return [newContact, ...oldData];
+      });
+      // Invalider pour refetch depuis le serveur
       queryClient.invalidateQueries({ queryKey: ['contacts'] });
     },
     onError: (error) => {
@@ -136,7 +152,14 @@ export const useUpdateContact = () => {
       console.log('Contact updated successfully:', data);
       return data;
     },
-    onSuccess: () => {
+    onSuccess: (updatedContact) => {
+      // Mettre à jour immédiatement le cache
+      queryClient.setQueryData(['contacts'], (oldData: Contact[] | undefined) => {
+        if (!oldData) return [updatedContact];
+        return oldData.map(contact => 
+          contact.id === updatedContact.id ? updatedContact : contact
+        );
+      });
       queryClient.invalidateQueries({ queryKey: ['contacts'] });
     },
   });
@@ -162,7 +185,12 @@ export const useDeleteContact = () => {
       console.log('Contact deleted successfully');
       return id;
     },
-    onSuccess: () => {
+    onSuccess: (deletedId) => {
+      // Mettre à jour immédiatement le cache
+      queryClient.setQueryData(['contacts'], (oldData: Contact[] | undefined) => {
+        if (!oldData) return [];
+        return oldData.filter(contact => contact.id !== deletedId);
+      });
       queryClient.invalidateQueries({ queryKey: ['contacts'] });
     },
   });

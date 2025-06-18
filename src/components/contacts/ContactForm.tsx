@@ -41,7 +41,7 @@ export const ContactForm = ({ onSubmit, onCancel, loading }: ContactFormProps) =
 
   const generatePreviewNumber = (type: string) => {
     const prefix = type === 'client' ? 'C' : 'F';
-    return `${prefix}000001`;
+    return `${prefix}000001 (exemple)`;
   };
 
   const onFormSubmit = async (data: ContactFormData) => {
@@ -54,11 +54,11 @@ export const ContactForm = ({ onSubmit, onCancel, loading }: ContactFormProps) =
     
     try {
       await onSubmit(data);
-      console.log('Contact form submitted successfully');
-      reset(); // Reset form after successful submission
+      console.log('Contact form submitted successfully, resetting form');
+      reset(); // Reset form après succès
     } catch (error) {
       console.error('Error in contact form submission:', error);
-      // Error handling is done in the parent component
+      // L'erreur est gérée dans le composant parent
     }
   };
 
@@ -72,7 +72,7 @@ export const ContactForm = ({ onSubmit, onCancel, loading }: ContactFormProps) =
             {generatePreviewNumber(typeValue || 'client')}
           </div>
           <p className="text-xs text-blue-600 mt-1">
-            Le numéro définitif sera généré automatiquement
+            Le numéro définitif sera généré automatiquement et séquentiellement
           </p>
         </div>
 

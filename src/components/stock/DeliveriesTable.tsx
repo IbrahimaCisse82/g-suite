@@ -47,28 +47,28 @@ export const DeliveriesTable = ({ deliveries }: DeliveriesTableProps) => {
   };
 
   return (
-    <div className="rounded-lg border">
+    <div className="rounded-lg border bg-white">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Date création</TableHead>
-            <TableHead>Facture</TableHead>
-            <TableHead>Client</TableHead>
-            <TableHead>Statut</TableHead>
-            <TableHead>Date livraison</TableHead>
-            <TableHead>Actions</TableHead>
+            <TableHead className="table-text">Date création</TableHead>
+            <TableHead className="table-text">Facture</TableHead>
+            <TableHead className="table-text">Client</TableHead>
+            <TableHead className="table-text">Statut</TableHead>
+            <TableHead className="table-text">Date livraison</TableHead>
+            <TableHead className="table-text">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {deliveries.map((delivery) => (
             <TableRow key={delivery.id}>
-              <TableCell>
+              <TableCell className="table-text-secondary">
                 {new Date(delivery.created_at).toLocaleDateString('fr-FR')}
               </TableCell>
-              <TableCell>{delivery.invoices?.invoice_number}</TableCell>
-              <TableCell>{delivery.invoices?.contacts?.name}</TableCell>
+              <TableCell className="table-text font-medium">{delivery.invoices?.invoice_number}</TableCell>
+              <TableCell className="table-text-secondary">{delivery.invoices?.contacts?.name}</TableCell>
               <TableCell>{getStatusBadge(delivery.status)}</TableCell>
-              <TableCell>
+              <TableCell className="table-text-secondary">
                 {delivery.delivery_date 
                   ? new Date(delivery.delivery_date).toLocaleDateString('fr-FR')
                   : '-'

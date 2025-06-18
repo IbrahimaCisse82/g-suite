@@ -8,25 +8,25 @@
 @layer base {
   :root {
     --background: 248 250 252;
-    --foreground: 55 65 81;
+    --foreground: 17 24 39;
 
     --card: 255 255 255;
-    --card-foreground: 55 65 81;
+    --card-foreground: 17 24 39;
 
     --popover: 255 255 255;
-    --popover-foreground: 55 65 81;
+    --popover-foreground: 17 24 39;
 
     --primary: 34 197 94;
     --primary-foreground: 255 255 255;
 
     --secondary: 243 244 246;
-    --secondary-foreground: 75 85 99;
+    --secondary-foreground: 17 24 39;
 
     --muted: 243 244 246;
-    --muted-foreground: 107 114 128;
+    --muted-foreground: 55 65 81;
 
     --accent: 16 185 129;
-    --accent-foreground: 255 255 255;
+    --accent-foreground: 17 24 39;
 
     --destructive: 239 68 68;
     --destructive-foreground: 255 255 255;
@@ -117,6 +117,16 @@
     touch-action: manipulation;
     overscroll-behavior: none;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+    color: rgb(17 24 39);
+  }
+
+  /* Force dark text colors for better readability */
+  h1, h2, h3, h4, h5, h6 {
+    color: rgb(17 24 39) !important;
+  }
+
+  p, span, div, td, th, label {
+    color: rgb(17 24 39);
   }
 
   /* Optimisations pour iOS */
@@ -169,33 +179,36 @@
   }
 
   .btn-secondary {
-    @apply bg-gray-100 hover:bg-gray-200 text-gray-700 px-8 py-4 rounded-xl font-semibold transition-all duration-200;
+    @apply bg-gray-100 hover:bg-gray-200 text-gray-900 px-8 py-4 rounded-xl font-semibold transition-all duration-200;
   }
 
   /* Amélioration de la lisibilité du texte */
   .text-readable-primary {
-    color: rgb(55 65 81);
+    color: rgb(17 24 39) !important;
   }
   
   .text-readable-secondary {
-    color: rgb(75 85 99);
+    color: rgb(55 65 81) !important;
   }
   
   .text-readable-muted {
-    color: rgb(107 114 128);
+    color: rgb(75 85 99) !important;
   }
 
   /* Styles spécifiques pour les tableaux */
   .table-text {
     @apply text-gray-900 font-medium;
+    color: rgb(17 24 39) !important;
   }
   
   .table-text-secondary {
-    @apply text-gray-700;
+    @apply text-gray-800;
+    color: rgb(31 41 55) !important;
   }
   
   .table-text-muted {
-    @apply text-gray-600;
+    @apply text-gray-700;
+    color: rgb(55 65 81) !important;
   }
 
   /* Professional shadows */
@@ -268,3 +281,4 @@
 .animate-fade-in-up {
   animation: fadeInUp 0.6s ease-out;
 }
+

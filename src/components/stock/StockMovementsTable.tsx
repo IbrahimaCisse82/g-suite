@@ -34,29 +34,29 @@ export const StockMovementsTable = ({ movements }: StockMovementsTableProps) => 
   };
 
   return (
-    <div className="rounded-lg border">
+    <div className="rounded-lg border bg-white">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Date</TableHead>
-            <TableHead>Produit</TableHead>
-            <TableHead>Type</TableHead>
-            <TableHead>Quantité</TableHead>
-            <TableHead>Notes</TableHead>
+            <TableHead className="table-text">Date</TableHead>
+            <TableHead className="table-text">Produit</TableHead>
+            <TableHead className="table-text">Type</TableHead>
+            <TableHead className="table-text">Quantité</TableHead>
+            <TableHead className="table-text">Notes</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {movements.map((movement) => (
             <TableRow key={movement.id}>
-              <TableCell>
+              <TableCell className="table-text-secondary">
                 {new Date(movement.created_at).toLocaleDateString('fr-FR')}
               </TableCell>
-              <TableCell>
+              <TableCell className="table-text font-medium">
                 {movement.products?.name} ({movement.products?.sku || 'Sans SKU'})
               </TableCell>
               <TableCell>{getMovementTypeBadge(movement.movement_type)}</TableCell>
-              <TableCell>{movement.quantity}</TableCell>
-              <TableCell>{movement.notes || '-'}</TableCell>
+              <TableCell className="table-text">{movement.quantity}</TableCell>
+              <TableCell className="table-text-muted">{movement.notes || '-'}</TableCell>
             </TableRow>
           ))}
         </TableBody>

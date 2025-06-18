@@ -41,25 +41,25 @@ export const Stock = () => {
       <div className="gradient-bg min-h-full">
         <div className="p-8">
           <div className="mb-8">
-            <h1 className="text-4xl font-bold text-slate-900 mb-2 flex items-center">
+            <h1 className="text-4xl font-bold text-readable-primary mb-2 flex items-center">
               <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center mr-4">
                 <Package className="w-6 h-6 text-white" />
               </div>
               Gestion du stock
             </h1>
-            <p className="text-xl text-slate-600">Suivez et gérez vos niveaux de stock</p>
+            <p className="text-xl text-readable-secondary">Suivez et gérez vos niveaux de stock</p>
           </div>
 
           <Tabs defaultValue="stock" className="space-y-6">
             <TabsList className="bg-white shadow-lg">
-              <TabsTrigger value="stock">Stock actuel</TabsTrigger>
-              <TabsTrigger value="movements">Mouvements</TabsTrigger>
-              <TabsTrigger value="deliveries">Livraisons</TabsTrigger>
+              <TabsTrigger value="stock" className="text-readable-primary">Stock actuel</TabsTrigger>
+              <TabsTrigger value="movements" className="text-readable-primary">Mouvements</TabsTrigger>
+              <TabsTrigger value="deliveries" className="text-readable-primary">Livraisons</TabsTrigger>
             </TabsList>
 
             <TabsContent value="stock" className="space-y-6">
               <div className="flex justify-between items-center">
-                <h2 className="text-xl font-semibold text-slate-900">État du stock</h2>
+                <h2 className="text-xl font-semibold text-readable-primary">État du stock</h2>
                 <Dialog open={isMovementDialogOpen} onOpenChange={setIsMovementDialogOpen}>
                   <DialogTrigger asChild>
                     <Button onClick={() => setSelectedProduct(null)} className="bg-green-600 hover:bg-green-700">
@@ -69,7 +69,7 @@ export const Stock = () => {
                   </DialogTrigger>
                   <DialogContent>
                     <DialogHeader>
-                      <DialogTitle>Nouveau mouvement de stock</DialogTitle>
+                      <DialogTitle className="text-readable-primary">Nouveau mouvement de stock</DialogTitle>
                     </DialogHeader>
                     <StockMovementForm 
                       product={selectedProduct} 
@@ -80,7 +80,7 @@ export const Stock = () => {
               </div>
 
               {stockLoading ? (
-                <div className="text-center py-4 text-slate-600">Chargement du stock...</div>
+                <div className="text-center py-4 text-readable-secondary">Chargement du stock...</div>
               ) : (
                 <StockTable 
                   stock={stock || []} 
@@ -91,11 +91,11 @@ export const Stock = () => {
 
             <TabsContent value="movements" className="space-y-6">
               <div className="flex justify-between items-center">
-                <h2 className="text-xl font-semibold text-slate-900">Historique des mouvements</h2>
+                <h2 className="text-xl font-semibold text-readable-primary">Historique des mouvements</h2>
               </div>
 
               {movementsLoading ? (
-                <div className="text-center py-4 text-slate-600">Chargement des mouvements...</div>
+                <div className="text-center py-4 text-readable-secondary">Chargement des mouvements...</div>
               ) : (
                 <StockMovementsTable movements={movements || []} />
               )}
@@ -103,7 +103,7 @@ export const Stock = () => {
 
             <TabsContent value="deliveries" className="space-y-6">
               <div className="flex justify-between items-center">
-                <h2 className="text-xl font-semibold text-slate-900">Gestion des livraisons</h2>
+                <h2 className="text-xl font-semibold text-readable-primary">Gestion des livraisons</h2>
                 <Dialog open={isDeliveryDialogOpen} onOpenChange={setIsDeliveryDialogOpen}>
                   <DialogTrigger asChild>
                     <Button className="bg-green-600 hover:bg-green-700">
@@ -113,7 +113,7 @@ export const Stock = () => {
                   </DialogTrigger>
                   <DialogContent>
                     <DialogHeader>
-                      <DialogTitle>Créer une livraison</DialogTitle>
+                      <DialogTitle className="text-readable-primary">Créer une livraison</DialogTitle>
                     </DialogHeader>
                     <DeliveryForm onClose={handleCloseDeliveryDialog} />
                   </DialogContent>
@@ -121,7 +121,7 @@ export const Stock = () => {
               </div>
 
               {deliveriesLoading ? (
-                <div className="text-center py-4 text-slate-600">Chargement des livraisons...</div>
+                <div className="text-center py-4 text-readable-secondary">Chargement des livraisons...</div>
               ) : (
                 <DeliveriesTable deliveries={deliveries || []} />
               )}

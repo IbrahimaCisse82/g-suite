@@ -38,29 +38,29 @@ export const StockTable = ({ stock, onStockMovement }: StockTableProps) => {
   };
 
   return (
-    <div className="rounded-lg border">
+    <div className="rounded-lg border bg-white">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Produit</TableHead>
-            <TableHead>SKU</TableHead>
-            <TableHead>Catégorie</TableHead>
-            <TableHead>Stock Actuel</TableHead>
-            <TableHead>Seuil Minimum</TableHead>
-            <TableHead>Valeur Stock</TableHead>
-            <TableHead>Statut</TableHead>
-            <TableHead>Actions</TableHead>
+            <TableHead className="table-text">Produit</TableHead>
+            <TableHead className="table-text">SKU</TableHead>
+            <TableHead className="table-text">Catégorie</TableHead>
+            <TableHead className="table-text">Stock Actuel</TableHead>
+            <TableHead className="table-text">Seuil Minimum</TableHead>
+            <TableHead className="table-text">Valeur Stock</TableHead>
+            <TableHead className="table-text">Statut</TableHead>
+            <TableHead className="table-text">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {stock.map((item) => (
             <TableRow key={item.id}>
-              <TableCell className="font-medium">{item.products?.name}</TableCell>
-              <TableCell>{item.products?.sku || '-'}</TableCell>
-              <TableCell>{item.products?.product_categories?.name}</TableCell>
-              <TableCell>{item.quantity_in_stock || 0}</TableCell>
-              <TableCell>{item.minimum_stock_level || 0}</TableCell>
-              <TableCell>
+              <TableCell className="table-text font-medium">{item.products?.name}</TableCell>
+              <TableCell className="table-text-secondary">{item.products?.sku || '-'}</TableCell>
+              <TableCell className="table-text-secondary">{item.products?.product_categories?.name}</TableCell>
+              <TableCell className="table-text">{item.quantity_in_stock || 0}</TableCell>
+              <TableCell className="table-text-secondary">{item.minimum_stock_level || 0}</TableCell>
+              <TableCell className="table-text font-semibold">
                 {formatPrice((item.quantity_in_stock || 0) * (item.products?.unit_price || 0))}
               </TableCell>
               <TableCell>{getStockStatus(item)}</TableCell>

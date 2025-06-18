@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -45,6 +44,7 @@ import { FinancialStatements } from "./pages/FinancialStatements";
 import { JournalEntries } from "./pages/JournalEntries";
 import CompanyRegistration from "./pages/CompanyRegistration";
 import { AdminUserManagement } from "./pages/AdminUserManagement";
+import AdminBackoffice from "./pages/AdminBackoffice";
 
 const queryClient = new QueryClient();
 
@@ -95,6 +95,10 @@ const App = () => (
 
           <Route path="/subscriptions" element={<SubscriptionSettings />} />
           <Route path="/admin-users" element={<AdminUserManagement />} />
+          
+          {/* Backoffice Routes */}
+          <Route path="/admin-backoffice" element={<AdminBackoffice />} />
+          
           <Route path="/contact" element={<Contact />} />
           <Route path="/formation" element={<Formation />} />
           <Route path="/training" element={<TrainingSupport />} />

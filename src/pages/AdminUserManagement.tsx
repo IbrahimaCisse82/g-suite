@@ -1,12 +1,12 @@
 
 import React from 'react';
 import { Layout } from '@/components/Layout';
-import { UserManagementDashboard } from '@/components/admin/UserManagementDashboard';
+import { BackofficeUserManagement } from '@/components/admin/BackofficeUserManagement';
 
 export const AdminUserManagement = () => {
   return (
     <Layout>
-      <UserManagementDashboard />
+      <BackofficeUserManagement />
     </Layout>
   );
 };

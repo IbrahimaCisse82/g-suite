@@ -1,9 +1,8 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Plus, Users } from 'lucide-react';
+import { Plus, Users, AlertCircle } from 'lucide-react';
 import { ContactsTable } from '@/components/contacts/ContactsTable';
 import { ContactForm } from '@/components/contacts/ContactForm';
 import { ContactEditForm } from '@/components/contacts/ContactEditForm';
@@ -12,6 +11,7 @@ import { ContactsStats } from '@/components/contacts/ContactsStats';
 import { useContacts, useCreateContact, useUpdateContact, useDeleteContact } from '@/hooks/useContacts';
 import { useToast } from '@/hooks/use-toast';
 import { Layout } from '@/components/Layout';
+import { supabase } from '@/integrations/supabase/client';
 import type { Database } from '@/integrations/supabase/types';
 
 type Contact = Database['public']['Tables']['contacts']['Row'];
@@ -21,12 +21,23 @@ export const Contacts = () => {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
+  const [authStatus, setAuthStatus] = useState<'checking' | 'authenticated' | 'unauthenticated'>('checking');
 
   const { data: contacts = [], isLoading, error } = useContacts();
   const createContact = useCreateContact();
   const updateContact = useUpdateContact();
   const deleteContact = useDeleteContact();
   const { toast } = useToast();
+
+  // Vérifier l'état d'authentification au chargement
+  React.useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setAuthStatus(user ? 'authenticated' : 'unauthenticated');
+    };
+    
+    checkAuth();
+  }, []);
 
   // Gestion de la création de contact
   const handleCreateContact = async (contactData: any) => {
@@ -38,11 +49,11 @@ export const Contacts = () => {
         description: 'Le contact a été ajouté avec succès avec un numéro généré automatiquement',
       });
       setIsCreateDialogOpen(false);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error creating contact:', error);
       toast({
         title: 'Erreur',
-        description: 'Impossible d\'ajouter le contact. Veuillez réessayer.',
+        description: error.message || 'Impossible d\'ajouter le contact. Veuillez réessayer.',
         variant: 'destructive',
       });
     }
@@ -109,18 +120,28 @@ export const Contacts = () => {
     }
   };
 
-  // Gestion des erreurs de chargement
-  if (error) {
-    console.error('Error loading contacts:', error);
+  // Affichage si l'utilisateur n'est pas authentifié
+  if (authStatus === 'unauthenticated') {
     return (
       <Layout>
         <div className="gradient-bg min-h-full">
           <div className="p-8">
             <div className="text-center">
-              <h1 className="text-2xl font-bold text-red-600 mb-4">Erreur de chargement</h1>
-              <p className="text-gray-600">
-                Impossible de charger les contacts. Veuillez rafraîchir la page.
+              <div className="mx-auto w-24 h-24 bg-orange-100 rounded-full flex items-center justify-center mb-4">
+                <AlertCircle className="w-12 h-12 text-orange-600" />
+              </div>
+              <h1 className="text-2xl font-bold text-readable-primary mb-4">
+                Authentification requise
+              </h1>
+              <p className="text-readable-secondary mb-6">
+                Vous devez être connecté pour accéder à la gestion des contacts.
               </p>
+              <Button 
+                onClick={() => window.location.href = '/login'}
+                className="bg-green-600 hover:bg-green-700 text-white"
+              >
+                Se connecter
+              </Button>
             </div>
           </div>
         </div>
@@ -129,7 +150,7 @@ export const Contacts = () => {
   }
 
   // Chargement
-  if (isLoading) {
+  if (isLoading || authStatus === 'checking') {
     return (
       <Layout>
         <div className="gradient-bg min-h-full">
@@ -142,6 +163,25 @@ export const Contacts = () => {
                 <div className="h-32 bg-gray-200 rounded"></div>
               </div>
               <div className="h-96 bg-gray-200 rounded"></div>
+            </div>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
+
+  // Gestion des erreurs de chargement
+  if (error) {
+    console.error('Error loading contacts:', error);
+    return (
+      <Layout>
+        <div className="gradient-bg min-h-full">
+          <div className="p-8">
+            <div className="text-center">
+              <h1 className="text-2xl font-bold text-red-600 mb-4">Erreur de chargement</h1>
+              <p className="text-gray-600">
+                Impossible de charger les contacts. Veuillez rafraîchir la page.
+              </p>
             </div>
           </div>
         </div>

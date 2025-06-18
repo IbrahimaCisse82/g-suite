@@ -11,9 +11,30 @@ export const useContacts = () => {
     queryKey: ['contacts'],
     queryFn: async () => {
       console.log('Fetching contacts...');
+      
+      // Vérifier d'abord si l'utilisateur est authentifié
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        console.log('No authenticated user, returning empty contacts list');
+        return [];
+      }
+
+      // Récupérer le company_id de l'utilisateur
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('company_id')
+        .eq('id', user.id)
+        .single();
+
+      if (!profile?.company_id) {
+        console.log('No company associated with user, returning empty contacts list');
+        return [];
+      }
+
       const { data, error } = await supabase
         .from('contacts')
         .select('*')
+        .eq('company_id', profile.company_id)
         .order('created_at', { ascending: false });
       
       if (error) {
@@ -80,7 +101,7 @@ export const useCreateContact = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         console.error('User not authenticated');
-        throw new Error('User not authenticated');
+        throw new Error('Vous devez être connecté pour créer un contact');
       }
 
       const { data: profile } = await supabase
@@ -91,7 +112,7 @@ export const useCreateContact = () => {
 
       if (!profile?.company_id) {
         console.error('No company associated with user');
-        throw new Error('No company associated with user');
+        throw new Error('Aucune entreprise associée à votre compte');
       }
 
       const contactNumber = await generateContactNumber(contact.type || 'client', profile.company_id);

@@ -55,68 +55,70 @@ export const ContactForm = ({ onSubmit, onCancel, loading }: ContactFormProps) =
   };
 
   return (
-    <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4">
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <Label htmlFor="name">Nom *</Label>
-          <Input {...register('name')} />
-          {errors.name && <p className="text-sm text-red-500">{errors.name.message}</p>}
+    <div className="bg-white">
+      <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4">
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <Label htmlFor="name" className="text-readable-primary">Nom *</Label>
+            <Input {...register('name')} className="bg-white text-readable-primary" />
+            {errors.name && <p className="text-sm text-red-500">{errors.name.message}</p>}
+          </div>
+          
+          <div>
+            <Label htmlFor="type" className="text-readable-primary">Type *</Label>
+            <Select onValueChange={(value) => setValue('type', value as any)}>
+              <SelectTrigger className="bg-white text-readable-primary">
+                <SelectValue placeholder="Sélectionner un type" />
+              </SelectTrigger>
+              <SelectContent className="bg-white">
+                <SelectItem value="client" className="text-readable-primary">Client</SelectItem>
+                <SelectItem value="fournisseur" className="text-readable-primary">Fournisseur</SelectItem>
+                <SelectItem value="both" className="text-readable-primary">Client & Fournisseur</SelectItem>
+              </SelectContent>
+            </Select>
+            {errors.type && <p className="text-sm text-red-500">{errors.type.message}</p>}
+          </div>
         </div>
-        
-        <div>
-          <Label htmlFor="type">Type *</Label>
-          <Select onValueChange={(value) => setValue('type', value as any)}>
-            <SelectTrigger>
-              <SelectValue placeholder="Sélectionner un type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="client">Client</SelectItem>
-              <SelectItem value="fournisseur">Fournisseur</SelectItem>
-              <SelectItem value="both">Client & Fournisseur</SelectItem>
-            </SelectContent>
-          </Select>
-          {errors.type && <p className="text-sm text-red-500">{errors.type.message}</p>}
-        </div>
-      </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <Label htmlFor="email">Email</Label>
-          <Input type="email" {...register('email')} />
-          {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <Label htmlFor="email" className="text-readable-primary">Email</Label>
+            <Input type="email" {...register('email')} className="bg-white text-readable-primary" />
+            {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
+          </div>
+          
+          <div>
+            <Label htmlFor="phone" className="text-readable-primary">Téléphone</Label>
+            <Input {...register('phone')} className="bg-white text-readable-primary" />
+          </div>
         </div>
-        
-        <div>
-          <Label htmlFor="phone">Téléphone</Label>
-          <Input {...register('phone')} />
-        </div>
-      </div>
 
-      <div>
-        <Label htmlFor="address">Adresse</Label>
-        <Textarea {...register('address')} />
-      </div>
-
-      <div className="grid grid-cols-2 gap-4">
         <div>
-          <Label htmlFor="city">Ville</Label>
-          <Input {...register('city')} />
+          <Label htmlFor="address" className="text-readable-primary">Adresse</Label>
+          <Textarea {...register('address')} className="bg-white text-readable-primary" />
         </div>
-        
-        <div>
-          <Label htmlFor="country">Pays</Label>
-          <Input {...register('country')} />
-        </div>
-      </div>
 
-      <div className="flex justify-end space-x-2">
-        <Button type="button" variant="outline" onClick={onCancel}>
-          Annuler
-        </Button>
-        <Button type="submit" disabled={loading}>
-          {loading ? 'Ajout...' : 'Ajouter'}
-        </Button>
-      </div>
-    </form>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <Label htmlFor="city" className="text-readable-primary">Ville</Label>
+            <Input {...register('city')} className="bg-white text-readable-primary" />
+          </div>
+          
+          <div>
+            <Label htmlFor="country" className="text-readable-primary">Pays</Label>
+            <Input {...register('country')} className="bg-white text-readable-primary" />
+          </div>
+        </div>
+
+        <div className="flex justify-end space-x-2">
+          <Button type="button" variant="outline" onClick={onCancel} className="text-readable-primary">
+            Annuler
+          </Button>
+          <Button type="submit" disabled={loading} className="bg-green-600 hover:bg-green-700">
+            {loading ? 'Ajout...' : 'Ajouter'}
+          </Button>
+        </div>
+      </form>
+    </div>
   );
 };

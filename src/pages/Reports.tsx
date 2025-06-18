@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { FinancialChart } from '@/components/FinancialChart';
@@ -19,38 +20,40 @@ export const Reports = () => {
 
   return (
     <Layout>
-      <div className="p-8">
-        <ReportsHeader />
-        
-        <ReportsPeriodSelector 
-          selectedPeriod={selectedPeriod}
-          onPeriodChange={setSelectedPeriod}
-        />
+      <div className="gradient-bg min-h-full">
+        <div className="p-8">
+          <ReportsHeader />
+          
+          <ReportsPeriodSelector 
+            selectedPeriod={selectedPeriod}
+            onPeriodChange={setSelectedPeriod}
+          />
 
-        <ReportsKPICards 
-          selectedReport={selectedReport}
-          onReportSelect={setSelectedReport}
-        />
+          <ReportsKPICards 
+            selectedReport={selectedReport}
+            onReportSelect={setSelectedReport}
+          />
 
-        <div className="mb-8">
-          <StockReport />
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2">
-            <Card>
-              <CardHeader>
-                <CardTitle>Graphique financier</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <FinancialChart />
-              </CardContent>
-            </Card>
+          <div className="mb-8">
+            <StockReport />
           </div>
 
-          <div className="space-y-6">
-            <ReportsDownloadSection onDownloadReport={handleDownloadReport} />
-            <ReportsAlertsSection />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2">
+              <Card className="bg-white shadow-lg">
+                <CardHeader>
+                  <CardTitle className="text-readable-primary">Graphique financier</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <FinancialChart />
+                </CardContent>
+              </Card>
+            </div>
+
+            <div className="space-y-6">
+              <ReportsDownloadSection onDownloadReport={handleDownloadReport} />
+              <ReportsAlertsSection />
+            </div>
           </div>
         </div>
       </div>

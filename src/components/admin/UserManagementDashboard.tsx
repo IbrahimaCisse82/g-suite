@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -26,7 +25,7 @@ interface User {
   email: string;
   firstName: string;
   lastName: string;
-  role: 'manager' | 'comptable' | 'budget' | 'logistique' | 'caissier';
+  role: 'manager' | 'comptable' | 'commercial' | 'logistique' | 'caissier';
   phone?: string;
   isActive: boolean;
   lastLogin?: string;
@@ -64,7 +63,7 @@ const mockUsers: User[] = [
 const roleLabels = {
   manager: 'Manager',
   comptable: 'Comptable',
-  budget: 'Budget',
+  commercial: 'Commercial',
   logistique: 'Logistique',
   caissier: 'Caissier'
 };
@@ -72,7 +71,7 @@ const roleLabels = {
 const roleColors = {
   manager: 'bg-purple-100 text-purple-800',
   comptable: 'bg-blue-100 text-blue-800',
-  budget: 'bg-green-100 text-green-800',
+  commercial: 'bg-green-100 text-green-800',
   logistique: 'bg-orange-100 text-orange-800',
   caissier: 'bg-yellow-100 text-yellow-800'
 };

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
@@ -80,23 +79,21 @@ export const EnterpriseHeader = () => {
   const isAccountingBase = location.pathname.startsWith('/accounting') || location.pathname.startsWith('/chart-of-accounts');
 
   return (
-    <Sidebar className="transition-all duration-300 ease-in-out">
-      <SidebarHeader className="border-b border-sidebar-border/50">
-        <div className="flex items-center space-x-3 p-2 transition-all duration-200 hover:bg-sidebar-accent/50 rounded-lg">
-          <div className="transition-transform duration-200 hover:scale-105">
-            <GSuiteLogo size={40} />
-          </div>
+    <Sidebar>
+      <SidebarHeader>
+        <div className="flex items-center space-x-3 p-2">
+          <GSuiteLogo size={40} />
           <div>
-            <h1 className="text-xl font-bold text-sidebar-foreground transition-colors duration-200">G-Suite</h1>
-            <p className="text-sm text-sidebar-foreground/70 transition-colors duration-200">Gestion d'entreprise digitale</p>
+            <h1 className="text-xl font-bold text-sidebar-foreground">G-Suite</h1>
+            <p className="text-sm text-sidebar-foreground/70">Gestion d'entreprise digitale</p>
           </div>
         </div>
       </SidebarHeader>
       
-      <SidebarContent className="p-2">
+      <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenu className="space-y-1">
+            <SidebarMenu>
               {menuItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = location.pathname === item.path;
@@ -104,29 +101,24 @@ export const EnterpriseHeader = () => {
                 const isParentActive = item.path === '/accounting' && isAccountingBase;
                 
                 return (
-                  <SidebarMenuItem key={item.path} className="transition-all duration-200">
-                    <SidebarMenuButton 
-                      asChild 
-                      isActive={isActive || isParentActive}
-                      className="transition-all duration-200 hover:scale-[1.02] hover:shadow-sm"
-                    >
-                      <Link to={item.path} className="group">
-                        <Icon className="w-5 h-5 transition-all duration-200 group-hover:scale-110" />
-                        <span className="font-medium transition-all duration-200">{item.label}</span>
+                  <SidebarMenuItem key={item.path}>
+                    <SidebarMenuButton asChild isActive={isActive || isParentActive}>
+                      <Link to={item.path}>
+                        <Icon className="w-5 h-5" />
+                        <span className="font-medium">{item.label}</span>
                       </Link>
                     </SidebarMenuButton>
                     {hasSubItems && (
-                      <SidebarMenuSub className="animate-accordion-down">
+                      <SidebarMenuSub>
                         {item.subItems.map((subItem) => (
                           <SidebarMenuSubItem key={subItem.path}>
                             <SidebarMenuSubButton
                               asChild
                               isActive={location.pathname === subItem.path}
-                              className="transition-all duration-200 hover:translate-x-1"
                             >
-                              <Link to={subItem.path} className="group">
-                                <BookOpen className="w-4 h-4 transition-all duration-200 group-hover:scale-110" />
-                                <span className="transition-all duration-200">{subItem.label}</span>
+                              <Link to={subItem.path}>
+                                <BookOpen className="w-4 h-4" />
+                                {subItem.label}
                               </Link>
                             </SidebarMenuSubButton>
                           </SidebarMenuSubItem>
@@ -138,71 +130,65 @@ export const EnterpriseHeader = () => {
               })}
               
               {/* Settings menu with sub-items */}
-              <SidebarMenuItem className="transition-all duration-200">
+              <SidebarMenuItem>
                 <SidebarMenuButton
                   isActive={isSettingsBase}
                   asChild={false}
                   aria-expanded={isSettingsBase}
-                  className="transition-all duration-200 hover:scale-[1.02] hover:shadow-sm"
                 >
-                  <span className="flex items-center gap-2 group">
-                    <Settings className="w-5 h-5 transition-all duration-200 group-hover:rotate-45" />
-                    <span className="font-medium transition-all duration-200">Paramètres</span>
+                  <span className="flex items-center gap-2">
+                    <Settings className="w-5 h-5" />
+                    <span className="font-medium">Paramètres</span>
                   </span>
                 </SidebarMenuButton>
-                {isSettingsBase && (
-                  <SidebarMenuSub className="animate-accordion-down">
-                    <SidebarMenuSubItem>
-                      <SidebarMenuSubButton
-                        asChild
-                        isActive={location.pathname === "/settings/profile"}
-                        className="transition-all duration-200 hover:translate-x-1"
-                      >
-                        <Link to="/settings/profile">Profil de l'entreprise</Link>
-                      </SidebarMenuSubButton>
-                    </SidebarMenuSubItem>
-                    <SidebarMenuSubItem>
-                      <SidebarMenuSubButton
-                        asChild
-                        isActive={location.pathname === "/settings/users"}
-                        className="transition-all duration-200 hover:translate-x-1"
-                      >
-                        <Link to="/settings/users">Utilisateurs</Link>
-                      </SidebarMenuSubButton>
-                    </SidebarMenuSubItem>
-                    <SidebarMenuSubItem>
-                      <SidebarMenuSubButton
-                        asChild
-                        isActive={location.pathname === "/settings/licenses"}
-                        className="transition-all duration-200 hover:translate-x-1"
-                      >
-                        <Link to="/settings/licenses">Clés de licence</Link>
-                      </SidebarMenuSubButton>
-                    </SidebarMenuSubItem>
-                  </SidebarMenuSub>
-                )}
+                <SidebarMenuSub>
+                  <SidebarMenuSubItem>
+                    <SidebarMenuSubButton
+                      asChild
+                      isActive={location.pathname === "/settings/profile"}
+                    >
+                      <Link to="/settings/profile">Profil de l'entreprise</Link>
+                    </SidebarMenuSubButton>
+                  </SidebarMenuSubItem>
+                  <SidebarMenuSubItem>
+                    <SidebarMenuSubButton
+                      asChild
+                      isActive={location.pathname === "/settings/users"}
+                    >
+                      <Link to="/settings/users">Utilisateurs</Link>
+                    </SidebarMenuSubButton>
+                  </SidebarMenuSubItem>
+                  <SidebarMenuSubItem>
+                    <SidebarMenuSubButton
+                      asChild
+                      isActive={location.pathname === "/settings/licenses"}
+                    >
+                      <Link to="/settings/licenses">Clés de licence</Link>
+                    </SidebarMenuSubButton>
+                  </SidebarMenuSubItem>
+                </SidebarMenuSub>
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
       
-      <SidebarFooter className="border-t border-sidebar-border/50 p-2">
+      <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
               <Button 
                 onClick={handleLogout}
                 variant="ghost" 
-                className="w-full justify-start text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-all duration-200 hover:scale-[1.02]"
+                className="w-full justify-start text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-foreground"
               >
-                <LogOut className="w-4 h-4 transition-all duration-200" />
+                <LogOut className="w-4 h-4" />
                 <span>Déconnexion</span>
               </Button>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
-        <div className="text-xs text-sidebar-foreground/50 text-center p-2 transition-colors duration-200">
+        <div className="text-xs text-sidebar-foreground/50 text-center p-2">
           © 2024 G-Suite Entreprise v1.0
         </div>
       </SidebarFooter>

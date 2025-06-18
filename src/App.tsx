@@ -43,6 +43,7 @@ import Budget from "./pages/Budget";
 import { ChartOfAccounts } from "./pages/ChartOfAccounts";
 import { FinancialStatements } from "./pages/FinancialStatements";
 import { JournalEntries } from "./pages/JournalEntries";
+import CompanyRegistration from "./pages/CompanyRegistration";
 
 const queryClient = new QueryClient();
 
@@ -68,6 +69,7 @@ const App = () => (
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/admin-login" element={<AdminLogin />} />
+          <Route path="/company-registration" element={<CompanyRegistration />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/accounting" element={<Accounting />} />
           <Route path="/chart-of-accounts" element={<ChartOfAccounts />} />

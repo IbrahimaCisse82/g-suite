@@ -34,6 +34,12 @@ import ProductDocumentation from "./pages/ProductDocumentation";
 import Formation from "./pages/Formation";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import Contacts from "./pages/Contacts";
+import Invoicing from "./pages/Invoicing";
+import Purchases from "./pages/Purchases";
+import Treasury from "./pages/Treasury";
+import Analytics from "./pages/Analytics";
+import Budget from "./pages/Budget";
 
 const queryClient = new QueryClient();
 
@@ -61,6 +67,15 @@ const App = () => (
           <Route path="/admin-login" element={<AdminLogin />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/accounting" element={<Accounting />} />
+          <Route path="/contacts" element={<Contacts />} />
+          <Route path="/invoicing" element={<Invoicing />} />
+          <Route path="/purchases" element={<Purchases />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/stock" element={<Stock />} />
+          <Route path="/treasury" element={<Treasury />} />
+          <Route path="/reports" element={<Reports />} />
+          <Route path="/analytics" element={<Analytics />} />
+          <Route path="/budget" element={<Budget />} />
 
           <Route path="/settings" element={<SettingsLayout />} >
             <Route index element={<Settings />} />
@@ -70,9 +85,6 @@ const App = () => (
           </Route>
 
           <Route path="/subscriptions" element={<SubscriptionSettings />} />
-          <Route path="/products" element={<Products />} />
-          <Route path="/stock" element={<Stock />} />
-          <Route path="/reports" element={<Reports />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/formation" element={<Formation />} />
           <Route path="/training" element={<TrainingSupport />} />

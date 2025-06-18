@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -52,7 +51,7 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
   const MODULE_OPTIONS = [
     { value: "entreprise", label: "Gestion d'Entreprise" },
     { value: "comptable", label: "Comptabilité" },
-    { value: "commerciale", label: "Commerciale" }
+    { value: "budget", label: "Budget & Commercial" }
   ];
   const [selectedModule, setSelectedModule] = useState<string>(
     moduleParam || "entreprise"

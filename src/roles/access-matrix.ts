@@ -1,14 +1,14 @@
 
 /**
  * Mapping combiné {module: {role: features[]}}
- * Les clés de modules : "entreprise", "comptable", "commerciale"
- * Les rôles sont : "manager", "comptable", "commerciale", "logistique", "caissier"
+ * Les clés de modules : "entreprise", "comptable", "budget"
+ * Les rôles sont : "manager", "comptable", "budget", "logistique", "caissier"
  */
-export type ModuleType = "entreprise" | "comptable" | "commerciale";
+export type ModuleType = "entreprise" | "comptable" | "budget";
 export type Role =
   | "manager"
   | "comptable"
-  | "commerciale"
+  | "budget"
   | "logistique"
   | "caissier";
 
@@ -30,6 +30,7 @@ export const MODULE_ACCESS_MATRIX: Record<
       "treasury",
       "reports",
       "analytics",
+      "budget",
       "training",
       "settings",
     ],
@@ -39,11 +40,12 @@ export const MODULE_ACCESS_MATRIX: Record<
       "treasury",
       "training",
     ],
-    // Commercial : contacts, facturation, achats, formation
-    commerciale: [
+    // Budget : contacts, facturation, achats, budget, formation
+    budget: [
       "contacts",
       "invoicing",
       "purchases",
+      "budget",
       "training",
     ],
     // Logisticien : produits, stock, formation
@@ -73,8 +75,8 @@ export const MODULE_ACCESS_MATRIX: Record<
       "treasury",
       "training",
     ],
-    // Commercial : aucun accès
-    commerciale: [],
+    // Budget : aucun accès
+    budget: [],
     // Logisticien : aucun accès
     logistique: [],
     // Caissier : trésorerie, formation
@@ -83,25 +85,27 @@ export const MODULE_ACCESS_MATRIX: Record<
       "training",
     ],
   },
-  // SOLUTION COMMERCIALE
-  commerciale: {
-    // Manager : contacts, facturation, achats, produits, stock, formation, paramètres
+  // SOLUTION BUDGET
+  budget: {
+    // Manager : contacts, facturation, achats, produits, stock, budget, formation, paramètres
     manager: [
       "contacts",
       "invoicing",
       "purchases",
       "products",
       "stock",
+      "budget",
       "training",
       "settings",
     ],
     // Comptable : aucun accès
     comptable: [],
-    // Commercial : contacts, facturation, achats, formation
-    commerciale: [
+    // Budget : contacts, facturation, achats, budget, formation
+    budget: [
       "contacts",
       "invoicing",
       "purchases",
+      "budget",
       "training",
     ],
     // Logisticien : produits, stock, formation
@@ -129,6 +133,7 @@ export const PATH_FEATURE_MAP: Record<string, string> = {
   "/treasury": "treasury",
   "/reports": "reports",
   "/analytics": "analytics",
+  "/budget": "budget",
   "/training": "training",
   "/settings": "settings",
 };

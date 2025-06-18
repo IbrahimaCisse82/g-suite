@@ -18,7 +18,7 @@ import {
   LogOut,
   Globe2,
   FileBarChart,
-  ShoppingBag
+  DollarSign
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { 
@@ -38,11 +38,10 @@ import {
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { GSuiteLogo } from '@/components/ui/gsuite-logo';
-import { Briefcase } from 'lucide-react';
 
 const menuItems = [
-  { icon: Globe2, label: 'Tableau de bord', path: '/dashboard' }, // Globe2 pour l’aspect global entreprise
-  { icon: FileBarChart, label: 'Comptabilité', path: '/accounting' }, // FileBarChart pour la compta
+  { icon: Globe2, label: 'Tableau de bord', path: '/dashboard' },
+  { icon: FileBarChart, label: 'Comptabilité', path: '/accounting' },
   { icon: Users, label: 'Contacts', path: '/contacts' },
   { icon: FileText, label: 'Facturation', path: '/invoicing' },
   { icon: ShoppingCart, label: 'Achats', path: '/purchases' },
@@ -51,8 +50,7 @@ const menuItems = [
   { icon: CreditCard, label: 'Trésorerie', path: '/treasury' },
   { icon: PieChart, label: 'Rapports', path: '/reports' },
   { icon: TrendingUp, label: 'Analyse', path: '/analytics' },
-  { icon: ShoppingBag, label: 'Commercial', path: '/training' }, // ShoppingBag pour Commerciale
-  // Retirer l'entrée "Paramètres" ici (on va l'ajouter avec son sous-menu plus bas)
+  { icon: DollarSign, label: 'Budget', path: '/budget' },
 ];
 
 export const EnterpriseHeader = () => {
@@ -106,7 +104,6 @@ export const EnterpriseHeader = () => {
               <SidebarMenuItem>
                 <SidebarMenuButton
                   isActive={isSettingsBase}
-                  // Désactive le lien si on affiche le sous-menu
                   asChild={false}
                   aria-expanded={isSettingsBase}
                 >

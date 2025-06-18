@@ -1,7 +1,20 @@
 
-import type { Database } from '@/integrations/supabase/types';
-
-type BusinessSector = Database['public']['Enums']['business_sector'];
+export type BusinessSector = 
+  | 'agriculture'
+  | 'industrie'
+  | 'construction'
+  | 'commerce'
+  | 'transport'
+  | 'hebergement_restauration'
+  | 'information_communication'
+  | 'activites_financieres'
+  | 'immobilier'
+  | 'activites_specialisees'
+  | 'administration_publique'
+  | 'enseignement'
+  | 'sante_action_sociale'
+  | 'arts_spectacles'
+  | 'autres_services';
 
 export interface CompanyFormData {
   name: string;

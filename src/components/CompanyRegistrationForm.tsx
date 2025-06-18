@@ -40,6 +40,8 @@ const companySchema = z.object({
   website: z.string().url('URL invalide').optional().or(z.literal('')),
 });
 
+type FormData = z.infer<typeof companySchema>;
+
 interface CompanyRegistrationFormProps {
   onSuccess?: () => void;
 }
@@ -59,7 +61,7 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
   );
   const { isLoading, submitForm } = useCompanyRegistration(onSuccess);
 
-  const form = useForm<CompanyFormData>({
+  const form = useForm<FormData>({
     resolver: zodResolver(companySchema),
     defaultValues: {
       country: 'Sénégal',
@@ -101,8 +103,8 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
     }
   };
 
-  const onSubmit = async (data: CompanyFormData) => {
-    await submitForm(data, logoFile, selectedModule);
+  const onSubmit = async (data: FormData) => {
+    await submitForm(data as CompanyFormData, logoFile, selectedModule);
   };
 
   return (

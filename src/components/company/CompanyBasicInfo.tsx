@@ -4,11 +4,27 @@ import { UseFormReturn } from 'react-hook-form';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { CompanyFormData } from '@/types/company';
 import { COUNTRIES } from '@/utils/countryData';
 
+interface FormData {
+  name: string;
+  address: string;
+  city: string;
+  country: string;
+  phone?: string;
+  email: string;
+  business_sector: string;
+  currency: string;
+  representative_title: string;
+  representative_first_name: string;
+  representative_last_name: string;
+  ninea?: string;
+  rccm?: string;
+  website?: string;
+}
+
 interface CompanyBasicInfoProps {
-  form: UseFormReturn<CompanyFormData>;
+  form: UseFormReturn<FormData>;
 }
 
 export const CompanyBasicInfo = ({ form }: CompanyBasicInfoProps) => {

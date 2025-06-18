@@ -32,14 +32,14 @@ export const ContactForm = ({ onSubmit, onCancel, loading }: ContactFormProps) =
     resolver: zodResolver(contactSchema),
     defaultValues: {
       country: 'Sénégal',
-      type: 'client', // Valeur par défaut pour éviter les erreurs
+      type: 'client',
     },
   });
 
   const typeValue = watch('type');
 
   const onFormSubmit = (data: ContactFormData) => {
-    console.log('Submitting contact data:', data); // Debug log
+    console.log('Submitting contact data:', data);
     onSubmit(data);
   };
 
@@ -55,7 +55,10 @@ export const ContactForm = ({ onSubmit, onCancel, loading }: ContactFormProps) =
           
           <div>
             <Label htmlFor="type" className="text-readable-primary">Type *</Label>
-            <Select onValueChange={(value) => setValue('type', value as 'client' | 'fournisseur')} defaultValue="client">
+            <Select 
+              onValueChange={(value) => setValue('type', value as 'client' | 'fournisseur')} 
+              value={typeValue}
+            >
               <SelectTrigger className="bg-white text-readable-primary">
                 <SelectValue placeholder="Sélectionner un type" />
               </SelectTrigger>

@@ -8,22 +8,22 @@
 @layer base {
   :root {
     --background: 248 250 252;
-    --foreground: 15 23 42;
+    --foreground: 55 65 81;
 
     --card: 255 255 255;
-    --card-foreground: 15 23 42;
+    --card-foreground: 55 65 81;
 
     --popover: 255 255 255;
-    --popover-foreground: 15 23 42;
+    --popover-foreground: 55 65 81;
 
-    --primary: 5 150 105;
+    --primary: 34 197 94;
     --primary-foreground: 255 255 255;
 
-    --secondary: 241 245 249;
-    --secondary-foreground: 51 65 85;
+    --secondary: 243 244 246;
+    --secondary-foreground: 75 85 99;
 
-    --muted: 241 245 249;
-    --muted-foreground: 71 85 105;
+    --muted: 243 244 246;
+    --muted-foreground: 107 114 128;
 
     --accent: 16 185 129;
     --accent-foreground: 255 255 255;
@@ -31,72 +31,76 @@
     --destructive: 239 68 68;
     --destructive-foreground: 255 255 255;
 
-    --border: 226 232 240;
+    --border: 229 231 235;
     --input: 248 250 252;
-    --ring: 5 150 105;
+    --ring: 34 197 94;
 
     --radius: 0.75rem;
 
-    --sidebar-background: 15 23 42;
-    --sidebar-foreground: 248 250 252;
-    --sidebar-primary: 5 150 105;
+    --sidebar-background: 249 250 251;
+    --sidebar-foreground: 55 65 81;
+    --sidebar-primary: 34 197 94;
     --sidebar-primary-foreground: 255 255 255;
-    --sidebar-accent: 30 41 59;
-    --sidebar-accent-foreground: 248 250 252;
-    --sidebar-border: 51 65 85;
-    --sidebar-ring: 5 150 105;
+    --sidebar-accent: 243 244 246;
+    --sidebar-accent-foreground: 75 85 99;
+    --sidebar-border: 229 231 235;
+    --sidebar-ring: 34 197 94;
 
-    /* Professional color palette */
-    --emerald-50: 236 253 245;
-    --emerald-100: 209 250 229;
-    --emerald-500: 16 185 129;
-    --emerald-600: 5 150 105;
-    --emerald-700: 4 120 87;
-    --slate-50: 248 250 252;
-    --slate-100: 241 245 249;
-    --slate-600: 71 85 105;
-    --slate-700: 51 65 85;
-    --slate-800: 30 41 59;
-    --slate-900: 15 23 42;
+    /* Professional color palette - Green & Gray */
+    --green-50: 240 253 244;
+    --green-100: 220 252 231;
+    --green-500: 34 197 94;
+    --green-600: 22 163 74;
+    --green-700: 21 128 61;
+    --gray-50: 249 250 251;
+    --gray-100: 243 244 246;
+    --gray-200: 229 231 235;
+    --gray-300: 209 213 219;
+    --gray-400: 156 163 175;
+    --gray-500: 107 114 128;
+    --gray-600: 75 85 99;
+    --gray-700: 55 65 81;
+    --gray-800: 31 41 55;
+    --gray-900: 17 24 39;
   }
 
   .dark {
-    --background: 15 23 42;
-    --foreground: 248 250 252;
+    --background: 17 24 39;
+    --foreground: 249 250 251;
 
-    --card: 30 41 59;
-    --card-foreground: 248 250 252;
+    --card: 31 41 55;
+    --card-foreground: 249 250 251;
 
-    --popover: 30 41 59;
-    --popover-foreground: 248 250 252;
+    --popover: 31 41 55;
+    --popover-foreground: 249 250 251;
 
-    --primary: 5 150 105;
-    --primary-foreground: 15 23 42;
+    --primary: 34 197 94;
+    --primary-foreground: 17 24 39;
 
-    --secondary: 51 65 85;
-    --secondary-foreground: 248 250 252;
+    --secondary: 55 65 81;
+    --secondary-foreground: 249 250 251;
 
-    --muted: 51 65 85;
-    --muted-foreground: 148 163 184;
+    --muted: 55 65 81;
+    --muted-foreground: 156 163 175;
 
-    --accent: 51 65 85;
-    --accent-foreground: 248 250 252;
+    --accent: 55 65 81;
+    --accent-foreground: 249 250 251;
 
     --destructive: 239 68 68;
-    --destructive-foreground: 248 250 252;
+    --destructive-foreground: 249 250 251;
 
-    --border: 71 85 105;
-    --input: 51 65 85;
-    --ring: 5 150 105;
+    --border: 75 85 99;
+    --input: 55 65 81;
+    --ring: 34 197 94;
     
-    --sidebar-background: 15 23 42;
-    --sidebar-foreground: 248 250 252;
-    --sidebar-primary: 5 150 105;
+    --sidebar-background: 17 24 39;
+    --sidebar-foreground: 249 250 251;
+    --sidebar-primary: 34 197 94;
     --sidebar-primary-foreground: 255 255 255;
-    --sidebar-accent: 30 41 59;
-    --sidebar-accent-foreground: 248 250 252;
-    --sidebar-border: 51 65 85;
-    --sidebar-ring: 5 150 105;
+    --sidebar-accent: 31 41 55;
+    --sidebar-accent-foreground: 249 250 251;
+    --sidebar-border: 55 65 81;
+    --sidebar-ring: 34 197 94;
   }
 }
 
@@ -153,7 +157,7 @@
   
   /* Styles pour un design moderne et cohérent avec la landing */
   .gradient-bg {
-    background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 50%, #f0f9ff 100%);
+    background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 50%, #f9fafb 100%);
   }
   
   .card-hover {
@@ -161,37 +165,37 @@
   }
   
   .btn-primary {
-    @apply bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200;
+    @apply bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200;
   }
 
   .btn-secondary {
-    @apply bg-slate-100 hover:bg-slate-200 text-slate-700 px-8 py-4 rounded-xl font-semibold transition-all duration-200;
+    @apply bg-gray-100 hover:bg-gray-200 text-gray-700 px-8 py-4 rounded-xl font-semibold transition-all duration-200;
   }
 
   /* Amélioration de la lisibilité du texte */
   .text-readable-primary {
-    color: rgb(15 23 42);
+    color: rgb(55 65 81);
   }
   
   .text-readable-secondary {
-    color: rgb(51 65 85);
+    color: rgb(75 85 99);
   }
   
   .text-readable-muted {
-    color: rgb(71 85 105);
+    color: rgb(107 114 128);
   }
 
   /* Styles spécifiques pour les tableaux */
   .table-text {
-    @apply text-slate-900 font-medium;
+    @apply text-gray-900 font-medium;
   }
   
   .table-text-secondary {
-    @apply text-slate-700;
+    @apply text-gray-700;
   }
   
   .table-text-muted {
-    @apply text-slate-600;
+    @apply text-gray-600;
   }
 
   /* Professional shadows */
@@ -204,12 +208,12 @@
   }
 
   /* Professional gradients */
-  .gradient-emerald {
-    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  .gradient-green {
+    background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
   }
 
-  .gradient-slate {
-    background: linear-gradient(135deg, #475569 0%, #334155 100%);
+  .gradient-gray {
+    background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
   }
 
   /* Modern glass effect */
@@ -225,7 +229,7 @@
   }
 
   .hover-glow {
-    @apply transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/25;
+    @apply transition-all duration-300 hover:shadow-lg hover:shadow-green-500/25;
   }
 }
 
@@ -235,8 +239,8 @@
   opacity: 0.05;
 }
 
-.bg-grid-slate-100 {
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='%23e2e8f0'%3e%3cpath d='m0 .5h32m-32 32v-32'/%3e%3c/svg%3e");
+.bg-grid-gray-100 {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='%23f3f4f6'%3e%3cpath d='m0 .5h32m-32 32v-32'/%3e%3c/svg%3e");
   opacity: 0.5;
 }
 

@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -27,7 +28,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-green-50 flex items-center justify-center p-4">
       {/* Image de gestion en arrière-plan */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute right-0 top-0 h-full w-1/2 opacity-10">
@@ -140,8 +141,8 @@ export const LoginForm: React.FC<LoginFormProps> = ({
                 </Link>
               </div>
 
-              <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                <p className="text-sm text-blue-800">
+              <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                <p className="text-sm text-green-800">
                   <strong>Compte d'entreprise requis</strong><br />
                   Chaque email est associé à un compte d'entreprise unique. Contactez votre administrateur si vous avez des difficultés de connexion.
                 </p>

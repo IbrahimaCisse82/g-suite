@@ -3,6 +3,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { EtatFinancier } from '@/hooks/useFinancialCalculations';
 import { BilanSYSCOHADATable } from './BilanSYSCOHADATable';
+import { CompteResultatSYSCOHADATable } from './CompteResultatSYSCOHADATable';
 
 interface FinancialStatementsDetailsProps {
   etat: EtatFinancier;
@@ -13,6 +14,9 @@ export const FinancialStatementsDetails = ({ etat }: FinancialStatementsDetailsP
     <div className="space-y-6">
       {/* Bilan SYSCOHADA officiel */}
       <BilanSYSCOHADATable etat={etat} />
+
+      {/* Compte de Résultat SYSCOHADA officiel */}
+      <CompteResultatSYSCOHADATable etat={etat} />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Détail du Compte de Résultat */}

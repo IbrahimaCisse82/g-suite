@@ -1,11 +1,11 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Building, Mail, Lock, ArrowLeft, Eye, EyeOff } from 'lucide-react';
+import { Mail, Lock, ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { GSuiteLogo } from '@/components/ui/gsuite-logo';
 
 interface LoginFormProps {
   email: string;
@@ -65,9 +65,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           <Card className="w-full max-w-md bg-white border-gray-200 shadow-lg">
             <CardHeader className="text-center">
               <div className="flex justify-center mb-4">
-                <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center">
-                  <Building className="w-8 h-8 text-white" />
-                </div>
+                <GSuiteLogo size={64} />
               </div>
               <CardTitle className="text-2xl font-bold text-gray-900">Connexion G-Suite</CardTitle>
               <p className="text-gray-600">Accédez à votre espace entreprise</p>

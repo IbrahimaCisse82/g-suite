@@ -9,7 +9,7 @@ interface UserPersonalInfoSectionProps {
     firstName: string;
     lastName: string;
     email: string;
-    phone: string;
+    phone?: string;
   };
   errors: Record<string, string>;
   onInputChange: (field: string, value: string) => void;
@@ -77,7 +77,7 @@ export const UserPersonalInfoSection = ({
           <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
           <Input
             id="phone"
-            value={formData.phone}
+            value={formData.phone || ''}
             onChange={(e) => onInputChange('phone', e.target.value)}
             className="pl-10"
             placeholder="+33 1 23 45 67 89"

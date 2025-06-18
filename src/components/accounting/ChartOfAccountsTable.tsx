@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Plus, Upload, Download, Eye, EyeOff, Edit, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -12,16 +13,51 @@ interface ChartOfAccount {
   accountNumber: string;
   accountTitle: string;
   accountType: string;
-  openingBalance: number;
+  hasCarryForward: boolean; // Report à nouveau (oui/non)
   isHidden: boolean;
 }
 
+// Plan comptable SYSCOHADA RÉVISÉ - Système minimal de trésorerie
 const mockAccounts: ChartOfAccount[] = [
-  { id: '1', accountNumber: '101000', accountTitle: 'Capital social', accountType: 'Capitaux propres', openingBalance: 1000000, isHidden: false },
-  { id: '2', accountNumber: '411000', accountTitle: 'Clients', accountType: 'Actif circulant', openingBalance: 150000, isHidden: false },
-  { id: '3', accountNumber: '401000', accountTitle: 'Fournisseurs', accountType: 'Dettes', openingBalance: -85000, isHidden: false },
-  { id: '4', accountNumber: '512000', accountTitle: 'Banque', accountType: 'Actif circulant', openingBalance: 450000, isHidden: false },
-  { id: '5', accountNumber: '701000', accountTitle: 'Ventes de marchandises', accountType: 'Produits', openingBalance: 0, isHidden: false },
+  // Classe 1 - Comptes de ressources durables
+  { id: '1', accountNumber: '101', accountTitle: 'Capital', accountType: 'Capital', hasCarryForward: true, isHidden: false },
+  { id: '2', accountNumber: '106', accountTitle: 'Réserves', accountType: 'Réserves', hasCarryForward: true, isHidden: false },
+  { id: '3', accountNumber: '110', accountTitle: 'Report à nouveau (solde créditeur)', accountType: 'Report à nouveau', hasCarryForward: true, isHidden: false },
+  { id: '4', accountNumber: '119', accountTitle: 'Report à nouveau (solde débiteur)', accountType: 'Report à nouveau', hasCarryForward: true, isHidden: false },
+  { id: '5', accountNumber: '161', accountTitle: 'Emprunts et dettes assimilées', accountType: 'Dettes financières', hasCarryForward: true, isHidden: false },
+  
+  // Classe 2 - Comptes d'actif immobilisé
+  { id: '6', accountNumber: '211', accountTitle: 'Terrains', accountType: 'Immobilisations corporelles', hasCarryForward: true, isHidden: false },
+  { id: '7', accountNumber: '213', accountTitle: 'Constructions', accountType: 'Immobilisations corporelles', hasCarryForward: true, isHidden: false },
+  { id: '8', accountNumber: '218', accountTitle: 'Matériel, mobilier et actifs biologiques', accountType: 'Immobilisations corporelles', hasCarryForward: true, isHidden: false },
+  
+  // Classe 3 - Comptes de stocks
+  { id: '9', accountNumber: '31', accountTitle: 'Matières premières', accountType: 'Stocks', hasCarryForward: true, isHidden: false },
+  { id: '10', accountNumber: '37', accountTitle: 'Stocks de marchandises', accountType: 'Stocks', hasCarryForward: true, isHidden: false },
+  
+  // Classe 4 - Comptes de tiers
+  { id: '11', accountNumber: '411', accountTitle: 'Clients', accountType: 'Créances clients', hasCarryForward: true, isHidden: false },
+  { id: '12', accountNumber: '401', accountTitle: 'Fournisseurs', accountType: 'Dettes fournisseurs', hasCarryForward: true, isHidden: false },
+  { id: '13', accountNumber: '421', accountTitle: 'Personnel - Rémunérations dues', accountType: 'Dettes sociales', hasCarryForward: true, isHidden: false },
+  { id: '14', accountNumber: '431', accountTitle: 'Sécurité sociale', accountType: 'Dettes sociales', hasCarryForward: true, isHidden: false },
+  { id: '15', accountNumber: '441', accountTitle: 'État - Impôts sur bénéfices', accountType: 'Dettes fiscales', hasCarryForward: true, isHidden: false },
+  { id: '16', accountNumber: '445', accountTitle: 'État - Taxes sur le chiffre d\'affaires', accountType: 'Dettes fiscales', hasCarryForward: true, isHidden: false },
+  
+  // Classe 5 - Comptes de trésorerie
+  { id: '17', accountNumber: '521', accountTitle: 'Banques locales', accountType: 'Disponibilités', hasCarryForward: true, isHidden: false },
+  { id: '18', accountNumber: '531', accountTitle: 'Chèques postaux', accountType: 'Disponibilités', hasCarryForward: true, isHidden: false },
+  { id: '19', accountNumber: '57', accountTitle: 'Caisse', accountType: 'Disponibilités', hasCarryForward: true, isHidden: false },
+  
+  // Classe 6 - Comptes de charges
+  { id: '20', accountNumber: '601', accountTitle: 'Achats de matières premières', accountType: 'Charges d\'exploitation', hasCarryForward: false, isHidden: false },
+  { id: '21', accountNumber: '607', accountTitle: 'Achats de marchandises', accountType: 'Charges d\'exploitation', hasCarryForward: false, isHidden: false },
+  { id: '22', accountNumber: '621', accountTitle: 'Sous-traitance générale', accountType: 'Charges d\'exploitation', hasCarryForward: false, isHidden: false },
+  { id: '23', accountNumber: '661', accountTitle: 'Charges d\'intérêts', accountType: 'Charges financières', hasCarryForward: false, isHidden: false },
+  
+  // Classe 7 - Comptes de produits
+  { id: '24', accountNumber: '701', accountTitle: 'Ventes de produits finis', accountType: 'Produits d\'exploitation', hasCarryForward: false, isHidden: false },
+  { id: '25', accountNumber: '707', accountTitle: 'Ventes de marchandises', accountType: 'Produits d\'exploitation', hasCarryForward: false, isHidden: false },
+  { id: '26', accountNumber: '771', accountTitle: 'Intérêts de prêts', accountType: 'Produits financiers', hasCarryForward: false, isHidden: false },
 ];
 
 export const ChartOfAccountsTable = () => {
@@ -33,7 +69,7 @@ export const ChartOfAccountsTable = () => {
     accountNumber: '',
     accountTitle: '',
     accountType: '',
-    openingBalance: 0
+    hasCarryForward: false
   });
 
   const filteredAccounts = showHidden ? accounts : accounts.filter(acc => !acc.isHidden);
@@ -51,7 +87,7 @@ export const ChartOfAccountsTable = () => {
     };
 
     setAccounts([...accounts, account]);
-    setNewAccount({ accountNumber: '', accountTitle: '', accountType: '', openingBalance: 0 });
+    setNewAccount({ accountNumber: '', accountTitle: '', accountType: '', hasCarryForward: false });
     setIsAddDialogOpen(false);
     toast.success('Compte ajouté avec succès');
   };
@@ -118,7 +154,7 @@ export const ChartOfAccountsTable = () => {
               <TableHead>Numéro de Compte</TableHead>
               <TableHead>Intitulé</TableHead>
               <TableHead>Nature du compte</TableHead>
-              <TableHead className="text-right">Report à nouveau</TableHead>
+              <TableHead className="text-center">Report à nouveau</TableHead>
               <TableHead>Statut</TableHead>
               <TableHead className="text-center">Actions</TableHead>
             </TableRow>
@@ -129,11 +165,14 @@ export const ChartOfAccountsTable = () => {
                 <TableCell className="font-medium">{account.accountNumber}</TableCell>
                 <TableCell>{account.accountTitle}</TableCell>
                 <TableCell>{account.accountType}</TableCell>
-                <TableCell className="text-right">
-                  {account.openingBalance.toLocaleString('fr-FR', { 
-                    style: 'currency', 
-                    currency: 'EUR' 
-                  })}
+                <TableCell className="text-center">
+                  <div className="flex justify-center">
+                    <Checkbox 
+                      checked={account.hasCarryForward} 
+                      disabled 
+                      className="pointer-events-none"
+                    />
+                  </div>
                 </TableCell>
                 <TableCell>
                   <span className={`px-2 py-1 rounded-full text-xs font-medium ${
@@ -188,7 +227,7 @@ export const ChartOfAccountsTable = () => {
               <Input
                 value={newAccount.accountNumber}
                 onChange={(e) => setNewAccount({...newAccount, accountNumber: e.target.value})}
-                placeholder="ex: 411000"
+                placeholder="ex: 411"
               />
             </div>
             <div>
@@ -204,17 +243,18 @@ export const ChartOfAccountsTable = () => {
               <Input
                 value={newAccount.accountType}
                 onChange={(e) => setNewAccount({...newAccount, accountType: e.target.value})}
-                placeholder="ex: Actif circulant"
+                placeholder="ex: Créances clients"
               />
             </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">Report à nouveau</label>
-              <Input
-                type="number"
-                value={newAccount.openingBalance}
-                onChange={(e) => setNewAccount({...newAccount, openingBalance: parseFloat(e.target.value) || 0})}
-                placeholder="0.00"
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="carryForward"
+                checked={newAccount.hasCarryForward}
+                onCheckedChange={(checked) => setNewAccount({...newAccount, hasCarryForward: checked as boolean})}
               />
+              <label htmlFor="carryForward" className="text-sm font-medium">
+                Ce compte fait l'objet d'un report à nouveau
+              </label>
             </div>
             <div className="flex justify-end space-x-3 pt-4">
               <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
@@ -246,12 +286,12 @@ export const ChartOfAccountsTable = () => {
               />
             </div>
             <div className="text-sm text-muted-foreground">
-              <p>Format attendu :</p>
+              <p className="font-medium mb-2">Format attendu (SYSCOHADA RÉVISÉ) :</p>
               <ul className="list-disc list-inside mt-2 space-y-1">
                 <li>Colonne 1: Numéro de compte</li>
                 <li>Colonne 2: Intitulé</li>
                 <li>Colonne 3: Nature du compte</li>
-                <li>Colonne 4: Report à nouveau</li>
+                <li>Colonne 4: Report à nouveau (Oui/Non ou 1/0)</li>
               </ul>
             </div>
             <div className="flex justify-end space-x-3 pt-4">

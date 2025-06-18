@@ -141,6 +141,9 @@ export type Database = {
           id: string
           name: string
           phone: string | null
+          postal_code: string | null
+          siret: string | null
+          tax_number: string | null
           type: string | null
           updated_at: string | null
         }
@@ -155,6 +158,9 @@ export type Database = {
           id?: string
           name: string
           phone?: string | null
+          postal_code?: string | null
+          siret?: string | null
+          tax_number?: string | null
           type?: string | null
           updated_at?: string | null
         }
@@ -169,12 +175,22 @@ export type Database = {
           id?: string
           name?: string
           phone?: string | null
+          postal_code?: string | null
+          siret?: string | null
+          tax_number?: string | null
           type?: string | null
           updated_at?: string | null
         }
         Relationships: [
           {
             foreignKeyName: "contacts_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_contacts_company"
             columns: ["company_id"]
             isOneToOne: false
             referencedRelation: "companies"

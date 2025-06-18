@@ -1,4 +1,3 @@
-
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import type { Database } from '@/integrations/supabase/types';
@@ -12,25 +11,36 @@ export const useContacts = () => {
     queryFn: async () => {
       console.log('Fetching contacts...');
       
-      // Vérifier d'abord si l'utilisateur est authentifié
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        console.log('No authenticated user, returning empty contacts list');
+      // Vérifier l'authentification
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      if (sessionError) {
+        console.error('Session error:', sessionError);
+        throw new Error('Erreur de session');
+      }
+
+      if (!session?.user) {
+        console.log('No authenticated user');
         return [];
       }
 
-      // Récupérer le company_id de l'utilisateur
-      const { data: profile } = await supabase
+      // Récupérer le profil utilisateur
+      const { data: profile, error: profileError } = await supabase
         .from('profiles')
         .select('company_id')
-        .eq('id', user.id)
+        .eq('id', session.user.id)
         .single();
 
+      if (profileError) {
+        console.error('Profile error:', profileError);
+        throw new Error('Erreur lors de la récupération du profil');
+      }
+
       if (!profile?.company_id) {
-        console.log('No company associated with user, returning empty contacts list');
+        console.log('No company associated with user');
         return [];
       }
 
+      // Récupérer les contacts de l'entreprise
       const { data, error } = await supabase
         .from('contacts')
         .select('*')
@@ -39,14 +49,21 @@ export const useContacts = () => {
       
       if (error) {
         console.error('Error fetching contacts:', error);
-        throw error;
+        throw new Error('Erreur lors du chargement des contacts');
       }
       
       console.log('Contacts fetched successfully:', data?.length || 0, 'contacts');
       return data || [];
     },
-    staleTime: 0, // Toujours refetch pour avoir les données à jour
+    staleTime: 0,
     refetchOnWindowFocus: true,
+    retry: (failureCount, error) => {
+      // Ne pas réessayer si c'est une erreur d'authentification
+      if (error.message.includes('session') || error.message.includes('profil')) {
+        return false;
+      }
+      return failureCount < 3;
+    },
   });
 };
 
@@ -137,12 +154,10 @@ export const useCreateContact = () => {
     },
     onSuccess: (newContact) => {
       console.log('Contact created, updating cache...');
-      // Mettre à jour immédiatement le cache
       queryClient.setQueryData(['contacts'], (oldData: Contact[] | undefined) => {
         if (!oldData) return [newContact];
         return [newContact, ...oldData];
       });
-      // Invalider pour refetch depuis le serveur
       queryClient.invalidateQueries({ queryKey: ['contacts'] });
     },
     onError: (error) => {
@@ -174,7 +189,6 @@ export const useUpdateContact = () => {
       return data;
     },
     onSuccess: (updatedContact) => {
-      // Mettre à jour immédiatement le cache
       queryClient.setQueryData(['contacts'], (oldData: Contact[] | undefined) => {
         if (!oldData) return [updatedContact];
         return oldData.map(contact => 
@@ -207,7 +221,6 @@ export const useDeleteContact = () => {
       return id;
     },
     onSuccess: (deletedId) => {
-      // Mettre à jour immédiatement le cache
       queryClient.setQueryData(['contacts'], (oldData: Contact[] | undefined) => {
         if (!oldData) return [];
         return oldData.filter(contact => contact.id !== deletedId);

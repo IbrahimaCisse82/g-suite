@@ -6,7 +6,7 @@ import { JournalEntriesManager } from '@/components/accounting/JournalEntriesMan
 export const JournalEntries = () => {
   return (
     <Layout>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-green-50">
         <div className="p-6">
           <div className="mb-6">
             <h1 className="text-3xl font-bold text-gray-900">Écritures Comptables</h1>

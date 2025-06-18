@@ -12,6 +12,7 @@ import { CompanyLogoUpload } from '@/components/company/CompanyLogoUpload';
 import { CompanyBasicInfo } from '@/components/company/CompanyBasicInfo';
 import { CompanyContactInfo } from '@/components/company/CompanyContactInfo';
 import { CompanyBusinessInfo } from '@/components/company/CompanyBusinessInfo';
+import { CompanyLegalFormInfo } from '@/components/company/CompanyLegalFormInfo';
 import { CompanyRepresentativeInfo } from '@/components/company/CompanyRepresentativeInfo';
 import { useSearchParams } from "react-router-dom";
 import { getCountryByName } from '@/utils/countryData';
@@ -30,6 +31,12 @@ const companySchema = z.object({
     'immobilier', 'activites_specialisees', 'administration_publique',
     'enseignement', 'sante_action_sociale', 'arts_spectacles', 'autres_services'
   ]),
+  forme_juridique: z.enum([
+    'entreprise_individuelle', 'gie', 'sarl', 'sa', 'snc', 'scs',
+    'societe_civile', 'sas', 'societe_sans_personnalite_juridique'
+  ], {
+    required_error: 'Veuillez sélectionner une forme juridique'
+  }),
   currency: z.string().min(1, 'Veuillez sélectionner une devise'),
   representative_title: z.enum(['M.', 'Mme', 'Mlle'], {
     required_error: 'Veuillez sélectionner une civilité'
@@ -69,6 +76,7 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
       website: '',
       currency: 'XOF',
       business_sector: 'commerce',
+      forme_juridique: 'sarl',
       representative_title: 'M.',
     },
   });
@@ -153,6 +161,10 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
 
           <div className="border-2 border-slate-200 rounded-lg p-4 space-y-4">
             <CompanyBusinessInfo form={form as any} />
+          </div>
+
+          <div className="border-2 border-slate-200 rounded-lg p-4 space-y-4">
+            <CompanyLegalFormInfo form={form as any} />
           </div>
 
           <div className="border-2 border-slate-200 rounded-lg p-4 space-y-4">

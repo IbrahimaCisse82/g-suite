@@ -16,6 +16,17 @@ export type BusinessSector =
   | 'arts_spectacles'
   | 'autres_services';
 
+export type LegalForm = 
+  | 'entreprise_individuelle'
+  | 'gie'
+  | 'sarl'
+  | 'sa'
+  | 'snc'
+  | 'scs'
+  | 'societe_civile'
+  | 'sas'
+  | 'societe_sans_personnalite_juridique';
+
 export interface CompanyFormData {
   name: string;
   address: string;
@@ -24,6 +35,7 @@ export interface CompanyFormData {
   phone?: string;
   email: string;
   business_sector: BusinessSector;
+  forme_juridique: LegalForm;
   currency: string;
   representative_title: 'M.' | 'Mme' | 'Mlle';
   representative_first_name: string;

@@ -10,11 +10,10 @@ export const useSubscriptionPlans = () => {
       const { data, error } = await supabase
         .from('subscription_plans')
         .select('*')
-        .eq('is_active', true)
         .order('price', { ascending: true });
 
       if (error) throw error;
-      return data;
+      return data || [];
     },
   });
 };
@@ -41,7 +40,7 @@ export const usePaidAccountRequests = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return data;
+      return data || [];
     },
   });
 };
@@ -130,9 +129,9 @@ export const useCurrentSubscription = () => {
           )
         `)
         .eq('is_active', true)
-        .single();
+        .maybeSingle();
 
-      if (error && error.code !== 'PGRST116') throw error;
+      if (error) throw error;
       return data;
     },
   });

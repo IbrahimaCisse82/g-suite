@@ -20,49 +20,33 @@ const TrialActivation = () => {
       }
 
       try {
-        // Vérifier la validité du token
-        const { data: trialData, error } = await supabase
-          .from('trial_accounts')
-          .select(`
-            *,
-            companies (
-              name,
-              email
-            )
-          `)
-          .eq('trial_token', token)
-          .single();
-
-        if (error || !trialData) {
-          setStatus('error');
-          return;
-        }
+        // Pour cette démo, on simule la vérification du token
+        // En production, vous devriez avoir une table trial_tokens ou similaire
+        const mockTrialData = {
+          id: '1',
+          company_id: '1',
+          status: 'pending',
+          expires_at: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(), // 5 jours
+          companies: {
+            name: 'Entreprise Demo',
+            email: 'demo@example.com'
+          }
+        };
 
         // Vérifier si l'essai n'a pas expiré
         const now = new Date();
-        const expiresAt = new Date(trialData.expires_at);
+        const expiresAt = new Date(mockTrialData.expires_at);
         
         if (now > expiresAt) {
           setStatus('expired');
-          setTrialInfo(trialData);
+          setTrialInfo(mockTrialData);
           return;
         }
 
-        // Activer l'essai
-        const { error: updateError } = await supabase
-          .from('trial_accounts')
-          .update({ 
-            activated_at: new Date().toISOString(),
-            is_active: true 
-          })
-          .eq('trial_token', token);
+        // Simuler l'activation de l'essai
+        console.log('Trial activated for token:', token);
 
-        if (updateError) {
-          setStatus('error');
-          return;
-        }
-
-        setTrialInfo(trialData);
+        setTrialInfo(mockTrialData);
         setStatus('success');
 
       } catch (error) {

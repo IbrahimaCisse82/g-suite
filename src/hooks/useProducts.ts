@@ -20,11 +20,10 @@ export const useProducts = () => {
             minimum_stock_level
           )
         `)
-        .eq('is_active', true)
         .order('name');
       
       if (error) throw error;
-      return data;
+      return data || [];
     },
   });
 };
@@ -36,11 +35,10 @@ export const useProductCategories = () => {
       const { data, error } = await supabase
         .from('product_categories')
         .select('*')
-        .eq('is_active', true)
         .order('name');
       
       if (error) throw error;
-      return data;
+      return data || [];
     },
   });
 };

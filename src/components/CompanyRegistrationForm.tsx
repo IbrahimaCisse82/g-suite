@@ -72,7 +72,7 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
 
   // Gérer le changement de pays automatiquement
   useEffect(() => {
-    const subscription = form.watch((value, { name }) => {
+    const subscription = form.watch((value, { name, type }) => {
       if (name === 'country' && value.country) {
         const countryData = getCountryByName(value.country);
         if (countryData) {

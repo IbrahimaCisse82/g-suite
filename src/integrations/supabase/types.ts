@@ -19,6 +19,7 @@ export type Database = {
           currency: string | null
           email: string | null
           id: string
+          initial_setup_completed: boolean | null
           logo_url: string | null
           name: string
           ninea: string | null
@@ -41,6 +42,7 @@ export type Database = {
           currency?: string | null
           email?: string | null
           id?: string
+          initial_setup_completed?: boolean | null
           logo_url?: string | null
           name: string
           ninea?: string | null
@@ -63,6 +65,7 @@ export type Database = {
           currency?: string | null
           email?: string | null
           id?: string
+          initial_setup_completed?: boolean | null
           logo_url?: string | null
           name?: string
           ninea?: string | null
@@ -172,6 +175,73 @@ export type Database = {
             columns: ["company_id"]
             isOneToOne: false
             referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      paid_account_requests: {
+        Row: {
+          admin_notes: string | null
+          company_id: string
+          created_at: string
+          expires_at: string | null
+          id: string
+          plan_id: string
+          processed_at: string | null
+          processed_by: string | null
+          request_message: string | null
+          requested_by: string
+          status: string | null
+          updated_at: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          company_id: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          plan_id: string
+          processed_at?: string | null
+          processed_by?: string | null
+          request_message?: string | null
+          requested_by: string
+          status?: string | null
+          updated_at?: string
+        }
+        Update: {
+          admin_notes?: string | null
+          company_id?: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          plan_id?: string
+          processed_at?: string | null
+          processed_by?: string | null
+          request_message?: string | null
+          requested_by?: string
+          status?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "paid_account_requests_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "paid_account_requests_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "subscription_plans"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "paid_account_requests_requested_by_fkey"
+            columns: ["requested_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -315,6 +385,7 @@ export type Database = {
           id: string
           max_users: number | null
           name: string
+          plan_type: string | null
           price: number | null
         }
         Insert: {
@@ -324,6 +395,7 @@ export type Database = {
           id?: string
           max_users?: number | null
           name: string
+          plan_type?: string | null
           price?: number | null
         }
         Update: {
@@ -333,6 +405,7 @@ export type Database = {
           id?: string
           max_users?: number | null
           name?: string
+          plan_type?: string | null
           price?: number | null
         }
         Relationships: []

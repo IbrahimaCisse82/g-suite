@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -25,6 +26,7 @@ import { SubscriptionSettings } from "./pages/SubscriptionSettings";
 import { Products } from "./pages/Products";
 import { Stock } from "./pages/Stock";
 import { Reports } from "./pages/Reports";
+import { Accounting } from "./pages/Accounting";
 import Contact from "./pages/Contact";
 import TrainingSupport from "./pages/TrainingSupport";
 import TrainingSupportStandalone from "./pages/TrainingSupportStandalone";
@@ -58,6 +60,7 @@ const App = () => (
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/admin-login" element={<AdminLogin />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/accounting" element={<Accounting />} />
 
           <Route path="/settings" element={<SettingsLayout />} >
             <Route index element={<Settings />} />

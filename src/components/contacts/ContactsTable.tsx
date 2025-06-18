@@ -11,9 +11,17 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Edit, Trash2, Phone, Mail } from 'lucide-react';
-import type { Database } from '@/integrations/supabase/types';
 
-type Contact = Database['public']['Tables']['contacts']['Row'];
+// Utiliser un type plus flexible pour les contacts
+interface Contact {
+  id: string;
+  name: string;
+  type: string;
+  email?: string | null;
+  phone?: string | null;
+  city?: string | null;
+  contact_number?: string | null;
+}
 
 interface ContactsTableProps {
   contacts: Contact[];

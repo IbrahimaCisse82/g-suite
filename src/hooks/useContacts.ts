@@ -25,7 +25,7 @@ export const useCreateContact = () => {
   const queryClient = useQueryClient();
   
   return useMutation({
-    mutationFn: async (contact: Omit<ContactInsert, 'company_id'>) => {
+    mutationFn: async (contact: ContactInsert) => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('User not authenticated');
 

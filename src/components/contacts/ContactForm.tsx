@@ -26,7 +26,7 @@ const contactSchema = z.object({
 type ContactFormData = z.infer<typeof contactSchema>;
 
 interface ContactFormProps {
-  onSubmit: (data: Omit<ContactInsert, 'company_id'>) => void;
+  onSubmit: (data: ContactInsert) => void;
   onCancel: () => void;
   loading?: boolean;
 }
@@ -43,7 +43,7 @@ export const ContactForm = ({ onSubmit, onCancel, loading }: ContactFormProps) =
 
   const onFormSubmit = (data: ContactFormData) => {
     // Transform the form data to match the expected type
-    const submitData: Omit<ContactInsert, 'company_id'> = {
+    const submitData: ContactInsert = {
       name: data.name,
       contact_number: data.contact_number,
       type: data.type,

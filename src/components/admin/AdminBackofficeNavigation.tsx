@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
   Users, 
@@ -9,11 +9,35 @@ import {
   Building2,
   Shield,
   Database,
-  UserCheck
+  UserCheck,
+  ChevronDown,
+  ChevronRight,
+  FileBarChart,
+  ShoppingBag,
+  Globe2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { GSuiteLogo } from '@/components/ui/gsuite-logo';
+
+// Mock data pour les entreprises par solution
+const companiesBySolution = {
+  comptabilite: [
+    { id: '1', name: 'Cabinet Comptable Expert', admin: 'Amadou Diallo' },
+    { id: '2', name: 'Expertise Compta Plus', admin: 'Fatou Sall' },
+    { id: '3', name: 'Compta Services', admin: 'Omar Ba' }
+  ],
+  commerciale: [
+    { id: '4', name: 'SA Commerce Général', admin: 'Marie Martin' },
+    { id: '5', name: 'Distribution Plus', admin: 'Jean Ndiaye' },
+    { id: '6', name: 'Négoce International', admin: 'Aissatou Fall' }
+  ],
+  entreprise: [
+    { id: '7', name: 'SARL Tech Solutions', admin: 'Jean Dupont' },
+    { id: '8', name: 'Groupe Industriel Sénégal', admin: 'Moussa Diop' },
+    { id: '9', name: 'Holdings & Partners', admin: 'Khadidja Touré' }
+  ]
+};
 
 const backofficeMenuItems = [
   { icon: Users, label: 'Gestion Utilisateurs', path: '/admin-backoffice', active: true },
@@ -24,8 +48,41 @@ const backofficeMenuItems = [
   { icon: Settings, label: 'Configuration', path: '/admin-backoffice/settings', active: false },
 ];
 
+const solutions = [
+  {
+    id: 'comptabilite',
+    name: 'Comptabilité',
+    icon: FileBarChart,
+    color: 'text-blue-600',
+    companies: companiesBySolution.comptabilite
+  },
+  {
+    id: 'commerciale',
+    name: 'Commerciale',
+    icon: ShoppingBag,
+    color: 'text-green-600',
+    companies: companiesBySolution.commerciale
+  },
+  {
+    id: 'entreprise',
+    name: 'Entreprise',
+    icon: Globe2,
+    color: 'text-purple-600',
+    companies: companiesBySolution.entreprise
+  }
+];
+
 export const AdminBackofficeNavigation = () => {
   const location = useLocation();
+  const [expandedSolutions, setExpandedSolutions] = useState<string[]>([]);
+
+  const toggleSolution = (solutionId: string) => {
+    setExpandedSolutions(prev => 
+      prev.includes(solutionId) 
+        ? prev.filter(id => id !== solutionId)
+        : [...prev, solutionId]
+    );
+  };
 
   const handleLogout = () => {
     // Logic de déconnexion
@@ -52,7 +109,7 @@ export const AdminBackofficeNavigation = () => {
       </div>
       
       {/* Navigation Menu */}
-      <nav className="flex-1 p-4 space-y-2">
+      <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
         <div className="mb-4">
           <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
             Gestion
@@ -87,6 +144,59 @@ export const AdminBackofficeNavigation = () => {
             </Link>
           );
         })}
+
+        {/* Solutions et Entreprises Section */}
+        <div className="mt-8">
+          <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4">
+            Solutions & Entreprises
+          </h3>
+          
+          <div className="space-y-2">
+            {solutions.map((solution) => {
+              const SolutionIcon = solution.icon;
+              const isExpanded = expandedSolutions.includes(solution.id);
+              
+              return (
+                <div key={solution.id} className="space-y-1">
+                  <button
+                    onClick={() => toggleSolution(solution.id)}
+                    className="w-full flex items-center justify-between px-4 py-3 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition-all duration-200"
+                  >
+                    <div className="flex items-center space-x-3">
+                      <SolutionIcon className={`w-5 h-5 ${solution.color}`} />
+                      <span className="font-medium">{solution.name}</span>
+                      <Badge variant="outline" className="text-xs bg-slate-700 text-slate-300 border-slate-600">
+                        {solution.companies.length}
+                      </Badge>
+                    </div>
+                    {isExpanded ? (
+                      <ChevronDown className="w-4 h-4" />
+                    ) : (
+                      <ChevronRight className="w-4 h-4" />
+                    )}
+                  </button>
+                  
+                  {isExpanded && (
+                    <div className="ml-6 space-y-1">
+                      {solution.companies.map((company) => (
+                        <Link
+                          key={company.id}
+                          to={`/admin-backoffice/company/${company.id}`}
+                          className="block px-4 py-2 text-sm text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-all duration-200"
+                        >
+                          <div className="flex flex-col">
+                            <span className="font-medium">{company.name}</span>
+                            <span className="text-xs text-slate-500">Admin: {company.admin}</span>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
       </nav>
       
       {/* Footer */}

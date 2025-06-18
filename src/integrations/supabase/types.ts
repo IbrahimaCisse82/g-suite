@@ -507,6 +507,7 @@ export type Database = {
           price: number | null
           sku: string | null
           stock_quantity: number | null
+          unit_price: number | null
           updated_at: string | null
         }
         Insert: {
@@ -522,6 +523,7 @@ export type Database = {
           price?: number | null
           sku?: string | null
           stock_quantity?: number | null
+          unit_price?: number | null
           updated_at?: string | null
         }
         Update: {
@@ -537,6 +539,7 @@ export type Database = {
           price?: number | null
           sku?: string | null
           stock_quantity?: number | null
+          unit_price?: number | null
           updated_at?: string | null
         }
         Relationships: [
@@ -563,6 +566,7 @@ export type Database = {
           email: string | null
           first_name: string | null
           id: string
+          is_company_admin: boolean | null
           is_first_login: boolean | null
           last_name: string | null
           role: string | null
@@ -574,6 +578,7 @@ export type Database = {
           email?: string | null
           first_name?: string | null
           id: string
+          is_company_admin?: boolean | null
           is_first_login?: boolean | null
           last_name?: string | null
           role?: string | null
@@ -585,6 +590,7 @@ export type Database = {
           email?: string | null
           first_name?: string | null
           id?: string
+          is_company_admin?: boolean | null
           is_first_login?: boolean | null
           last_name?: string | null
           role?: string | null
@@ -793,6 +799,41 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "treasury_transactions_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      trial_accounts: {
+        Row: {
+          company_id: string
+          created_at: string
+          expires_at: string | null
+          id: string
+          status: string | null
+          updated_at: string
+        }
+        Insert: {
+          company_id: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          status?: string | null
+          updated_at?: string
+        }
+        Update: {
+          company_id?: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          status?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trial_accounts_company_id_fkey"
             columns: ["company_id"]
             isOneToOne: false
             referencedRelation: "companies"

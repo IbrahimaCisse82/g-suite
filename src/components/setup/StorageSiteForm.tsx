@@ -9,7 +9,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
 interface StorageSite {
-  site_name: string;
+  name: string;
   site_type: 'warehouse' | 'store' | 'depot' | 'showroom';
   address?: string;
   city?: string;
@@ -26,7 +26,7 @@ interface StorageSiteFormProps {
 
 export const StorageSiteForm = ({ onSuccess }: StorageSiteFormProps) => {
   const [sites, setSites] = useState<StorageSite[]>([{
-    site_name: '',
+    name: '',
     site_type: 'warehouse',
     address: '',
     city: '',
@@ -47,7 +47,7 @@ export const StorageSiteForm = ({ onSuccess }: StorageSiteFormProps) => {
 
   const addSite = () => {
     setSites([...sites, {
-      site_name: '',
+      name: '',
       site_type: 'warehouse',
       address: '',
       city: '',
@@ -73,7 +73,7 @@ export const StorageSiteForm = ({ onSuccess }: StorageSiteFormProps) => {
 
   const handleSubmit = async () => {
     // Validation
-    const validSites = sites.filter(site => site.site_name.trim() !== '');
+    const validSites = sites.filter(site => site.name.trim() !== '');
     if (validSites.length === 0) {
       toast.error('Veuillez ajouter au moins un site avec un nom');
       return;
@@ -93,8 +93,11 @@ export const StorageSiteForm = ({ onSuccess }: StorageSiteFormProps) => {
       if (!profile?.company_id) throw new Error('Entreprise non trouvée');
 
       const sitesToInsert = validSites.map(site => ({
-        ...site,
-        company_id: profile.company_id
+        company_id: profile.company_id,
+        name: site.name,
+        address: site.address,
+        city: site.city,
+        country: site.country
       }));
 
       const { error } = await supabase
@@ -144,8 +147,8 @@ export const StorageSiteForm = ({ onSuccess }: StorageSiteFormProps) => {
                   <label className="block text-sm font-medium mb-2">Nom du site *</label>
                   <Input
                     placeholder="Ex: Entrepôt principal Dakar"
-                    value={site.site_name}
-                    onChange={(e) => updateSite(index, 'site_name', e.target.value)}
+                    value={site.name}
+                    onChange={(e) => updateSite(index, 'name', e.target.value)}
                   />
                 </div>
                 <div>

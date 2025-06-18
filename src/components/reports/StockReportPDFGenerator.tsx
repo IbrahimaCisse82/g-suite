@@ -9,7 +9,7 @@ interface StockItem {
   products: {
     name: string;
     sku: string;
-    price: number;
+    unit_price: number;
     product_categories?: {
       name: string;
     };
@@ -28,7 +28,7 @@ export const useStockReportPDFGenerator = () => {
 
   const calculateTotalStockValue = (stock: StockItem[]) => {
     return stock.reduce((total, item) => {
-      return total + (item.quantity_in_stock * (item.products?.price || 0));
+      return total + (item.quantity_in_stock * (item.products?.unit_price || 0));
     }, 0);
   };
 
@@ -210,8 +210,8 @@ export const useStockReportPDFGenerator = () => {
                   <td>${item.products?.product_categories?.name || '-'}</td>
                   <td>${item.quantity_in_stock}</td>
                   <td>${item.minimum_stock_level}</td>
-                  <td>${formatPrice(item.products?.price || 0)}</td>
-                  <td>${formatPrice(item.quantity_in_stock * (item.products?.price || 0))}</td>
+                  <td>${formatPrice(item.products?.unit_price || 0)}</td>
+                  <td>${formatPrice(item.quantity_in_stock * (item.products?.unit_price || 0))}</td>
                 </tr>
               `).join('')}
             </tbody>

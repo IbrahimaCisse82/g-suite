@@ -1,13 +1,38 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Users, Plus, Mail, Phone, Shield, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { UserFormDialog } from "@/components/admin/UserFormDialog";
+
+interface User {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  role: 'manager' | 'comptable' | 'budget' | 'logistique' | 'caissier';
+  isActive: boolean;
+  lastLogin: string;
+  createdAt: string;
+}
+
+interface UserFormData {
+  email: string;
+  firstName: string;
+  lastName: string;
+  role: 'manager' | 'comptable' | 'budget' | 'logistique' | 'caissier';
+  phone?: string;
+  isActive: boolean;
+  lastLogin?: string;
+}
 
 const UsersSettings = () => {
+  const [isAddUserOpen, setIsAddUserOpen] = useState(false);
+  
   // Utilisateurs avec profils complets
-  const users = [
+  const [users, setUsers] = useState<User[]>([
     { 
       id: 1, 
       firstName: "Jean",
@@ -41,7 +66,7 @@ const UsersSettings = () => {
       lastLogin: "2024-01-10 08:15",
       createdAt: "2023-12-15"
     }
-  ];
+  ]);
 
   const roleLabels = {
     manager: 'Manager',
@@ -97,6 +122,23 @@ const UsersSettings = () => {
     ]
   };
 
+  const handleAddUser = (userData: UserFormData) => {
+    const newUser: User = {
+      id: Math.max(...users.map(u => u.id)) + 1,
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+      email: userData.email,
+      phone: userData.phone || '',
+      role: userData.role,
+      isActive: userData.isActive,
+      lastLogin: '',
+      createdAt: new Date().toISOString().split('T')[0]
+    };
+    
+    setUsers([...users, newUser]);
+    setIsAddUserOpen(false);
+  };
+
   return (
     <div className="max-w-6xl mx-auto py-8 space-y-6">
       {/* En-tête */}
@@ -112,7 +154,10 @@ const UsersSettings = () => {
               </CardTitle>
               <p className="text-gray-600 mt-2">Gérez les utilisateurs et leurs droits d'accès</p>
             </div>
-            <Button className="bg-green-600 hover:bg-green-700">
+            <Button 
+              className="bg-green-600 hover:bg-green-700"
+              onClick={() => setIsAddUserOpen(true)}
+            >
               <Plus className="w-4 h-4 mr-2" />
               Inviter un utilisateur
             </Button>
@@ -243,6 +288,14 @@ const UsersSettings = () => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Dialog pour ajouter un utilisateur */}
+      <UserFormDialog
+        isOpen={isAddUserOpen}
+        onClose={() => setIsAddUserOpen(false)}
+        onSubmit={handleAddUser}
+        title="Inviter un utilisateur"
+      />
     </div>
   );
 };

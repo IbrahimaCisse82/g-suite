@@ -14,7 +14,8 @@ import {
   ChevronRight,
   FileBarChart,
   ShoppingBag,
-  Globe2
+  Globe2,
+  Home
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -40,7 +41,8 @@ const companiesBySolution = {
 };
 
 const backofficeMenuItems = [
-  { icon: Users, label: 'Gestion Utilisateurs', path: '/admin-backoffice', active: true },
+  { icon: Home, label: 'Dashboard', path: '/admin-backoffice', active: true },
+  { icon: Users, label: 'Gestion Utilisateurs', path: '/admin-backoffice/users', active: true },
   { icon: Building2, label: 'Gestion Entreprises', path: '/admin-backoffice/companies', active: false },
   { icon: Shield, label: 'Rôles & Permissions', path: '/admin-backoffice/roles', active: false },
   { icon: Database, label: 'Base de données', path: '/admin-backoffice/database', active: false },
@@ -90,14 +92,14 @@ export const AdminBackofficeNavigation = () => {
   };
 
   return (
-    <div className="w-72 bg-slate-900 text-white flex flex-col border-r border-slate-700">
+    <div className="w-72 bg-white text-gray-900 flex flex-col border-r border-gray-200 shadow-sm">
       {/* Header */}
-      <div className="p-6 border-b border-slate-700">
+      <div className="p-6 border-b border-gray-200 bg-gray-50">
         <div className="flex items-center space-x-3">
           <GSuiteLogo size={40} />
           <div>
-            <h1 className="text-xl font-bold text-white">Backoffice Admin</h1>
-            <p className="text-sm text-slate-300">Gestion des comptes entreprises</p>
+            <h1 className="text-xl font-bold text-gray-900">Backoffice Admin</h1>
+            <p className="text-sm text-gray-600">Gestion des comptes entreprises</p>
           </div>
         </div>
         <div className="mt-4">
@@ -111,7 +113,7 @@ export const AdminBackofficeNavigation = () => {
       {/* Navigation Menu */}
       <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
         <div className="mb-4">
-          <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+          <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
             Gestion
           </h3>
         </div>
@@ -126,10 +128,10 @@ export const AdminBackofficeNavigation = () => {
               to={item.path}
               className={`flex items-center justify-between space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${
                 isActive 
-                  ? 'bg-green-600 text-white shadow-lg' 
+                  ? 'bg-green-600 text-white shadow-md' 
                   : item.active 
-                    ? 'text-slate-300 hover:bg-slate-800 hover:text-white'
-                    : 'text-slate-500 cursor-not-allowed'
+                    ? 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                    : 'text-gray-400 cursor-not-allowed'
               }`}
             >
               <div className="flex items-center space-x-3">
@@ -137,7 +139,7 @@ export const AdminBackofficeNavigation = () => {
                 <span className="font-medium">{item.label}</span>
               </div>
               {!item.active && (
-                <Badge variant="secondary" className="text-xs bg-slate-700 text-slate-400">
+                <Badge variant="secondary" className="text-xs bg-gray-200 text-gray-600">
                   Bientôt
                 </Badge>
               )}
@@ -147,7 +149,7 @@ export const AdminBackofficeNavigation = () => {
 
         {/* Solutions et Entreprises Section */}
         <div className="mt-8">
-          <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4">
+          <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">
             Solutions & Entreprises
           </h3>
           
@@ -160,19 +162,19 @@ export const AdminBackofficeNavigation = () => {
                 <div key={solution.id} className="space-y-1">
                   <button
                     onClick={() => toggleSolution(solution.id)}
-                    className="w-full flex items-center justify-between px-4 py-3 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition-all duration-200"
+                    className="w-full flex items-center justify-between px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-all duration-200"
                   >
                     <div className="flex items-center space-x-3">
                       <SolutionIcon className={`w-5 h-5 ${solution.color}`} />
-                      <span className="font-medium">{solution.name}</span>
-                      <Badge variant="outline" className="text-xs bg-slate-700 text-slate-300 border-slate-600">
+                      <span className="font-medium text-gray-900">{solution.name}</span>
+                      <Badge variant="outline" className="text-xs bg-gray-100 text-gray-700 border-gray-300">
                         {solution.companies.length}
                       </Badge>
                     </div>
                     {isExpanded ? (
-                      <ChevronDown className="w-4 h-4" />
+                      <ChevronDown className="w-4 h-4 text-gray-600" />
                     ) : (
-                      <ChevronRight className="w-4 h-4" />
+                      <ChevronRight className="w-4 h-4 text-gray-600" />
                     )}
                   </button>
                   
@@ -182,11 +184,11 @@ export const AdminBackofficeNavigation = () => {
                         <Link
                           key={company.id}
                           to={`/admin-backoffice/company/${company.id}`}
-                          className="block px-4 py-2 text-sm text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-all duration-200"
+                          className="block px-4 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-all duration-200"
                         >
                           <div className="flex flex-col">
-                            <span className="font-medium">{company.name}</span>
-                            <span className="text-xs text-slate-500">Admin: {company.admin}</span>
+                            <span className="font-medium text-gray-900">{company.name}</span>
+                            <span className="text-xs text-gray-500">Admin: {company.admin}</span>
                           </div>
                         </Link>
                       ))}
@@ -200,15 +202,15 @@ export const AdminBackofficeNavigation = () => {
       </nav>
       
       {/* Footer */}
-      <div className="p-4 border-t border-slate-700">
-        <div className="mb-4 p-3 bg-slate-800 rounded-lg">
+      <div className="p-4 border-t border-gray-200 bg-gray-50">
+        <div className="mb-4 p-3 bg-white rounded-lg border border-gray-200">
           <div className="flex items-center space-x-2 mb-2">
             <div className="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center">
               <span className="text-white font-semibold text-sm">SA</span>
             </div>
             <div>
-              <p className="text-sm font-medium text-white">Super Admin</p>
-              <p className="text-xs text-slate-400">admin@growhub.com</p>
+              <p className="text-sm font-medium text-gray-900">Super Admin</p>
+              <p className="text-xs text-gray-600">admin@growhub.com</p>
             </div>
           </div>
         </div>
@@ -216,13 +218,13 @@ export const AdminBackofficeNavigation = () => {
         <Button 
           onClick={handleLogout}
           variant="ghost" 
-          className="w-full text-white hover:bg-slate-800 hover:text-white"
+          className="w-full text-gray-700 hover:bg-gray-100 hover:text-gray-900"
         >
           <LogOut className="w-4 h-4 mr-2" />
           Déconnexion
         </Button>
         
-        <div className="text-xs text-slate-400 mt-3 text-center">
+        <div className="text-xs text-gray-500 mt-3 text-center">
           <div>© 2024 GrowHub Backoffice</div>
           <div className="flex items-center justify-center mt-1">
             <Building2 className="w-3 h-3 mr-1" />

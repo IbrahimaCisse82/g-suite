@@ -1,8 +1,1 @@
-
 project_id = "jpmpfpeuqutzfcdlhvpi"
-
-[functions.send-trial-access]
-verify_jwt = false
-
-[functions.send-trial-expiry-notification]
-verify_jwt = false

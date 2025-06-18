@@ -31,8 +31,7 @@ export const usePaidAccountRequests = () => {
           subscription_plans (
             name,
             plan_type,
-            price,
-            duration_months
+            price
           ),
           profiles (
             first_name,

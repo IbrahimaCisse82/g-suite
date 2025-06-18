@@ -109,7 +109,7 @@ export const AdminDashboard = () => {
                         <div>
                           <p className="font-medium text-slate-900">{request.profiles?.first_name} {request.profiles?.last_name}</p>
                           <p className="text-sm text-slate-600">
-                            Plan: {request.subscription_plans?.name} - {request.subscription_plans?.price?.toLocaleString()} XOF
+                            Plan: {request.subscription_plans?.name || 'Plan non défini'} - {request.subscription_plans?.price ? `${request.subscription_plans.price.toLocaleString()} XOF` : 'Prix non défini'}
                           </p>
                           <p className="text-xs text-slate-500">
                             Demandé le {new Date(request.created_at).toLocaleDateString('fr-FR')}

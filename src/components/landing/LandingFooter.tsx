@@ -38,7 +38,7 @@ const LandingFooter = () => {
   };
 
   return (
-    <footer className="bg-slate-900 text-white">
+    <footer className="bg-slate-900 text-white [&_*]:!text-white [&_*]:!color-white">
       <div className="container mx-auto px-4 py-16">
         <div className="grid md:grid-cols-4 gap-8">
           <FooterCompanyInfo 

@@ -33,7 +33,8 @@ export const TreasuryTable = ({ transactions, onEdit, onDelete }: TreasuryTableP
     const printWindow = window.open('', '_blank');
     if (!printWindow) return;
 
-    const company = profile?.companies;
+    // Get the first company from the companies array
+    const company = Array.isArray(profile?.companies) ? profile.companies[0] : profile?.companies;
     const reportDate = new Date().toLocaleDateString('fr-FR');
     const totalIncome = transactions
       .filter(t => t.transaction_type === 'income')

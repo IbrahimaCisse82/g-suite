@@ -10,10 +10,10 @@ import { useStockReportPDFGenerator } from './StockReportPDFGenerator';
 
 export const StockReport = () => {
   const { data: profile } = useCompanyProfile();
-  const { data: stock } = useStock();
+  const { data: stock = [] } = useStock();
   const { generatePrintableReport, formatPrice, calculateTotalStockValue } = useStockReportPDFGenerator();
 
-  if (!stock || !profile) {
+  if (!profile) {
     return (
       <Card>
         <CardHeader>

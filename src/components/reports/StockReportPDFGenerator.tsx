@@ -2,29 +2,18 @@
 import { useCompanyProfile } from '@/hooks/useCompanyData';
 
 interface StockItem {
+  id: string;
   quantity_in_stock: number;
   minimum_stock_level: number;
-  products?: {
-    name?: string;
-    sku?: string;
-    unit_price?: number;
+  last_stock_update: string;
+  products: {
+    name: string;
+    sku: string;
+    unit_price: number;
     product_categories?: {
-      name?: string;
+      name: string;
     };
   };
-}
-
-interface Company {
-  name?: string;
-  logo_url?: string;
-  address?: string;
-  city?: string;
-  country?: string;
-  phone?: string;
-  email?: string;
-  website?: string;
-  ninea?: string;
-  rccm?: string;
 }
 
 export const useStockReportPDFGenerator = () => {
@@ -37,31 +26,21 @@ export const useStockReportPDFGenerator = () => {
     }).format(price);
   };
 
-  const getStockStatus = (item: StockItem) => {
-    const { quantity_in_stock, minimum_stock_level } = item;
-    
-    if (quantity_in_stock <= 0) {
-      return 'Rupture';
-    } else if (quantity_in_stock <= minimum_stock_level) {
-      return 'Stock faible';
-    } else {
-      return 'En stock';
-    }
-  };
-
   const calculateTotalStockValue = (stock: StockItem[]) => {
-    return stock?.reduce((total, item) => {
+    return stock.reduce((total, item) => {
       return total + (item.quantity_in_stock * (item.products?.unit_price || 0));
-    }, 0) || 0;
+    }, 0);
   };
 
   const generatePrintableReport = (stock: StockItem[]) => {
     const printWindow = window.open('', '_blank');
     if (!printWindow) return;
 
-    const company = profile?.companies as Company;
+    // Get the first company from the companies array
+    const company = Array.isArray(profile?.companies) ? profile.companies[0] : profile?.companies;
     const reportDate = new Date().toLocaleDateString('fr-FR');
     const totalValue = calculateTotalStockValue(stock);
+    const lowStockItems = stock.filter(item => item.quantity_in_stock <= item.minimum_stock_level);
 
     const htmlContent = `
       <!DOCTYPE html>
@@ -151,9 +130,10 @@ export const useStockReportPDFGenerator = () => {
               font-weight: bold;
               color: #374151;
             }
-            .status-en-stock { color: #059669; }
-            .status-stock-faible { color: #d97706; }
-            .status-rupture { color: #dc2626; }
+            .low-stock {
+              background-color: #fef2f2;
+              color: #dc2626;
+            }
             .footer {
               position: fixed;
               bottom: 20px;
@@ -197,16 +177,16 @@ export const useStockReportPDFGenerator = () => {
 
           <div class="summary">
             <div class="summary-card">
-              <div class="summary-value">${stock?.length || 0}</div>
-              <div class="summary-label">Produits en stock</div>
+              <div class="summary-value">${stock.length}</div>
+              <div class="summary-label">Total Produits</div>
             </div>
             <div class="summary-card">
               <div class="summary-value">${formatPrice(totalValue)}</div>
-              <div class="summary-label">Valeur totale du stock</div>
+              <div class="summary-label">Valeur Totale</div>
             </div>
             <div class="summary-card">
-              <div class="summary-value">${stock?.filter(item => item.quantity_in_stock <= item.minimum_stock_level).length || 0}</div>
-              <div class="summary-label">Alertes stock</div>
+              <div class="summary-value">${lowStockItems.length}</div>
+              <div class="summary-label">Alertes Stock</div>
             </div>
           </div>
 
@@ -217,25 +197,23 @@ export const useStockReportPDFGenerator = () => {
                 <th>SKU</th>
                 <th>Catégorie</th>
                 <th>Stock Actuel</th>
-                <th>Seuil Minimum</th>
+                <th>Stock Minimum</th>
                 <th>Prix Unitaire</th>
                 <th>Valeur Stock</th>
-                <th>Statut</th>
               </tr>
             </thead>
             <tbody>
-              ${stock?.map(item => `
-                <tr>
+              ${stock.map(item => `
+                <tr ${item.quantity_in_stock <= item.minimum_stock_level ? 'class="low-stock"' : ''}>
                   <td>${item.products?.name || '-'}</td>
                   <td>${item.products?.sku || '-'}</td>
                   <td>${item.products?.product_categories?.name || '-'}</td>
                   <td>${item.quantity_in_stock}</td>
-                  <td>${item.minimum_stock_level || 0}</td>
+                  <td>${item.minimum_stock_level}</td>
                   <td>${formatPrice(item.products?.unit_price || 0)}</td>
                   <td>${formatPrice(item.quantity_in_stock * (item.products?.unit_price || 0))}</td>
-                  <td class="status-${getStockStatus(item).toLowerCase().replace(' ', '-')}">${getStockStatus(item)}</td>
                 </tr>
-              `).join('') || ''}
+              `).join('')}
             </tbody>
           </table>
 

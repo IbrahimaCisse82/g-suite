@@ -10,6 +10,20 @@ import { Layout } from '@/components/Layout';
 
 export const Treasury = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const transactions: any[] = []; // Mock data - replace with actual data hook
+
+  const handleTreasurySubmit = (transactionData: any) => {
+    console.log('Treasury transaction submitted:', transactionData);
+    setIsDialogOpen(false);
+  };
+
+  const handleEdit = (transaction: any) => {
+    console.log('Edit transaction:', transaction);
+  };
+
+  const handleDelete = (id: string) => {
+    console.log('Delete transaction:', id);
+  };
 
   return (
     <Layout>
@@ -80,14 +94,21 @@ export const Treasury = () => {
                 <DialogHeader>
                   <DialogTitle className="text-readable-primary">Ajouter une transaction</DialogTitle>
                 </DialogHeader>
-                <EnhancedTreasuryForm onClose={() => setIsDialogOpen(false)} />
+                <EnhancedTreasuryForm 
+                  onSubmit={handleTreasurySubmit}
+                  onCancel={() => setIsDialogOpen(false)}
+                />
               </DialogContent>
             </Dialog>
           </div>
 
           <Card className="bg-white shadow-lg">
             <CardContent className="p-0">
-              <TreasuryTable />
+              <TreasuryTable 
+                transactions={transactions}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+              />
             </CardContent>
           </Card>
         </div>

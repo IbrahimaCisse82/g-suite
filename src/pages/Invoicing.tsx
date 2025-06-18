@@ -14,6 +14,23 @@ export const Invoicing = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { data: invoices = [], isLoading } = useInvoices();
 
+  const handleInvoiceSubmit = (invoiceData: any) => {
+    console.log('Invoice submitted:', invoiceData);
+    setIsDialogOpen(false);
+  };
+
+  const handleView = (invoice: any) => {
+    console.log('View invoice:', invoice);
+  };
+
+  const handleEdit = (invoice: any) => {
+    console.log('Edit invoice:', invoice);
+  };
+
+  const handleDownload = (invoice: any) => {
+    console.log('Download invoice:', invoice);
+  };
+
   if (isLoading) {
     return (
       <Layout>
@@ -115,7 +132,10 @@ export const Invoicing = () => {
                   <DialogHeader>
                     <DialogTitle className="text-readable-primary">Créer une nouvelle facture</DialogTitle>
                   </DialogHeader>
-                  <EnhancedInvoiceForm onClose={() => setIsDialogOpen(false)} />
+                  <EnhancedInvoiceForm 
+                    onSubmit={handleInvoiceSubmit} 
+                    onCancel={() => setIsDialogOpen(false)}
+                  />
                 </DialogContent>
               </Dialog>
             </div>
@@ -126,7 +146,12 @@ export const Invoicing = () => {
                   <CardTitle className="text-readable-primary">Toutes les factures</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <InvoicesTable invoices={invoices} />
+                  <InvoicesTable 
+                    invoices={invoices} 
+                    onView={handleView}
+                    onEdit={handleEdit}
+                    onDownload={handleDownload}
+                  />
                 </CardContent>
               </Card>
             </TabsContent>
@@ -137,7 +162,12 @@ export const Invoicing = () => {
                   <CardTitle className="text-readable-primary">Factures en attente</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <InvoicesTable invoices={pendingInvoices} />
+                  <InvoicesTable 
+                    invoices={pendingInvoices} 
+                    onView={handleView}
+                    onEdit={handleEdit}
+                    onDownload={handleDownload}
+                  />
                 </CardContent>
               </Card>
             </TabsContent>
@@ -148,7 +178,12 @@ export const Invoicing = () => {
                   <CardTitle className="text-readable-primary">Factures payées</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <InvoicesTable invoices={paidInvoices} />
+                  <InvoicesTable 
+                    invoices={paidInvoices} 
+                    onView={handleView}
+                    onEdit={handleEdit}
+                    onDownload={handleDownload}
+                  />
                 </CardContent>
               </Card>
             </TabsContent>
@@ -159,7 +194,12 @@ export const Invoicing = () => {
                   <CardTitle className="text-readable-primary">Factures en retard</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <InvoicesTable invoices={overdueInvoices} />
+                  <InvoicesTable 
+                    invoices={overdueInvoices} 
+                    onView={handleView}
+                    onEdit={handleEdit}
+                    onDownload={handleDownload}
+                  />
                 </CardContent>
               </Card>
             </TabsContent>

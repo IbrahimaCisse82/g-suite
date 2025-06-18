@@ -17,6 +17,14 @@ export const Products = () => {
   const [isCategoryDialogOpen, setIsCategoryDialogOpen] = useState(false);
   const { data: products = [], isLoading } = useProducts();
 
+  const handleEditProduct = (product: any) => {
+    console.log('Edit product:', product);
+  };
+
+  const handleEditCategory = (category: any) => {
+    console.log('Edit category:', category);
+  };
+
   if (isLoading) {
     return (
       <Layout>
@@ -64,7 +72,7 @@ export const Products = () => {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-green-600">
-                  {products.filter(p => p.is_active).length}
+                  {products.length}
                 </div>
               </CardContent>
             </Card>
@@ -112,7 +120,7 @@ export const Products = () => {
 
               <Card className="bg-white shadow-lg">
                 <CardContent className="p-0">
-                  <ProductsTable />
+                  <ProductsTable products={products} onEdit={handleEditProduct} />
                 </CardContent>
               </Card>
             </TabsContent>
@@ -138,7 +146,7 @@ export const Products = () => {
 
               <Card className="bg-white shadow-lg">
                 <CardContent className="p-0">
-                  <CategoriesTable />
+                  <CategoriesTable categories={[]} onEdit={handleEditCategory} />
                 </CardContent>
               </Card>
             </TabsContent>

@@ -15,6 +15,7 @@ export const createAutoLicenseRequest = async (request: AutoLicenseRequest) => {
     .insert({
       company_id: request.company_id,
       plan_id: request.requested_plan_id,
+      requested_by: null, // System generated requests don't have a user
       request_message: `[AUTOMATIQUE] ${request.reason}`,
       status: 'pending'
     })
@@ -38,8 +39,7 @@ export const checkExpiringLicenses = async () => {
       subscription_plans(name, id)
     `)
     .eq('is_active', true)
-    .lte('end_date', thirtyDaysFromNow.toISOString())
-    .is('renewal_request_sent', null);
+    .lte('end_date', thirtyDaysFromNow.toISOString());
 
   if (error) {
     console.error('Erreur lors de la vérification des licences qui expirent:', error);
@@ -65,12 +65,6 @@ export const generateRenewalRequests = async () => {
       });
 
       renewalRequests.push(request);
-
-      // Marquer que la demande de renouvellement a été envoyée
-      await supabase
-        .from('company_subscriptions')
-        .update({ renewal_request_sent: new Date().toISOString() })
-        .eq('id', subscription.id);
 
     } catch (error) {
       console.error(`Erreur lors de la création de la demande de renouvellement pour ${subscription.companies?.name}:`, error);

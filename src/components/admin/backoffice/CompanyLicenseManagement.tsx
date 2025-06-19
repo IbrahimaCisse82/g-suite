@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -38,6 +37,7 @@ interface LicenseRequest {
   requestDate: string;
   status: 'pending' | 'approved' | 'rejected';
   message?: string;
+  isAutomatic?: boolean;
 }
 
 const mockCompanies: CompanyLicense[] = [
@@ -90,7 +90,17 @@ const mockRequests: LicenseRequest[] = [
     requestType: 'renewal',
     requestDate: '2024-06-17',
     status: 'pending',
-    message: 'Renouvellement de notre licence commerciale'
+    message: '[AUTOMATIQUE] Renouvellement automatique - Licence expire le 15/08/2024',
+    isAutomatic: true
+  },
+  {
+    id: '3',
+    companyName: 'Cabinet Comptable Expert',
+    requestedModule: 'entreprise',
+    requestType: 'upgrade',
+    requestDate: '2024-06-16',
+    status: 'pending',
+    message: '[UPGRADE] Demande d\'upgrade depuis Comptabilité vers Gestion d\'Entreprise pour accéder aux fonctionnalités avancées'
   }
 ];
 
@@ -123,17 +133,31 @@ export const CompanyLicenseManagement = () => {
     }
   };
 
-  const getRequestTypeBadge = (type: string) => {
+  const getRequestTypeBadge = (type: string, isAutomatic?: boolean) => {
     switch (type) {
       case 'new':
         return <Badge className="bg-blue-100 text-blue-800">Nouvelle</Badge>;
       case 'renewal':
-        return <Badge className="bg-orange-100 text-orange-800">Renouvellement</Badge>;
+        return (
+          <Badge className={`${isAutomatic ? 'bg-orange-100 text-orange-800' : 'bg-yellow-100 text-yellow-800'}`}>
+            {isAutomatic ? 'Renouvellement Auto' : 'Renouvellement'}
+          </Badge>
+        );
       case 'upgrade':
         return <Badge className="bg-purple-100 text-purple-800">Upgrade</Badge>;
       default:
         return <Badge variant="outline">{type}</Badge>;
     }
+  };
+
+  const getRequestPriorityColor = (type: string, isAutomatic?: boolean) => {
+    if (type === 'renewal' && isAutomatic) {
+      return 'border-l-4 border-l-orange-400';
+    }
+    if (type === 'upgrade') {
+      return 'border-l-4 border-l-purple-400';
+    }
+    return 'border-l-4 border-l-blue-400';
   };
 
   const handleRenewalSubmit = () => {
@@ -233,39 +257,75 @@ export const CompanyLicenseManagement = () => {
         </CardContent>
       </Card>
 
-      {/* Demandes de Clé Licence */}
+      {/* Demandes de Clé Licence - Enhanced */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             <Key className="w-5 h-5" />
             <span>Demandes de Clé Licence</span>
-            <Badge variant="outline" className="ml-2">
-              {requests.filter(r => r.status === 'pending').length} en attente
-            </Badge>
+            <div className="flex space-x-2 ml-4">
+              <Badge variant="outline" className="text-blue-600">
+                {requests.filter(r => r.requestType === 'new' && r.status === 'pending').length} Nouvelles
+              </Badge>
+              <Badge variant="outline" className="text-orange-600">
+                {requests.filter(r => r.requestType === 'renewal' && r.status === 'pending').length} Renouvellements
+              </Badge>
+              <Badge variant="outline" className="text-purple-600">
+                {requests.filter(r => r.requestType === 'upgrade' && r.status === 'pending').length} Upgrades
+              </Badge>
+            </div>
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             {requests.map((request) => (
-              <div key={request.id} className="border rounded-lg p-4">
+              <div key={request.id} className={`border rounded-lg p-4 ${getRequestPriorityColor(request.requestType, request.isAutomatic)}`}>
                 <div className="flex justify-between items-start">
                   <div className="space-y-2">
                     <div className="flex items-center space-x-3">
                       <h4 className="font-medium">{request.companyName}</h4>
-                      {getRequestTypeBadge(request.requestType)}
+                      {getRequestTypeBadge(request.requestType, request.isAutomatic)}
                       <Badge className={getModuleBadge(request.requestedModule)}>
                         {request.requestedModule}
                       </Badge>
+                      {request.isAutomatic && (
+                        <Badge variant="outline" className="text-xs bg-gray-100">
+                          <Clock className="w-3 h-3 mr-1" />
+                          Automatique
+                        </Badge>
+                      )}
                     </div>
                     <p className="text-sm text-gray-600">
                       Demandé le {new Date(request.requestDate).toLocaleDateString('fr-FR')}
                     </p>
                     {request.message && (
-                      <p className="text-sm italic bg-gray-50 p-2 rounded">
+                      <div className={`text-sm p-2 rounded ${
+                        request.isAutomatic 
+                          ? 'bg-orange-50 border border-orange-200 text-orange-800' 
+                          : 'bg-gray-50 italic'
+                      }`}>
                         "{request.message}"
-                      </p>
+                      </div>
+                    )}
+                    
+                    {/* Informations spécifiques selon le type */}
+                    {request.requestType === 'renewal' && (
+                      <div className="flex items-center space-x-2 text-sm">
+                        <RefreshCw className="w-4 h-4 text-orange-500" />
+                        <span className="text-orange-700">
+                          {request.isAutomatic ? 'Détecté automatiquement' : 'Demandé manuellement'}
+                        </span>
+                      </div>
+                    )}
+                    
+                    {request.requestType === 'upgrade' && (
+                      <div className="flex items-center space-x-2 text-sm">
+                        <CheckCircle className="w-4 h-4 text-purple-500" />
+                        <span className="text-purple-700">Upgrade vers plan supérieur</span>
+                      </div>
                     )}
                   </div>
+                  
                   {request.status === 'pending' && (
                     <div className="flex space-x-2">
                       <Button
@@ -285,6 +345,7 @@ export const CompanyLicenseManagement = () => {
                       </Button>
                     </div>
                   )}
+                  
                   {request.status !== 'pending' && (
                     <Badge variant={request.status === 'approved' ? 'default' : 'destructive'}>
                       {request.status === 'approved' ? 'Approuvé' : 'Rejeté'}
@@ -293,6 +354,29 @@ export const CompanyLicenseManagement = () => {
                 </div>
               </div>
             ))}
+          </div>
+          
+          {/* Bouton pour déclencher manuellement la vérification des renouvellements */}
+          <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+            <div className="flex justify-between items-center">
+              <div>
+                <h3 className="font-medium text-blue-900">Vérification automatique des renouvellements</h3>
+                <p className="text-sm text-blue-700">
+                  Le système vérifie automatiquement les licences qui expirent et génère des demandes de renouvellement.
+                </p>
+              </div>
+              <Button
+                onClick={() => {
+                  // Ici vous pourrez déclencher manuellement la fonction de vérification
+                  toast.success('Vérification des renouvellements déclenchée');
+                }}
+                variant="outline"
+                className="text-blue-700 border-blue-300 hover:bg-blue-100"
+              >
+                <RefreshCw className="w-4 h-4 mr-1" />
+                Vérifier maintenant
+              </Button>
+            </div>
           </div>
         </CardContent>
       </Card>

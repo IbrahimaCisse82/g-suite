@@ -1,10 +1,11 @@
+
 import React, { useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Key, BadgeCheck, Clock, X, Check } from "lucide-react";
+import { Key, BadgeCheck, Clock, X, Check, ArrowUp } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import { usePaidAccountRequests, useCreatePaidAccountRequest } from "@/hooks/useSubscriptions";
+import { usePaidAccountRequests, useCreatePaidAccountRequest, useSubscriptionPlans, useCurrentSubscription } from "@/hooks/useSubscriptions";
 import { Badge } from "@/components/ui/badge";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
@@ -30,7 +31,6 @@ const PLAN_COLOR_MAP: Record<string, string> = {
   commerciale: "bg-green-50 text-green-700 border-green-400",
 };
 
-// Ajouter un mapping pour les profils par module/plan
 const PLAN_PROFILES_MAP: Record<string, string[]> = {
   entreprise: ["Manager", "Comptable", "Commerciale", "Logistique", "Caissier"],
   comptable: ["Manager", "Comptable", "Caissier"],
@@ -42,11 +42,21 @@ export function LicenseKeySettings() {
   const solutionParam = searchParams.get("solution");
   const [selectedModule, setSelectedModule] = useState(solutionParam || "");
   const [requestMessage, setRequestMessage] = useState("");
+  const [upgradeDialogOpen, setUpgradeDialogOpen] = useState(false);
+  const [selectedUpgradePlan, setSelectedUpgradePlan] = useState("");
+  
   const createRequestMutation = useCreatePaidAccountRequest();
   const { data: requests = [], isLoading } = usePaidAccountRequests();
+  const { data: plans = [] } = useSubscriptionPlans();
+  const { data: currentSubscription } = useCurrentSubscription();
 
-  // Pour la validation visuelle et le dialog de confirmation
   const [dialogOpenId, setDialogOpenId] = useState<string | null>(null);
+
+  // Calculer les plans disponibles pour upgrade
+  const availableUpgradePlans = plans.filter(plan => {
+    if (!currentSubscription) return false;
+    return plan.price > (currentSubscription.subscription_plans?.price || 0);
+  });
 
   const handleRequest = async () => {
     if (!selectedModule) {
@@ -71,7 +81,43 @@ export function LicenseKeySettings() {
     } catch (e) {
       toast({
         title: "Erreur lors de la demande",
-        description: "Une erreur s'est produite lors de l’envoi de la demande.",
+        description: "Une erreur s'est produite lors de l'envoi de la demande.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleUpgradeRequest = async () => {
+    if (!selectedUpgradePlan) {
+      toast({
+        title: "Plan non sélectionné",
+        description: "Veuillez choisir un plan d'upgrade.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const selectedPlan = plans.find(p => p.id === selectedUpgradePlan);
+      const upgradeMessage = `[UPGRADE] Demande d'upgrade depuis ${currentSubscription?.subscription_plans?.name} vers ${selectedPlan?.name}. ${requestMessage}`;
+      
+      await createRequestMutation.mutateAsync({
+        planId: selectedUpgradePlan,
+        message: upgradeMessage,
+      });
+      
+      toast({
+        title: "Demande d'upgrade envoyée",
+        description: "Votre demande d'upgrade a été envoyée avec succès.",
+      });
+      
+      setUpgradeDialogOpen(false);
+      setSelectedUpgradePlan("");
+      setRequestMessage("");
+    } catch (e) {
+      toast({
+        title: "Erreur lors de la demande d'upgrade",
+        description: "Une erreur s'est produite lors de l'envoi de la demande.",
         variant: "destructive",
       });
     }
@@ -98,6 +144,16 @@ export function LicenseKeySettings() {
     }
   };
 
+  const getRequestTypeBadge = (message: string) => {
+    if (message?.includes('[UPGRADE]')) {
+      return <Badge className="bg-purple-100 text-purple-800 mr-2"><ArrowUp className="w-3 h-3 mr-1" />Upgrade</Badge>;
+    }
+    if (message?.includes('[AUTOMATIQUE]') && message?.includes('Renouvellement')) {
+      return <Badge className="bg-orange-100 text-orange-800 mr-2">Renouvellement Auto</Badge>;
+    }
+    return <Badge className="bg-blue-100 text-blue-800 mr-2">Nouvelle</Badge>;
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -108,7 +164,9 @@ export function LicenseKeySettings() {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="text-gray-600 mb-4">Demandez une clé pour activer l’un des modules de la plateforme :</div>
+        <div className="text-gray-600 mb-4">Demandez une clé pour activer l'un des modules de la plateforme :</div>
+        
+        {/* Section Nouvelle Licence */}
         <div className="flex flex-col gap-3 md:flex-row md:items-end mb-6">
           <div className="flex-1">
             <label className="block font-medium mb-1">Module</label>
@@ -137,6 +195,70 @@ export function LicenseKeySettings() {
           </Button>
         </div>
 
+        {/* Section Upgrade (si abonnement actuel) */}
+        {currentSubscription && availableUpgradePlans.length > 0 && (
+          <div className="mb-6 p-4 bg-purple-50 rounded-lg border border-purple-200">
+            <div className="flex justify-between items-center">
+              <div>
+                <h3 className="font-semibold text-purple-900">Upgrade disponible</h3>
+                <p className="text-sm text-purple-700">
+                  Plan actuel: {currentSubscription.subscription_plans?.name}
+                </p>
+              </div>
+              <Dialog open={upgradeDialogOpen} onOpenChange={setUpgradeDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" className="text-purple-700 border-purple-300 hover:bg-purple-100">
+                    <ArrowUp className="w-4 h-4 mr-1" />
+                    Demander un upgrade
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Demande d'upgrade</DialogTitle>
+                    <DialogDescription>
+                      Choisissez le plan vers lequel vous souhaitez upgrader
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block font-medium mb-2">Plan de destination</label>
+                      <select
+                        className="w-full border rounded-md px-3 py-2"
+                        value={selectedUpgradePlan}
+                        onChange={(e) => setSelectedUpgradePlan(e.target.value)}
+                      >
+                        <option value="">Choisir un plan...</option>
+                        {availableUpgradePlans.map((plan) => (
+                          <option key={plan.id} value={plan.id}>
+                            {plan.name} - {plan.price?.toLocaleString()} XOF/mois
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block font-medium mb-2">Raison de l'upgrade</label>
+                      <Textarea
+                        value={requestMessage}
+                        onChange={(e) => setRequestMessage(e.target.value)}
+                        placeholder="Pourquoi souhaitez-vous upgrader votre plan ?"
+                        rows={3}
+                      />
+                    </div>
+                  </div>
+                  <DialogFooter>
+                    <Button variant="outline" onClick={() => setUpgradeDialogOpen(false)}>
+                      Annuler
+                    </Button>
+                    <Button onClick={handleUpgradeRequest} disabled={createRequestMutation.isPending}>
+                      {createRequestMutation.isPending ? "Envoi..." : "Demander l'upgrade"}
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            </div>
+          </div>
+        )}
+
         <hr className="my-6" />
 
         <div>
@@ -148,14 +270,10 @@ export function LicenseKeySettings() {
           ) : (
             <ul className="space-y-4">
               {requests.map((req) => {
-                // cherche le nom du module/plan demandé (toujours visible)
                 const planKey = req.plan_id as string;
                 const planName = PLAN_NAME_MAP[planKey] || req.subscription_plans?.name || "Module inconnu";
                 const colorClass = PLAN_COLOR_MAP[planKey] || "bg-gray-100 text-gray-700 border-gray-300";
-                // Affiche le bouton de validation seulement si status=approved ET clé présente
                 const showValidate = req.status === "approved" && req.admin_notes;
-
-                // Liste des profils utilisateurs autorisés selon le plan
                 const allowedProfiles = PLAN_PROFILES_MAP[planKey] || [];
 
                 return (
@@ -163,10 +281,11 @@ export function LicenseKeySettings() {
                     <div className="flex justify-between items-center gap-2">
                       <div>
                         <div className="flex items-center gap-2 mb-1">
+                          {getRequestTypeBadge(req.request_message || "")}
                           <strong className="uppercase">{planName}</strong>
                           <Badge className="text-xs" variant="outline">{planKey}</Badge>
                         </div>
-                        {/* Start - Affichage des profils autorisés */}
+                        
                         {allowedProfiles.length > 0 && (
                           <div className="flex flex-wrap gap-2 mb-1 mt-1">
                             {allowedProfiles.map((profile) => (
@@ -179,7 +298,7 @@ export function LicenseKeySettings() {
                             ))}
                           </div>
                         )}
-                        {/* End - Affichage des profils autorisés */}
+                        
                         <div className="text-sm text-gray-600">
                           Demandé le {new Date(req.created_at).toLocaleDateString("fr-FR")}
                         </div>
@@ -188,7 +307,7 @@ export function LicenseKeySettings() {
                         )}
                         {req.status === "approved" && req.admin_notes && (
                           <div className="mt-2 p-2 rounded border bg-white">
-                            <span className="font-semibold text-green-700">Votre clé : </span>
+                            <span className="font-semibold text-green-700">Votre clé : </span>
                             <span className="select-all">{req.admin_notes}</span>
                           </div>
                         )}
@@ -204,9 +323,9 @@ export function LicenseKeySettings() {
                               <DialogHeader>
                                 <DialogTitle>Validation de la clé</DialogTitle>
                                 <DialogDescription>
-                                  Êtes-vous sûr de vouloir valider la clé ?<br />
-                                  <span className="block mt-3 font-medium">Module : <span className="font-bold">{planName}</span></span>
-                                  <span className="block mt-2">Clé : <span className="select-all text-xs">{req.admin_notes}</span></span>
+                                  Êtes-vous sûr de vouloir valider la clé ?<br />
+                                  <span className="block mt-3 font-medium">Module : <span className="font-bold">{planName}</span></span>
+                                  <span className="block mt-2">Clé : <span className="select-all text-xs">{req.admin_notes}</span></span>
                                 </DialogDescription>
                               </DialogHeader>
                               <DialogFooter>

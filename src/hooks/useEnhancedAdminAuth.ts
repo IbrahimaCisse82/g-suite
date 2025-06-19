@@ -56,55 +56,26 @@ export const useEnhancedAdminAuth = () => {
         return;
       }
 
-      // Try to verify session in database (if tables exist)
-      try {
-        // This will fail gracefully if the admin_sessions table doesn't exist yet
-        const { data: sessionData, error } = await supabase
-          .from('system_admins')
-          .select('email, is_active')
-          .eq('email', adminEmail)
-          .eq('is_active', true)
-          .single();
+      // Verify admin exists and is active
+      const { data: adminData, error } = await supabase
+        .from('system_admins')
+        .select('email, is_active')
+        .eq('email', adminEmail)
+        .eq('is_active', true)
+        .single();
 
-        if (error || !sessionData) {
-          await logout();
-          return;
-        }
-
-        // For now, we'll use simple localStorage-based session validation
-        // until the admin_sessions table is created
-        setSession({
-          isAuthenticated: true,
-          adminEmail: sessionData.email,
-          sessionToken: sessionToken,
-          loading: false,
-          lastActivity: new Date()
-        });
-
-      } catch (error) {
-        console.log('Admin sessions table not yet available, using simple validation');
-        
-        // Fallback to simple validation
-        const { data: adminData, error: adminError } = await supabase
-          .from('system_admins')
-          .select('email, is_active')
-          .eq('email', adminEmail)
-          .eq('is_active', true)
-          .single();
-
-        if (adminError || !adminData) {
-          await logout();
-          return;
-        }
-
-        setSession({
-          isAuthenticated: true,
-          adminEmail: adminData.email,
-          sessionToken: sessionToken,
-          loading: false,
-          lastActivity: new Date()
-        });
+      if (error || !adminData) {
+        await logout();
+        return;
       }
+
+      setSession({
+        isAuthenticated: true,
+        adminEmail: adminData.email,
+        sessionToken: sessionToken,
+        loading: false,
+        lastActivity: new Date()
+      });
 
     } catch (error) {
       console.error('Admin session check error:', error);
@@ -116,17 +87,13 @@ export const useEnhancedAdminAuth = () => {
     try {
       const userIP = await SecurityService.getUserIP();
       
-      // Log login attempt (if security tables exist)
-      try {
-        await SecurityService.logSecurityEvent({
-          event_type: 'admin_login_attempt',
-          admin_email: email,
-          ip_address: userIP,
-          event_data: { timestamp: new Date().toISOString() }
-        });
-      } catch (error) {
-        console.log('Security event logging not available yet');
-      }
+      // Log login attempt
+      await SecurityService.logSecurityEvent({
+        event_type: 'admin_login_attempt',
+        admin_email: email,
+        ip_address: userIP || undefined,
+        event_data: { timestamp: new Date().toISOString() }
+      });
 
       // Verify admin credentials
       const { data, error } = await supabase.functions.invoke('verify-admin-credentials', {
@@ -134,16 +101,12 @@ export const useEnhancedAdminAuth = () => {
       });
 
       if (error || !data?.valid) {
-        try {
-          await SecurityService.logSecurityEvent({
-            event_type: 'admin_login_failed',
-            admin_email: email,
-            ip_address: userIP,
-            event_data: { error: error?.message || 'Invalid credentials' }
-          });
-        } catch (logError) {
-          console.log('Security event logging not available yet');
-        }
+        await SecurityService.logSecurityEvent({
+          event_type: 'admin_login_failed',
+          admin_email: email,
+          ip_address: userIP || undefined,
+          event_data: { error: error?.message || 'Invalid credentials' }
+        });
         
         throw new Error(data?.error || 'Identifiants administrateur invalides');
       }
@@ -151,22 +114,6 @@ export const useEnhancedAdminAuth = () => {
       // Create secure session
       const sessionToken = crypto.randomUUID();
       const sessionExpiry = new Date().getTime() + (4 * 60 * 60 * 1000); // 4 hours
-
-      // Try to store session in database (if table exists)
-      try {
-        const { error: sessionError } = await supabase
-          .from('system_admins')
-          .select('id')
-          .eq('email', email)
-          .single();
-
-        if (!sessionError) {
-          // For now, we'll just use localStorage until admin_sessions table is created
-          console.log('Admin sessions table not yet available, using localStorage');
-        }
-      } catch (error) {
-        console.log('Admin sessions table not yet available');
-      }
 
       // Store session locally
       localStorage.setItem('admin_email', email);
@@ -182,16 +129,12 @@ export const useEnhancedAdminAuth = () => {
       });
 
       // Log successful login
-      try {
-        await SecurityService.logSecurityEvent({
-          event_type: 'admin_login_success',
-          admin_email: email,
-          ip_address: userIP,
-          event_data: { session_token: sessionToken }
-        });
-      } catch (error) {
-        console.log('Security event logging not available yet');
-      }
+      await SecurityService.logSecurityEvent({
+        event_type: 'admin_login_success',
+        admin_email: email,
+        ip_address: userIP || undefined,
+        event_data: { session_token: sessionToken }
+      });
 
       toast({
         title: "Connexion réussie",
@@ -215,25 +158,13 @@ export const useEnhancedAdminAuth = () => {
       const sessionToken = localStorage.getItem('admin_session_token');
       const adminEmail = localStorage.getItem('admin_email');
       
-      if (sessionToken) {
-        // Try to deactivate session in database (if table exists)
-        try {
-          // This will be implemented once admin_sessions table is created
-          console.log('Session deactivation in database not yet available');
-        } catch (error) {
-          console.log('Admin sessions table not yet available');
-        }
-
+      if (sessionToken && adminEmail) {
         // Log logout
-        try {
-          await SecurityService.logSecurityEvent({
-            event_type: 'admin_logout',
-            admin_email: adminEmail,
-            event_data: { session_token: sessionToken }
-          });
-        } catch (error) {
-          console.log('Security event logging not available yet');
-        }
+        await SecurityService.logSecurityEvent({
+          event_type: 'admin_logout',
+          admin_email: adminEmail,
+          event_data: { session_token: sessionToken }
+        });
       }
 
       // Clear local storage
@@ -266,14 +197,6 @@ export const useEnhancedAdminAuth = () => {
 
       const newExpiry = new Date().getTime() + (4 * 60 * 60 * 1000);
       
-      // Try to update session in database (if table exists)
-      try {
-        // This will be implemented once admin_sessions table is created
-        console.log('Session extension in database not yet available');
-      } catch (error) {
-        console.log('Admin sessions table not yet available');
-      }
-
       // Update localStorage
       localStorage.setItem('admin_session_expiry', newExpiry.toString());
       return true;

@@ -9,6 +9,42 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      admin_sessions: {
+        Row: {
+          admin_email: string
+          created_at: string
+          expires_at: string
+          id: string
+          ip_address: unknown | null
+          is_active: boolean | null
+          last_activity: string | null
+          session_token: string
+          user_agent: string | null
+        }
+        Insert: {
+          admin_email: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          ip_address?: unknown | null
+          is_active?: boolean | null
+          last_activity?: string | null
+          session_token: string
+          user_agent?: string | null
+        }
+        Update: {
+          admin_email?: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          ip_address?: unknown | null
+          is_active?: boolean | null
+          last_activity?: string | null
+          session_token?: string
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       companies: {
         Row: {
           address: string | null
@@ -617,6 +653,39 @@ export type Database = {
         }
         Relationships: []
       }
+      security_events: {
+        Row: {
+          admin_email: string | null
+          created_at: string
+          event_data: Json | null
+          event_type: string
+          id: string
+          ip_address: unknown | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          admin_email?: string | null
+          created_at?: string
+          event_data?: Json | null
+          event_type: string
+          id?: string
+          ip_address?: unknown | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          admin_email?: string | null
+          created_at?: string
+          event_data?: Json | null
+          event_type?: string
+          id?: string
+          ip_address?: unknown | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       stock_movements: {
         Row: {
           company_id: string
@@ -865,7 +934,33 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      cleanup_expired_sessions: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
+      get_user_company_id: {
+        Args: { user_id: string }
+        Returns: string
+      }
+      is_company_admin: {
+        Args: { user_id: string }
+        Returns: boolean
+      }
+      log_security_event: {
+        Args: {
+          event_type_param: string
+          user_id_param?: string
+          admin_email_param?: string
+          ip_address_param?: string
+          user_agent_param?: string
+          event_data_param?: Json
+        }
+        Returns: string
+      }
+      validate_password_strength: {
+        Args: { password_param: string }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never

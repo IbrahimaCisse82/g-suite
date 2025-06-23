@@ -79,7 +79,7 @@ export const SecureAdminLoginForm = () => {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="support@g-suiteapp.com"
+                  placeholder="admin@exemple.com"
                   required
                   className="h-12 border-gray-300 focus:border-green-500 focus:ring-green-500"
                 />

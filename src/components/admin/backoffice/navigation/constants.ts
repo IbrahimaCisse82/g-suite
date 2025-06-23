@@ -23,8 +23,8 @@ export const backofficeMenuItems = [
   { icon: Home, label: 'Dashboard', path: '/admin-backoffice', active: true },
   { icon: Users, label: 'Gestion Utilisateurs', path: '/admin-backoffice/users', active: true },
   { icon: Building2, label: 'Gestion Entreprises', path: '/admin-backoffice/companies', active: true },
-  { icon: Shield, label: 'Rôles & Permissions', path: '/admin-backoffice/roles', active: true },
-  { icon: Database, label: 'Base de données', path: '/admin-backoffice/database', active: true },
+  { icon: Shield, label: 'Rôles & Permissions', path: '/admin-backoffice/roles', active: false },
+  { icon: Database, label: 'Base de données', path: '/admin-backoffice/database', active: false },
   { icon: BarChart3, label: 'Statistiques', path: '/admin-backoffice/stats', active: true },
   { icon: Settings, label: 'Configuration', path: '/admin-backoffice/settings', active: true },
 ];

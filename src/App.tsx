@@ -133,18 +133,17 @@ function App() {
             <Route path="/solutions/comptabilite" element={<ComptabiliteSolution />} />
             <Route path="/solutions/commerciale" element={<CommercialeSolution />} />
             <Route path="/admin/backend" element={<AdminBackend />} />
-            <Route path="/admin/backoffice" element={<AdminBackoffice />} />
+            
+            {/* Routes Backoffice standardisées */}
             <Route path="/admin-backoffice" element={<AdminBackoffice />} />
-            <Route path="/admin/backoffice/users" element={<AdminBackofficeUsers />} />
-            <Route path="/admin/backoffice/companies" element={<AdminBackofficeCompanies />} />
-            <Route path="/admin/backoffice/stats" element={<AdminBackofficeStats />} />
-            <Route path="/admin/backoffice/settings" element={<AdminBackofficeSettings />} />
-            <Route path="/admin/backoffice/solution-entreprise" element={<AdminBackofficeSolutionEntreprise />} />
-            <Route path="/admin/backoffice/solution-comptabilite" element={<AdminBackofficeSolutionComptabilite />} />
-            <Route path="/admin/backoffice/solution-commerciale" element={<AdminBackofficeSolutionCommerciale />} />
+            <Route path="/admin-backoffice/users" element={<AdminBackofficeUsers />} />
+            <Route path="/admin-backoffice/companies" element={<AdminBackofficeCompanies />} />
+            <Route path="/admin-backoffice/stats" element={<AdminBackofficeStats />} />
+            <Route path="/admin-backoffice/settings" element={<AdminBackofficeSettings />} />
+            <Route path="/admin-backoffice/solution/entreprise" element={<AdminBackofficeSolutionEntreprise />} />
             <Route path="/admin-backoffice/solution/comptabilite" element={<AdminBackofficeSolutionComptabilite />} />
             <Route path="/admin-backoffice/solution/commerciale" element={<AdminBackofficeSolutionCommerciale />} />
-            <Route path="/admin-backoffice/solution/entreprise" element={<AdminBackofficeSolutionEntreprise />} />
+            
             <Route path="/tpe/onboarding" element={<TPEOnboarding />} />
             <Route path="/tpe/modules" element={<TPEModules />} />
             <Route path="*" element={<NotFound />} />

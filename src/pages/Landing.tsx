@@ -19,8 +19,8 @@ const Landing = () => {
       <HeroSection />
       <FeaturesSection />
       <TrustedCompaniesSection />
-      <PricingSection />
       <AdvantagesSection />
+      <PricingSection />
       <PartnersSection />
       <SolutionsComparisonSection />
       <TestimonialsSection />

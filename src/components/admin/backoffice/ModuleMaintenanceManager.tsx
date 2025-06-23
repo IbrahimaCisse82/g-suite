@@ -148,7 +148,7 @@ export const ModuleMaintenanceManager = () => {
                           <SelectValue placeholder="Sélectionner un sous-module" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="">Tout le module</SelectItem>
+                          <SelectItem value="all">Tout le module</SelectItem>
                           {modules.find(m => m.id === newMaintenance.module_name)?.submodules.map((sub) => (
                             <SelectItem key={sub} value={sub}>
                               {sub}

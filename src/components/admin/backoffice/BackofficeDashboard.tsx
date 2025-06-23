@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -19,6 +18,8 @@ import {
 import { toast } from 'sonner';
 import { ModuleMaintenanceManager } from './ModuleMaintenanceManager';
 import { CompanyAccountsManager } from './CompanyAccountsManager';
+import { AdminSidecar } from '../AdminSidecar';
+import { AdminNotificationButton } from '../AdminNotificationButton';
 
 interface PendingRequest {
   id: string;
@@ -35,6 +36,8 @@ interface PendingRequest {
 const mockPendingRequests: PendingRequest[] = [];
 
 export const BackofficeDashboard = () => {
+  const [isSidecarOpen, setIsSidecarOpen] = useState(false);
+
   const getModuleIcon = (module: string) => {
     switch (module) {
       case 'entreprise':
@@ -80,14 +83,19 @@ export const BackofficeDashboard = () => {
 
   return (
     <div className="space-y-6">
-      {/* En-tête du Dashboard */}
+      {/* En-tête du Dashboard avec bouton notification */}
       <div className="bg-gradient-to-r from-green-50 to-blue-50 p-6 rounded-lg border border-gray-200">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">
-          Dashboard Admin Backoffice
-        </h1>
-        <p className="text-gray-600">
-          Gérez les demandes de licences, la maintenance des modules et supervisez l'activité du système
-        </p>
+        <div className="flex justify-between items-start">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+              Dashboard Admin Backoffice
+            </h1>
+            <p className="text-gray-600">
+              Gérez les demandes de licences, la maintenance des modules et supervisez l'activité du système
+            </p>
+          </div>
+          <AdminNotificationButton onClick={() => setIsSidecarOpen(true)} />
+        </div>
       </div>
 
       {/* Statistiques rapides */}
@@ -188,6 +196,12 @@ export const BackofficeDashboard = () => {
           <CompanyAccountsManager />
         </TabsContent>
       </Tabs>
+
+      {/* Sidecar de notifications */}
+      <AdminSidecar 
+        isOpen={isSidecarOpen}
+        onClose={() => setIsSidecarOpen(false)}
+      />
     </div>
   );
 };

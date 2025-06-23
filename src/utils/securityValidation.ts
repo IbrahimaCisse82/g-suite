@@ -52,31 +52,59 @@ export class SecurityValidator {
     return isValidDate && matchesFormat && isReasonableDate;
   }
 
-  // Enhanced rate limiting with database fallback
+  // Enhanced rate limiting check using database
   static async checkRateLimit(
     key: string, 
     maxAttempts: number = 5, 
     windowMs: number = 900000
   ): Promise<boolean> {
     try {
-      const now = Date.now();
-      const storageKey = `rate_limit_${this.sanitizeHtml(key)}`;
-      const attempts = JSON.parse(localStorage.getItem(storageKey) || '[]');
+      // Import SecurityService dynamically to avoid circular dependency
+      const { SecurityService } = await import('@/services/securityService');
       
-      // Remove old attempts outside the time window
-      const validAttempts = attempts.filter((timestamp: number) => now - timestamp < windowMs);
+      const sanitizedKey = this.sanitizeHtml(key);
+      const windowMinutes = Math.floor(windowMs / 60000);
       
-      if (validAttempts.length >= maxAttempts) {
-        return false; // Rate limit exceeded
-      }
-      
-      validAttempts.push(now);
-      localStorage.setItem(storageKey, JSON.stringify(validAttempts));
-      return true;
+      return await SecurityService.checkRateLimit(
+        sanitizedKey,
+        'generic_action',
+        maxAttempts,
+        windowMinutes,
+        windowMinutes
+      );
     } catch (error) {
       console.error('Rate limit check failed:', error);
       return true; // Fail open for availability
     }
+  }
+
+  // Validate admin credentials format
+  static validateAdminCredentials(email: string, password: string): { valid: boolean; errors: string[] } {
+    const errors: string[] = [];
+
+    // Email validation
+    if (!email || typeof email !== 'string') {
+      errors.push('Email requis');
+    } else if (!this.validateEmail(email)) {
+      errors.push('Format d\'email invalide');
+    }
+
+    // Password validation
+    if (!password || typeof password !== 'string') {
+      errors.push('Mot de passe requis');
+    } else if (password.length < 8) {
+      errors.push('Mot de passe trop court (minimum 8 caractères)');
+    }
+
+    return { valid: errors.length === 0, errors };
+  }
+
+  // Validate session token format
+  static validateSessionToken(token: string): boolean {
+    if (!token || typeof token !== 'string') return false;
+    // Session tokens should be UUIDs with timestamp suffix
+    const tokenRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}-[0-9a-z]+$/i;
+    return tokenRegex.test(token) && token.length <= 100;
   }
 
   // Validate invoice data with comprehensive checks

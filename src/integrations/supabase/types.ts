@@ -653,6 +653,84 @@ export type Database = {
         }
         Relationships: []
       }
+      rate_limits: {
+        Row: {
+          action_type: string
+          attempt_count: number | null
+          blocked_until: string | null
+          created_at: string
+          id: string
+          identifier: string
+          updated_at: string
+          window_start: string
+        }
+        Insert: {
+          action_type: string
+          attempt_count?: number | null
+          blocked_until?: string | null
+          created_at?: string
+          id?: string
+          identifier: string
+          updated_at?: string
+          window_start?: string
+        }
+        Update: {
+          action_type?: string
+          attempt_count?: number | null
+          blocked_until?: string | null
+          created_at?: string
+          id?: string
+          identifier?: string
+          updated_at?: string
+          window_start?: string
+        }
+        Relationships: []
+      }
+      security_audit_log: {
+        Row: {
+          created_at: string
+          error_message: string | null
+          event_type: string
+          id: string
+          ip_address: unknown | null
+          new_values: Json | null
+          old_values: Json | null
+          resource_id: string | null
+          resource_type: string | null
+          success: boolean
+          user_agent: string | null
+          user_identifier: string | null
+        }
+        Insert: {
+          created_at?: string
+          error_message?: string | null
+          event_type: string
+          id?: string
+          ip_address?: unknown | null
+          new_values?: Json | null
+          old_values?: Json | null
+          resource_id?: string | null
+          resource_type?: string | null
+          success?: boolean
+          user_agent?: string | null
+          user_identifier?: string | null
+        }
+        Update: {
+          created_at?: string
+          error_message?: string | null
+          event_type?: string
+          id?: string
+          ip_address?: unknown | null
+          new_values?: Json | null
+          old_values?: Json | null
+          resource_id?: string | null
+          resource_type?: string | null
+          success?: boolean
+          user_agent?: string | null
+          user_identifier?: string | null
+        }
+        Relationships: []
+      }
       security_events: {
         Row: {
           admin_email: string | null
@@ -934,6 +1012,16 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      check_rate_limit_secure: {
+        Args: {
+          identifier_param: string
+          action_type_param: string
+          max_attempts?: number
+          window_minutes?: number
+          block_minutes?: number
+        }
+        Returns: boolean
+      }
       cleanup_expired_sessions: {
         Args: Record<PropertyKey, never>
         Returns: number
@@ -946,6 +1034,21 @@ export type Database = {
         Args: { user_id: string }
         Returns: boolean
       }
+      log_security_audit: {
+        Args: {
+          event_type_param: string
+          user_identifier_param?: string
+          resource_type_param?: string
+          resource_id_param?: string
+          old_values_param?: Json
+          new_values_param?: Json
+          success_param?: boolean
+          error_message_param?: string
+          ip_address_param?: string
+          user_agent_param?: string
+        }
+        Returns: string
+      }
       log_security_event: {
         Args: {
           event_type_param: string
@@ -956,6 +1059,18 @@ export type Database = {
           event_data_param?: Json
         }
         Returns: string
+      }
+      sanitize_input: {
+        Args: { input_text: string }
+        Returns: string
+      }
+      validate_admin_session_secure: {
+        Args: { session_token_param: string; admin_email_param: string }
+        Returns: boolean
+      }
+      validate_email_format: {
+        Args: { email_text: string }
+        Returns: boolean
       }
       validate_password_strength: {
         Args: { password_param: string }

@@ -31,6 +31,70 @@ export class SecurityService {
     }
   }
 
+  // Enhanced audit logging using the new function
+  static async logSecurityAudit(params: {
+    eventType: string;
+    userIdentifier?: string;
+    resourceType?: string;
+    resourceId?: string;
+    oldValues?: any;
+    newValues?: any;
+    success?: boolean;
+    errorMessage?: string;
+  }): Promise<void> {
+    try {
+      const userIP = await this.getUserIP();
+      
+      const { error } = await supabase.rpc('log_security_audit', {
+        event_type_param: params.eventType,
+        user_identifier_param: params.userIdentifier || null,
+        resource_type_param: params.resourceType || null,
+        resource_id_param: params.resourceId || null,
+        old_values_param: params.oldValues || null,
+        new_values_param: params.newValues || null,
+        success_param: params.success ?? true,
+        error_message_param: params.errorMessage || null,
+        ip_address_param: userIP,
+        user_agent_param: navigator.userAgent
+      });
+
+      if (error) {
+        console.error('Failed to log security audit:', error);
+      }
+    } catch (error) {
+      console.error('Security audit logging error:', error);
+    }
+  }
+
+  // Enhanced rate limiting using database function
+  static async checkRateLimit(
+    identifier: string,
+    actionType: string,
+    maxAttempts: number = 5,
+    windowMinutes: number = 15,
+    blockMinutes: number = 15
+  ): Promise<boolean> {
+    try {
+      const { data, error } = await supabase.rpc('check_rate_limit_secure', {
+        identifier_param: identifier,
+        action_type_param: actionType,
+        max_attempts: maxAttempts,
+        window_minutes: windowMinutes,
+        block_minutes: blockMinutes
+      });
+
+      if (error) {
+        console.error('Rate limit check error:', error);
+        return false; // Fail closed for security
+      }
+
+      return data;
+    } catch (error) {
+      console.error('Rate limit check error:', error);
+      return false;
+    }
+  }
+
   // Validate password strength using the RPC function
   static async validatePasswordStrength(password: string): Promise<boolean> {
     try {
@@ -46,6 +110,26 @@ export class SecurityService {
       return data;
     } catch (error) {
       console.error('Password validation error:', error);
+      return false;
+    }
+  }
+
+  // Enhanced admin session validation
+  static async validateAdminSession(sessionToken: string, adminEmail: string): Promise<boolean> {
+    try {
+      const { data, error } = await supabase.rpc('validate_admin_session_secure', {
+        session_token_param: sessionToken,
+        admin_email_param: adminEmail
+      });
+
+      if (error) {
+        console.error('Session validation error:', error);
+        return false;
+      }
+
+      return data;
+    } catch (error) {
+      console.error('Session validation error:', error);
       return false;
     }
   }
@@ -91,27 +175,63 @@ export class SecurityService {
     }
   }
 
-  // Get recent security events (using a custom query approach)
+  // Get recent security events from the audit log
   static async getRecentSecurityEvents(): Promise<any[]> {
     try {
-      // Since we can't directly query security_events due to TypeScript types,
-      // we'll return an empty array for now and implement a custom RPC if needed
-      return [];
+      const { data, error } = await supabase
+        .from('security_audit_log')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(50);
+
+      if (error) {
+        console.error('Error fetching security audit events:', error);
+        return [];
+      }
+
+      return data || [];
     } catch (error) {
       console.error('Error fetching security events:', error);
       return [];
     }
   }
 
-  // Get active admin sessions (using a custom query approach)
+  // Get active admin sessions
   static async getActiveAdminSessions(): Promise<any[]> {
     try {
-      // Since we can't directly query admin_sessions due to TypeScript types,
-      // we'll return an empty array for now and implement a custom RPC if needed
-      return [];
+      const { data, error } = await supabase
+        .from('admin_sessions')
+        .select('*')
+        .eq('is_active', true)
+        .gt('expires_at', new Date().toISOString())
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching admin sessions:', error);
+        return [];
+      }
+
+      return data || [];
     } catch (error) {
       console.error('Error fetching admin sessions:', error);
       return [];
     }
+  }
+
+  // Input sanitization helper
+  static sanitizeInput(input: string): string {
+    if (!input) return input;
+    return input.trim().replace(/[<>"'&;]/g, '');
+  }
+
+  // Email validation helper
+  static validateEmailFormat(email: string): boolean {
+    const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+    return emailRegex.test(email) && email.length <= 255 && email.length >= 5;
+  }
+
+  // Generate secure session token
+  static generateSessionToken(): string {
+    return crypto.randomUUID() + '-' + Date.now().toString(36);
   }
 }

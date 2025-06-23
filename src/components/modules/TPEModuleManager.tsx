@@ -5,13 +5,13 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ModuleToggle } from './ModuleToggle';
-import { Calculator, ShoppingBag, Users, Building, FileText, Package } from 'lucide-react';
+import { Calculator, ShoppingBag, Users, Building, FileText, Package, LucideIcon } from 'lucide-react';
 
 interface TPEModule {
   id: string;
   name: string;
   description: string;
-  icon: React.ElementType;
+  icon: LucideIcon;
   price: number;
   features: string[];
   enabled: boolean;

@@ -49,7 +49,7 @@ const Dashboard = () => {
 
   // Vérifier si l'utilisateur préfère l'interface TPE simplifiée
   const isTPEMode = localStorage.getItem('tpe_selected_module') || moduleType === 'entreprise';
-  const companySize = profile?.companies?.employee_count || 'unknown';
+  const companySize = profile?.companies?.[0]?.employee_count || 'unknown';
 
   if (isLoading) {
     return (

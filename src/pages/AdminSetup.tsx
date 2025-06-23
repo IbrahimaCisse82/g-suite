@@ -1,20 +1,20 @@
 
 import React from 'react';
-import { Layout } from '../components/Layout';
-import { AdminCredentialsManager } from '../components/admin/AdminCredentialsManager';
+import { AdminBackofficeLayout } from '@/components/admin/AdminBackofficeLayout';
+import { AdminCredentialsManager } from '@/components/admin/AdminCredentialsManager';
 
 export const AdminSetup = () => {
   return (
-    <Layout>
+    <AdminBackofficeLayout>
       <div className="p-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">Configuration Administrateurs</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Configuration Administrateurs</h1>
+          <p className="text-gray-600">
             Gérez les comptes et identifiants des administrateurs système
           </p>
         </div>
         <AdminCredentialsManager />
       </div>
-    </Layout>
+    </AdminBackofficeLayout>
   );
 };

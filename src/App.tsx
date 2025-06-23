@@ -142,6 +142,9 @@ function App() {
             <Route path="/admin/backoffice/solution-entreprise" element={<AdminBackofficeSolutionEntreprise />} />
             <Route path="/admin/backoffice/solution-comptabilite" element={<AdminBackofficeSolutionComptabilite />} />
             <Route path="/admin/backoffice/solution-commerciale" element={<AdminBackofficeSolutionCommerciale />} />
+            <Route path="/admin-backoffice/solution/comptabilite" element={<AdminBackofficeSolutionComptabilite />} />
+            <Route path="/admin-backoffice/solution/commerciale" element={<AdminBackofficeSolutionCommerciale />} />
+            <Route path="/admin-backoffice/solution/entreprise" element={<AdminBackofficeSolutionEntreprise />} />
             <Route path="/tpe/onboarding" element={<TPEOnboarding />} />
             <Route path="/tpe/modules" element={<TPEModules />} />
             <Route path="*" element={<NotFound />} />

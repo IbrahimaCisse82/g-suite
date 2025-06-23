@@ -109,6 +109,7 @@ function App() {
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/admin-login" element={<AdminLogin />} />
             <Route path="/admin/setup" element={<AdminSetup />} />
+            <Route path="/admin-setup" element={<AdminSetup />} />
             <Route path="/admin/setup-success" element={<AdminSetupSuccess />} />
             <Route path="/admin/company-setup" element={<CompanyAdminSetup />} />
             <Route path="/admin/users" element={<AdminUserManagement />} />

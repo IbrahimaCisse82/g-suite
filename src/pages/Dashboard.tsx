@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { LayoutDashboard, Users, FileText, Package, TrendingUp, DollarSign } from 'lucide-react';
@@ -49,7 +48,8 @@ const Dashboard = () => {
 
   // Vérifier si l'utilisateur préfère l'interface TPE simplifiée
   const isTPEMode = localStorage.getItem('tpe_selected_module') || moduleType === 'entreprise';
-  const companySize = profile?.companies?.[0]?.employee_count || 'unknown';
+  // Simuler une taille d'entreprise pour la démo (en réalité, cela viendrait des données de l'entreprise)
+  const companySize = 'micro'; // Pour l'instant, on simule une micro-entreprise
 
   if (isLoading) {
     return (

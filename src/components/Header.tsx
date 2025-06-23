@@ -4,17 +4,21 @@ import { Button } from '@/components/ui/button';
 import { LogOut, User, Shield } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useSecureAdminAuth } from '@/hooks/useSecureAdminAuth';
+import { useNavigate } from 'react-router-dom';
 
 export const Header = () => {
   const { user, signOut } = useAuth();
   const { isAuthenticated: isAdmin, adminEmail, logout: adminLogout } = useSecureAdminAuth();
+  const navigate = useNavigate();
 
-  const handleSignOut = () => {
+  const handleSignOut = async () => {
     if (isAdmin) {
-      adminLogout();
+      await adminLogout();
     } else {
-      signOut();
+      await signOut();
     }
+    // Rediriger vers la landing page après déconnexion
+    navigate('/');
   };
 
   return (

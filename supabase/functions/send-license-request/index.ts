@@ -35,8 +35,8 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Email to support team
     const supportEmailResponse = await resend.emails.send({
-      from: "GrowHub Sénégal <contact@growhubsenegal.com>",
-      to: ["support@g-suite.com"],
+      from: "G-Suite Support <support@g-suiteapp.com>",
+      to: ["support@g-suiteapp.com"],
       subject: `Nouvelle demande de clé licence G-Suite - ${data.companyName}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
@@ -82,18 +82,18 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Confirmation email to company
     const confirmationEmailResponse = await resend.emails.send({
-      from: "GrowHub Sénégal <contact@growhubsenegal.com>",
+      from: "G-Suite Support <support@g-suiteapp.com>",
       to: [data.companyEmail],
-      subject: "Demande de clé licence G-Suite reçue",
+      subject: "Demande de clé licence G-Suite reçue - Activation dans 24h",
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="background-color: #1e293b; color: white; padding: 20px; border-radius: 8px 8px 0 0;">
-            <h1 style="margin: 0; color: white;">GrowHub Sénégal</h1>
-            <p style="margin: 10px 0 0 0; color: #e2e8f0;">Votre solution de gestion d'entreprise G-Suite</p>
+            <h1 style="margin: 0; color: white;">G-Suite Application</h1>
+            <p style="margin: 10px 0 0 0; color: #e2e8f0;">Votre solution de gestion d'entreprise</p>
           </div>
           
           <div style="background-color: #f8fafc; padding: 30px; border-radius: 0 0 8px 8px;">
-            <h2 style="color: #1e293b; margin-top: 0;">Demande reçue avec succès</h2>
+            <h2 style="color: #1e293b; margin-top: 0;">Demande reçue avec succès ✅</h2>
             
             <p style="color: #475569;">Bonjour ${data.contactName},</p>
             
@@ -106,13 +106,14 @@ const handler = async (req: Request): Promise<Response> => {
               <ul style="color: #475569;">
                 <li><strong>Module demandé :</strong> ${data.selectedModule}</li>
                 <li><strong>Entreprise :</strong> ${data.companyName}</li>
+                <li><strong>Email de contact :</strong> ${data.companyEmail}</li>
               </ul>
             </div>
             
             <div style="background-color: #fef3c7; padding: 15px; border-radius: 8px; margin: 20px 0;">
               <p style="color: #92400e; margin: 0;">
-                <strong>⏰ Prochaines étapes :</strong><br>
-                Votre demande sera traitée dans les <strong>24 heures</strong> suivant sa réception. 
+                <strong>⏰ Activation dans 24 heures</strong><br>
+                Votre compte sera activé dans les <strong>24 heures</strong> suivant cette confirmation. 
                 Vous recevrez un email avec votre clé licence une fois celle-ci générée.
               </p>
             </div>
@@ -124,13 +125,13 @@ const handler = async (req: Request): Promise<Response> => {
             <div style="background-color: white; padding: 20px; border-radius: 8px; margin: 20px 0;">
               <h3 style="color: #1e293b; margin-top: 0;">Besoin d'aide ?</h3>
               <p style="color: #475569; margin-bottom: 10px;">
-                Notre équipe est disponible pour vous accompagner :
+                Notre équipe support est disponible pour vous accompagner :
               </p>
               <p style="color: #475569; margin: 5px 0;">
                 📞 <strong>Téléphone :</strong> +221 78 475 28 58
               </p>
               <p style="color: #475569; margin: 5px 0;">
-                📧 <strong>Email :</strong> support@g-suite.com
+                📧 <strong>Email :</strong> support@g-suiteapp.com
               </p>
             </div>
             
@@ -141,8 +142,8 @@ const handler = async (req: Request): Promise<Response> => {
             <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 30px 0;">
             
             <p style="color: #94a3b8; font-size: 14px; text-align: center;">
-              GrowHub Sénégal - Votre partenaire pour la croissance de votre entreprise<br>
-              Cet email a été envoyé automatiquement, merci de ne pas y répondre.
+              G-Suite Application - Votre partenaire pour la croissance de votre entreprise<br>
+              Cet email a été envoyé automatiquement depuis support@g-suiteapp.com
             </p>
           </div>
         </div>

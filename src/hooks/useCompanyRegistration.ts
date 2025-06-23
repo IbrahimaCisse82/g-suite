@@ -6,7 +6,7 @@ import { uploadLogo } from '@/utils/logoUpload';
 import { sendLicenseRequest } from '@/utils/emailService';
 import type { CompanyFormData } from '@/types/company';
 
-export const useCompanyRegistration = (onSuccess?: () => void) => {
+export const useCompanyRegistration = (onSuccess?: (data: { companyName: string; email: string }) => void) => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
@@ -30,21 +30,20 @@ export const useCompanyRegistration = (onSuccess?: () => void) => {
       try {
         await sendLicenseRequest(data, selectedModule);
 
-        toast({
-          title: 'Demande envoyée avec succès',
-          description: 'Votre demande de clé licence a été envoyée à notre équipe support. Vous recevrez une confirmation par email et votre clé licence dans les 24h.',
+        // Appeler onSuccess avec les données nécessaires pour la confirmation
+        onSuccess?.({
+          companyName: data.name,
+          email: data.email
         });
 
       } catch (emailError) {
         console.error('Erreur envoi email:', emailError);
         toast({
           title: 'Entreprise créée',
-          description: 'Votre entreprise a été créée mais l\'email de demande n\'a pas pu être envoyé. Veuillez contacter support@g-suite.com.',
+          description: 'Votre entreprise a été créée mais l\'email de demande n\'a pas pu être envoyé. Veuillez contacter support@g-suiteapp.com.',
           variant: 'destructive',
         });
       }
-
-      onSuccess?.();
       
     } catch (error) {
       console.error('Erreur inattendue:', error);

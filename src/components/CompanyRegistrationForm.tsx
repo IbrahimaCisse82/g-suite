@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -14,6 +13,7 @@ import { CompanyContactInfo } from '@/components/company/CompanyContactInfo';
 import { CompanyBusinessInfo } from '@/components/company/CompanyBusinessInfo';
 import { CompanyLegalFormInfo } from '@/components/company/CompanyLegalFormInfo';
 import { CompanyRepresentativeInfo } from '@/components/company/CompanyRepresentativeInfo';
+import { LicenseRequestConfirmation } from '@/components/company/LicenseRequestConfirmation';
 import { useSearchParams } from "react-router-dom";
 import { getCountryByName } from '@/utils/countryData';
 import type { CompanyFormData } from '@/types/company';
@@ -57,6 +57,8 @@ interface CompanyRegistrationFormProps {
 export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormProps) => {
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string>('');
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [confirmationData, setConfirmationData] = useState<{ companyName: string; email: string } | null>(null);
   const [searchParams] = useSearchParams();
   const moduleParam = searchParams.get('solution');
   const MODULE_OPTIONS = [
@@ -67,7 +69,10 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
   const [selectedModule, setSelectedModule] = useState<string>(
     moduleParam || "entreprise"
   );
-  const { isLoading, submitForm } = useCompanyRegistration(onSuccess);
+  const { isLoading, submitForm } = useCompanyRegistration((data) => {
+    setConfirmationData(data);
+    setShowConfirmation(true);
+  });
 
   const form = useForm<FormData>({
     resolver: zodResolver(companySchema),
@@ -115,6 +120,16 @@ export const CompanyRegistrationForm = ({ onSuccess }: CompanyRegistrationFormPr
   const onSubmit = async (data: FormData) => {
     await submitForm(data as CompanyFormData, logoFile, selectedModule);
   };
+
+  // Afficher le composant de confirmation si la demande a été envoyée
+  if (showConfirmation && confirmationData) {
+    return (
+      <LicenseRequestConfirmation
+        companyName={confirmationData.companyName}
+        email={confirmationData.email}
+      />
+    );
+  }
 
   return (
     <Card className="w-full max-w-2xl mx-auto bg-white shadow-xl border-2 border-slate-300">

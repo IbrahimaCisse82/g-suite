@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -34,7 +33,7 @@ export const SecureAdminLoginForm = () => {
         if (result.isFirstLogin) {
           setShowPasswordCreation(true);
         } else {
-          navigate('/admin');
+          navigate('/admin-backoffice');
         }
       }
     } catch (error: any) {
@@ -47,7 +46,7 @@ export const SecureAdminLoginForm = () => {
 
   const handlePasswordCreated = () => {
     setShowPasswordCreation(false);
-    navigate('/admin');
+    navigate('/admin-backoffice');
   };
 
   return (

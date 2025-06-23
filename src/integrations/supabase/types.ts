@@ -54,6 +54,7 @@ export type Database = {
           created_at: string | null
           currency: string | null
           email: string | null
+          forme_juridique: string | null
           id: string
           initial_setup_completed: boolean | null
           logo_url: string | null
@@ -77,6 +78,7 @@ export type Database = {
           created_at?: string | null
           currency?: string | null
           email?: string | null
+          forme_juridique?: string | null
           id?: string
           initial_setup_completed?: boolean | null
           logo_url?: string | null
@@ -100,6 +102,7 @@ export type Database = {
           created_at?: string | null
           currency?: string | null
           email?: string | null
+          forme_juridique?: string | null
           id?: string
           initial_setup_completed?: boolean | null
           logo_url?: string | null

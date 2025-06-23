@@ -12,23 +12,11 @@ import {
   Home
 } from 'lucide-react';
 
-// Mock data pour les entreprises par solution
+// Mock data pour les entreprises par solution - vidé
 export const companiesBySolution = {
-  comptabilite: [
-    { id: '1', name: 'Cabinet Comptable Expert', admin: 'Amadou Diallo' },
-    { id: '2', name: 'Expertise Compta Plus', admin: 'Fatou Sall' },
-    { id: '3', name: 'Compta Services', admin: 'Omar Ba' }
-  ],
-  commerciale: [
-    { id: '4', name: 'SA Commerce Général', admin: 'Marie Martin' },
-    { id: '5', name: 'Distribution Plus', admin: 'Jean Ndiaye' },
-    { id: '6', name: 'Négoce International', admin: 'Aissatou Fall' }
-  ],
-  entreprise: [
-    { id: '7', name: 'SARL Tech Solutions', admin: 'Jean Dupont' },
-    { id: '8', name: 'Groupe Industriel Sénégal', admin: 'Moussa Diop' },
-    { id: '9', name: 'Holdings & Partners', admin: 'Khadidja Touré' }
-  ]
+  comptabilite: [],
+  commerciale: [],
+  entreprise: []
 };
 
 export const backofficeMenuItems = [

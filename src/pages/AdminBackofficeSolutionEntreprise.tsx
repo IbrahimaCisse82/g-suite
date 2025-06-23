@@ -7,38 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 
 const AdminBackofficeSolutionEntreprise = () => {
-  const entrepriseCompanies = [
-    {
-      id: '7',
-      name: 'SARL Tech Solutions',
-      admin: 'Jean Dupont',
-      email: 'jean@techsolutions.fr',
-      licenseExpiry: '2025-12-31',
-      status: 'active',
-      users: 25,
-      createdAt: '2023-01-15'
-    },
-    {
-      id: '8',
-      name: 'Groupe Industriel Sénégal',
-      admin: 'Moussa Diop',
-      email: 'moussa@industrielsenegal.sn',
-      licenseExpiry: '2025-07-30',
-      status: 'active',
-      users: 45,
-      createdAt: '2023-05-20'
-    },
-    {
-      id: '9',
-      name: 'Holdings & Partners',
-      admin: 'Khadidja Touré',
-      email: 'khadidja@holdingspartners.sn',
-      licenseExpiry: '2025-10-15',
-      status: 'active',
-      users: 18,
-      createdAt: '2023-11-10'
-    }
-  ];
+  const entrepriseCompanies: any[] = [];
 
   return (
     <AdminBackofficeLayout>
@@ -98,7 +67,7 @@ const AdminBackofficeSolutionEntreprise = () => {
                 <div>
                   <p className="text-sm text-gray-600">Total Utilisateurs</p>
                   <p className="text-2xl font-bold text-purple-600">
-                    {entrepriseCompanies.reduce((sum, c) => sum + c.users, 0)}
+                    {entrepriseCompanies.reduce((sum, c) => sum + (c.users || 0), 0)}
                   </p>
                 </div>
                 <User className="w-8 h-8 text-purple-600" />
@@ -112,47 +81,55 @@ const AdminBackofficeSolutionEntreprise = () => {
             <CardTitle>Entreprises - Solution Entreprise</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b">
-                    <th className="text-left p-4">Entreprise</th>
-                    <th className="text-left p-4">Administrateur</th>
-                    <th className="text-left p-4">Email</th>
-                    <th className="text-left p-4">Utilisateurs</th>
-                    <th className="text-left p-4">Expiration Licence</th>
-                    <th className="text-left p-4">Statut</th>
-                    <th className="text-left p-4">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {entrepriseCompanies.map((company) => (
-                    <tr key={company.id} className="border-b hover:bg-gray-50">
-                      <td className="p-4 font-medium">{company.name}</td>
-                      <td className="p-4 text-gray-600">{company.admin}</td>
-                      <td className="p-4 text-gray-600">{company.email}</td>
-                      <td className="p-4">
-                        <Badge variant="outline">{company.users} utilisateurs</Badge>
-                      </td>
-                      <td className="p-4">{new Date(company.licenseExpiry).toLocaleDateString('fr-FR')}</td>
-                      <td className="p-4">
-                        <Badge className={company.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}>
-                          {company.status === 'active' ? 'Active' : 'Expirée'}
-                        </Badge>
-                      </td>
-                      <td className="p-4">
-                        <div className="flex space-x-2">
-                          <Button size="sm" variant="outline">Voir Détails</Button>
-                          <Button size="sm" className="bg-green-600 hover:bg-green-700">
-                            Renouveler
-                          </Button>
-                        </div>
-                      </td>
+            {entrepriseCompanies.length === 0 ? (
+              <div className="text-center py-8">
+                <Building2 className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <p className="text-gray-500">Aucune entreprise utilisant la solution Entreprise</p>
+                <p className="text-sm text-gray-400">Les entreprises apparaîtront ici une fois enregistrées</p>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b">
+                      <th className="text-left p-4">Entreprise</th>
+                      <th className="text-left p-4">Administrateur</th>
+                      <th className="text-left p-4">Email</th>
+                      <th className="text-left p-4">Utilisateurs</th>
+                      <th className="text-left p-4">Expiration Licence</th>
+                      <th className="text-left p-4">Statut</th>
+                      <th className="text-left p-4">Actions</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {entrepriseCompanies.map((company) => (
+                      <tr key={company.id} className="border-b hover:bg-gray-50">
+                        <td className="p-4 font-medium">{company.name}</td>
+                        <td className="p-4 text-gray-600">{company.admin}</td>
+                        <td className="p-4 text-gray-600">{company.email}</td>
+                        <td className="p-4">
+                          <Badge variant="outline">{company.users} utilisateurs</Badge>
+                        </td>
+                        <td className="p-4">{new Date(company.licenseExpiry).toLocaleDateString('fr-FR')}</td>
+                        <td className="p-4">
+                          <Badge className={company.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}>
+                            {company.status === 'active' ? 'Active' : 'Expirée'}
+                          </Badge>
+                        </td>
+                        <td className="p-4">
+                          <div className="flex space-x-2">
+                            <Button size="sm" variant="outline">Voir Détails</Button>
+                            <Button size="sm" className="bg-green-600 hover:bg-green-700">
+                              Renouveler
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

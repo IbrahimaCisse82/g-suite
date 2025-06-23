@@ -29,7 +29,7 @@ export const AdminNavigation = () => {
     try {
       await supabase.auth.signOut();
       toast.success('Déconnexion réussie');
-      window.location.href = '/admin-login';
+      window.location.href = '/';
     } catch (error) {
       toast.error('Erreur lors de la déconnexion');
     }

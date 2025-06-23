@@ -5,8 +5,8 @@ import { LogOut, Building2 } from 'lucide-react';
 
 export const NavigationFooter = () => {
   const handleLogout = () => {
-    // Logic de déconnexion
-    window.location.href = '/admin-login';
+    // Logic de déconnexion - redirection vers la page principale
+    window.location.href = '/';
   };
 
   return (

@@ -56,12 +56,13 @@ import { SubscriptionSettings } from "./pages/SubscriptionSettings";
 import EntrepriseSolution from "./pages/solutions/EntrepriseSolution";
 import ComptabiliteSolution from "./pages/solutions/ComptabiliteSolution";
 import CommercialeSolution from "./pages/solutions/CommercialeSolution";
-import { AdminBackend } from "./pages/AdminBackend";
 import AdminBackoffice from "./pages/AdminBackoffice";
 import AdminBackofficeUsers from "./pages/AdminBackofficeUsers";
 import AdminBackofficeCompanies from "./pages/AdminBackofficeCompanies";
 import AdminBackofficeStats from "./pages/AdminBackofficeStats";
 import AdminBackofficeSettings from "./pages/AdminBackofficeSettings";
+import AdminBackofficeRoles from "./pages/AdminBackofficeRoles";
+import AdminBackofficeDatabase from "./pages/AdminBackofficeDatabase";
 import AdminBackofficeSolutionEntreprise from "./pages/AdminBackofficeSolutionEntreprise";
 import AdminBackofficeSolutionComptabilite from "./pages/AdminBackofficeSolutionComptabilite";
 import AdminBackofficeSolutionCommerciale from "./pages/AdminBackofficeSolutionCommerciale";
@@ -77,11 +78,16 @@ function App() {
         <Toaster />
         <BrowserRouter>
           <Routes>
+            {/* Routes publiques */}
             <Route path="/" element={<Landing />} />
             <Route path="/index" element={<Index />} />
             <Route path="/login" element={<UserLogin />} />
-            <Route path="/user-login" element={<UserLogin />} />
             <Route path="/register" element={<CompanyRegistration />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/trial-activation" element={<TrialActivation />} />
+            
+            {/* Routes application principale */}
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/accounting" element={<Accounting />} />
             <Route path="/chart-of-accounts" element={<ChartOfAccounts />} />
@@ -97,6 +103,12 @@ function App() {
             <Route path="/analytics" element={<Analytics />} />
             <Route path="/training" element={<TrainingSupport />} />
             <Route path="/training-standalone" element={<TrainingSupportStandalone />} />
+            <Route path="/budget" element={<Budget />} />
+            <Route path="/integrations" element={<Integrations />} />
+            <Route path="/security" element={<Security />} />
+            <Route path="/mobile" element={<Mobile />} />
+            
+            {/* Routes paramètres */}
             <Route path="/settings" element={<SettingsLayout />}>
               <Route index element={<Settings />} />
               <Route path="profile" element={<ProfileSettings />} />
@@ -104,19 +116,37 @@ function App() {
               <Route path="licenses" element={<LicensesSettings />} />
               <Route path="subscriptions" element={<SubscriptionSettings />} />
             </Route>
-            <Route path="/security" element={<Security />} />
+            
+            {/* Routes admin */}
             <Route path="/admin" element={<AdminPanel />} />
             <Route path="/admin/login" element={<AdminLogin />} />
-            <Route path="/admin-login" element={<AdminLogin />} />
             <Route path="/admin/setup" element={<AdminSetup />} />
-            <Route path="/admin-setup" element={<AdminSetup />} />
             <Route path="/admin/setup-success" element={<AdminSetupSuccess />} />
             <Route path="/admin/company-setup" element={<CompanyAdminSetup />} />
             <Route path="/admin/users" element={<AdminUserManagement />} />
-            <Route path="/trial-activation" element={<TrialActivation />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/mobile" element={<Mobile />} />
+            
+            {/* Routes backoffice admin */}
+            <Route path="/admin-backoffice" element={<AdminBackoffice />} />
+            <Route path="/admin-backoffice/users" element={<AdminBackofficeUsers />} />
+            <Route path="/admin-backoffice/companies" element={<AdminBackofficeCompanies />} />
+            <Route path="/admin-backoffice/roles" element={<AdminBackofficeRoles />} />
+            <Route path="/admin-backoffice/database" element={<AdminBackofficeDatabase />} />
+            <Route path="/admin-backoffice/stats" element={<AdminBackofficeStats />} />
+            <Route path="/admin-backoffice/settings" element={<AdminBackofficeSettings />} />
+            <Route path="/admin-backoffice/solution/entreprise" element={<AdminBackofficeSolutionEntreprise />} />
+            <Route path="/admin-backoffice/solution/comptabilite" element={<AdminBackofficeSolutionComptabilite />} />
+            <Route path="/admin-backoffice/solution/commerciale" element={<AdminBackofficeSolutionCommerciale />} />
+            
+            {/* Routes solutions */}
+            <Route path="/solutions/entreprise" element={<EntrepriseSolution />} />
+            <Route path="/solutions/comptabilite" element={<ComptabiliteSolution />} />
+            <Route path="/solutions/commerciale" element={<CommercialeSolution />} />
+            
+            {/* Routes TPE */}
+            <Route path="/tpe/onboarding" element={<TPEOnboarding />} />
+            <Route path="/tpe/modules" element={<TPEModules />} />
+            
+            {/* Routes informatives */}
             <Route path="/help" element={<HelpCenter />} />
             <Route path="/formation" element={<Formation />} />
             <Route path="/contact" element={<Contact />} />
@@ -127,25 +157,8 @@ function App() {
             <Route path="/privacy" element={<PrivacyPolicy />} />
             <Route path="/terms" element={<TermsOfService />} />
             <Route path="/cookies" element={<CookiesPolicy />} />
-            <Route path="/budget" element={<Budget />} />
-            <Route path="/integrations" element={<Integrations />} />
-            <Route path="/solutions/entreprise" element={<EntrepriseSolution />} />
-            <Route path="/solutions/comptabilite" element={<ComptabiliteSolution />} />
-            <Route path="/solutions/commerciale" element={<CommercialeSolution />} />
-            <Route path="/admin/backend" element={<AdminBackend />} />
             
-            {/* Routes Backoffice standardisées */}
-            <Route path="/admin-backoffice" element={<AdminBackoffice />} />
-            <Route path="/admin-backoffice/users" element={<AdminBackofficeUsers />} />
-            <Route path="/admin-backoffice/companies" element={<AdminBackofficeCompanies />} />
-            <Route path="/admin-backoffice/stats" element={<AdminBackofficeStats />} />
-            <Route path="/admin-backoffice/settings" element={<AdminBackofficeSettings />} />
-            <Route path="/admin-backoffice/solution/entreprise" element={<AdminBackofficeSolutionEntreprise />} />
-            <Route path="/admin-backoffice/solution/comptabilite" element={<AdminBackofficeSolutionComptabilite />} />
-            <Route path="/admin-backoffice/solution/commerciale" element={<AdminBackofficeSolutionCommerciale />} />
-            
-            <Route path="/tpe/onboarding" element={<TPEOnboarding />} />
-            <Route path="/tpe/modules" element={<TPEModules />} />
+            {/* Route 404 */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

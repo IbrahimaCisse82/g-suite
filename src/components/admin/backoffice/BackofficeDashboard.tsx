@@ -26,38 +26,8 @@ interface PendingRequest {
   message?: string;
 }
 
-const mockPendingRequests: PendingRequest[] = [
-  {
-    id: '1',
-    companyName: 'SARL Nouvelle Entreprise',
-    requestedModule: 'entreprise',
-    requestType: 'new',
-    requestDate: '2024-06-18',
-    adminName: 'Pierre Ndour',
-    adminEmail: 'pierre@nouvelle-entreprise.sn',
-    message: 'Nous souhaitons activer le module entreprise complet'
-  },
-  {
-    id: '2',
-    companyName: 'SA Commerce Général',
-    requestedModule: 'commerciale',
-    requestType: 'renewal',
-    requestDate: '2024-06-17',
-    adminName: 'Marie Martin',
-    adminEmail: 'marie@commerce.sn',
-    message: 'Renouvellement de notre licence commerciale'
-  },
-  {
-    id: '3',
-    companyName: 'Cabinet Expert Compta',
-    requestedModule: 'comptabilite',
-    requestType: 'upgrade',
-    requestDate: '2024-06-16',
-    adminName: 'Ibrahima Sow',
-    adminEmail: 'ibrahima@expert-compta.sn',
-    message: 'Upgrade vers comptabilité avancée'
-  }
-];
+// Aucune demande pour le moment - données réelles
+const mockPendingRequests: PendingRequest[] = [];
 
 export const BackofficeDashboard = () => {
   const getModuleIcon = (module: string) => {
@@ -122,7 +92,7 @@ export const BackofficeDashboard = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600">Demandes en attente</p>
-                <p className="text-2xl font-bold text-orange-600">{mockPendingRequests.length}</p>
+                <p className="text-2xl font-bold text-orange-600">0</p>
               </div>
               <Clock className="w-8 h-8 text-orange-600" />
             </div>
@@ -134,7 +104,7 @@ export const BackofficeDashboard = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600">Traitées aujourd'hui</p>
-                <p className="text-2xl font-bold text-green-600">12</p>
+                <p className="text-2xl font-bold text-green-600">0</p>
               </div>
               <CheckCircle className="w-8 h-8 text-green-600" />
             </div>
@@ -146,7 +116,7 @@ export const BackofficeDashboard = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600">Licences expirées</p>
-                <p className="text-2xl font-bold text-red-600">5</p>
+                <p className="text-2xl font-bold text-red-600">0</p>
               </div>
               <AlertTriangle className="w-8 h-8 text-red-600" />
             </div>
@@ -158,7 +128,7 @@ export const BackofficeDashboard = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600">Entreprises actives</p>
-                <p className="text-2xl font-bold text-blue-600">142</p>
+                <p className="text-2xl font-bold text-blue-600">0</p>
               </div>
               <Building2 className="w-8 h-8 text-blue-600" />
             </div>
@@ -173,77 +143,15 @@ export const BackofficeDashboard = () => {
             <Key className="w-5 h-5" />
             <span>Demandes de Licence en Cours</span>
             <Badge variant="outline" className="ml-2">
-              {mockPendingRequests.length} en attente
+              0 en attente
             </Badge>
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {mockPendingRequests.map((request) => {
-              const ModuleIcon = getModuleIcon(request.requestedModule);
-              
-              return (
-                <div key={request.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
-                  <div className="flex justify-between items-start">
-                    <div className="space-y-3 flex-1">
-                      <div className="flex items-center space-x-3">
-                        <ModuleIcon className={`w-5 h-5 ${
-                          request.requestedModule === 'entreprise' ? 'text-purple-600' :
-                          request.requestedModule === 'commerciale' ? 'text-green-600' :
-                          'text-blue-600'
-                        }`} />
-                        <h4 className="font-semibold text-gray-900">{request.companyName}</h4>
-                        {getRequestTypeBadge(request.requestType)}
-                        <Badge className={getModuleBadge(request.requestedModule)}>
-                          {request.requestedModule.charAt(0).toUpperCase() + request.requestedModule.slice(1)}
-                        </Badge>
-                      </div>
-                      
-                      <div className="grid grid-cols-2 gap-4 text-sm">
-                        <div>
-                          <span className="text-gray-500">Admin:</span>
-                          <span className="ml-2 font-medium text-gray-900">{request.adminName}</span>
-                        </div>
-                        <div>
-                          <span className="text-gray-500">Email:</span>
-                          <span className="ml-2 text-gray-700">{request.adminEmail}</span>
-                        </div>
-                      </div>
-                      
-                      <p className="text-sm text-gray-600">
-                        Demandé le {new Date(request.requestDate).toLocaleDateString('fr-FR')}
-                      </p>
-                      
-                      {request.message && (
-                        <div className="bg-gray-50 p-3 rounded-md">
-                          <p className="text-sm italic text-gray-700">
-                            "{request.message}"
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                    
-                    <div className="flex space-x-2 ml-4">
-                      <Button
-                        onClick={() => handleApproveRequest(request)}
-                        size="sm"
-                        className="bg-green-600 hover:bg-green-700 text-white"
-                      >
-                        <CheckCircle className="w-4 h-4 mr-1" />
-                        Approuver
-                      </Button>
-                      <Button
-                        onClick={() => handleRejectRequest(request)}
-                        size="sm"
-                        variant="destructive"
-                      >
-                        Rejeter
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+            <p className="text-gray-500 text-center py-8">
+              Aucune demande de licence en cours
+            </p>
           </div>
         </CardContent>
       </Card>

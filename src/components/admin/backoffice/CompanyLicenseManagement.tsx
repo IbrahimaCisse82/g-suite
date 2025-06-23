@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -40,69 +41,9 @@ interface LicenseRequest {
   isAutomatic?: boolean;
 }
 
-const mockCompanies: CompanyLicense[] = [
-  {
-    id: '1',
-    companyName: 'SARL Tech Solutions',
-    adminName: 'Jean Dupont',
-    adminEmail: 'admin@techsolutions.com',
-    activeModule: 'entreprise',
-    licenseExpiry: '2024-12-31',
-    status: 'active',
-    createdAt: '2024-01-15'
-  },
-  {
-    id: '2',
-    companyName: 'SA Commerce Général',
-    adminName: 'Marie Martin',
-    adminEmail: 'marie@commerce.sn',
-    activeModule: 'commerciale',
-    licenseExpiry: '2024-08-15',
-    status: 'expired',
-    createdAt: '2023-08-15'
-  },
-  {
-    id: '3',
-    companyName: 'Cabinet Comptable Expert',
-    adminName: 'Amadou Diallo',
-    adminEmail: 'amadou@expert-compta.sn',
-    activeModule: 'comptabilite',
-    licenseExpiry: '2025-03-20',
-    status: 'active',
-    createdAt: '2024-03-20'
-  }
-];
-
-const mockRequests: LicenseRequest[] = [
-  {
-    id: '1',
-    companyName: 'SARL Nouvelle Entreprise',
-    requestedModule: 'entreprise',
-    requestType: 'new',
-    requestDate: '2024-06-18',
-    status: 'pending',
-    message: 'Nous souhaitons activer le module entreprise complet'
-  },
-  {
-    id: '2',
-    companyName: 'SA Commerce Général',
-    requestedModule: 'commerciale',
-    requestType: 'renewal',
-    requestDate: '2024-06-17',
-    status: 'pending',
-    message: '[AUTOMATIQUE] Renouvellement automatique - Licence expire le 15/08/2024',
-    isAutomatic: true
-  },
-  {
-    id: '3',
-    companyName: 'Cabinet Comptable Expert',
-    requestedModule: 'entreprise',
-    requestType: 'upgrade',
-    requestDate: '2024-06-16',
-    status: 'pending',
-    message: '[UPGRADE] Demande d\'upgrade depuis Comptabilité vers Gestion d\'Entreprise pour accéder aux fonctionnalités avancées'
-  }
-];
+// Aucune entreprise ni demande pour le moment - données réelles
+const mockCompanies: CompanyLicense[] = [];
+const mockRequests: LicenseRequest[] = [];
 
 export const CompanyLicenseManagement = () => {
   const [companies, setCompanies] = useState<CompanyLicense[]>(mockCompanies);
@@ -216,48 +157,14 @@ export const CompanyLicenseManagement = () => {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {companies.map((company) => (
-              <div key={company.id} className="border rounded-lg p-4 space-y-3">
-                <div className="flex justify-between items-start">
-                  <div className="space-y-2">
-                    <div className="flex items-center space-x-3">
-                      <h3 className="font-semibold text-lg">{company.companyName}</h3>
-                      {getStatusBadge(company.status)}
-                    </div>
-                    <div className="flex items-center space-x-2 text-sm text-gray-600">
-                      <User className="w-4 h-4" />
-                      <span>{company.adminName} ({company.adminEmail})</span>
-                    </div>
-                    <div className="flex items-center space-x-4">
-                      <Badge className={getModuleBadge(company.activeModule)}>
-                        <Key className="w-3 h-3 mr-1" />
-                        {company.activeModule.charAt(0).toUpperCase() + company.activeModule.slice(1)}
-                      </Badge>
-                      <div className="flex items-center space-x-1 text-sm">
-                        <Calendar className="w-4 h-4" />
-                        <span>Expire le {new Date(company.licenseExpiry).toLocaleDateString('fr-FR')}</span>
-                      </div>
-                    </div>
-                  </div>
-                  <Button
-                    onClick={() => {
-                      setSelectedCompany(company);
-                      setIsRenewalDialogOpen(true);
-                    }}
-                    variant="outline"
-                    size="sm"
-                  >
-                    <RefreshCw className="w-4 h-4 mr-1" />
-                    Réactiver
-                  </Button>
-                </div>
-              </div>
-            ))}
+            <p className="text-gray-500 text-center py-8">
+              Aucune entreprise enregistrée pour le moment
+            </p>
           </div>
         </CardContent>
       </Card>
 
-      {/* Demandes de Clé Licence - Enhanced */}
+      {/* Demandes de Clé Licence */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
@@ -265,95 +172,22 @@ export const CompanyLicenseManagement = () => {
             <span>Demandes de Clé Licence</span>
             <div className="flex space-x-2 ml-4">
               <Badge variant="outline" className="text-blue-600">
-                {requests.filter(r => r.requestType === 'new' && r.status === 'pending').length} Nouvelles
+                0 Nouvelles
               </Badge>
               <Badge variant="outline" className="text-orange-600">
-                {requests.filter(r => r.requestType === 'renewal' && r.status === 'pending').length} Renouvellements
+                0 Renouvellements
               </Badge>
               <Badge variant="outline" className="text-purple-600">
-                {requests.filter(r => r.requestType === 'upgrade' && r.status === 'pending').length} Upgrades
+                0 Upgrades
               </Badge>
             </div>
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {requests.map((request) => (
-              <div key={request.id} className={`border rounded-lg p-4 ${getRequestPriorityColor(request.requestType, request.isAutomatic)}`}>
-                <div className="flex justify-between items-start">
-                  <div className="space-y-2">
-                    <div className="flex items-center space-x-3">
-                      <h4 className="font-medium">{request.companyName}</h4>
-                      {getRequestTypeBadge(request.requestType, request.isAutomatic)}
-                      <Badge className={getModuleBadge(request.requestedModule)}>
-                        {request.requestedModule}
-                      </Badge>
-                      {request.isAutomatic && (
-                        <Badge variant="outline" className="text-xs bg-gray-100">
-                          <Clock className="w-3 h-3 mr-1" />
-                          Automatique
-                        </Badge>
-                      )}
-                    </div>
-                    <p className="text-sm text-gray-600">
-                      Demandé le {new Date(request.requestDate).toLocaleDateString('fr-FR')}
-                    </p>
-                    {request.message && (
-                      <div className={`text-sm p-2 rounded ${
-                        request.isAutomatic 
-                          ? 'bg-orange-50 border border-orange-200 text-orange-800' 
-                          : 'bg-gray-50 italic'
-                      }`}>
-                        "{request.message}"
-                      </div>
-                    )}
-                    
-                    {/* Informations spécifiques selon le type */}
-                    {request.requestType === 'renewal' && (
-                      <div className="flex items-center space-x-2 text-sm">
-                        <RefreshCw className="w-4 h-4 text-orange-500" />
-                        <span className="text-orange-700">
-                          {request.isAutomatic ? 'Détecté automatiquement' : 'Demandé manuellement'}
-                        </span>
-                      </div>
-                    )}
-                    
-                    {request.requestType === 'upgrade' && (
-                      <div className="flex items-center space-x-2 text-sm">
-                        <CheckCircle className="w-4 h-4 text-purple-500" />
-                        <span className="text-purple-700">Upgrade vers plan supérieur</span>
-                      </div>
-                    )}
-                  </div>
-                  
-                  {request.status === 'pending' && (
-                    <div className="flex space-x-2">
-                      <Button
-                        onClick={() => handleApproveRequest(request.id)}
-                        size="sm"
-                        className="bg-green-600 hover:bg-green-700"
-                      >
-                        <CheckCircle className="w-4 h-4 mr-1" />
-                        Approuver
-                      </Button>
-                      <Button
-                        onClick={() => handleRejectRequest(request.id)}
-                        size="sm"
-                        variant="destructive"
-                      >
-                        Rejeter
-                      </Button>
-                    </div>
-                  )}
-                  
-                  {request.status !== 'pending' && (
-                    <Badge variant={request.status === 'approved' ? 'default' : 'destructive'}>
-                      {request.status === 'approved' ? 'Approuvé' : 'Rejeté'}
-                    </Badge>
-                  )}
-                </div>
-              </div>
-            ))}
+            <p className="text-gray-500 text-center py-8">
+              Aucune demande de licence pour le moment
+            </p>
           </div>
           
           {/* Bouton pour déclencher manuellement la vérification des renouvellements */}

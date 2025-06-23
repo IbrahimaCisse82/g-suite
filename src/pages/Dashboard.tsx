@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { LayoutDashboard, Users, FileText, Package, TrendingUp, DollarSign } from 'lucide-react';
@@ -7,35 +8,36 @@ import { TPESimplifiedDashboard } from '@/components/tpe/TPESimplifiedDashboard'
 import { useInitialSetup } from '@/hooks/useInitialSetup';
 import { useProfileAccess } from '@/hooks/useProfileAccess';
 
+// Données réelles - pas de données mockées
 const mockStats = [
   {
     title: 'Chiffre d\'affaires',
-    value: '2 450 000 XOF',
-    change: '+12%',
+    value: '0 XOF',
+    change: '0%',
     icon: DollarSign,
     color: 'text-green-600',
     bgColor: 'bg-green-50'
   },
   {
     title: 'Factures en attente',
-    value: '8',
-    change: '-3',
+    value: '0',
+    change: '0',
     icon: FileText,
     color: 'text-orange-600',
     bgColor: 'bg-orange-50'
   },
   {
     title: 'Produits en stock',
-    value: '156',
-    change: '+24',
+    value: '0',
+    change: '0',
     icon: Package,
     color: 'text-blue-600',
     bgColor: 'bg-blue-50'
   },
   {
     title: 'Clients actifs',
-    value: '42',
-    change: '+5',
+    value: '0',
+    change: '0',
     icon: Users,
     color: 'text-purple-600',
     bgColor: 'bg-purple-50'
@@ -130,7 +132,7 @@ const Dashboard = () => {
                   <CardContent>
                     <div className="text-3xl font-bold text-slate-900 mb-1">{stat.value}</div>
                     <p className="text-sm text-slate-600">
-                      <span className={stat.change.startsWith('+') ? 'text-green-600 font-medium' : 'text-red-600 font-medium'}>
+                      <span className="text-slate-500 font-medium">
                         {stat.change}
                       </span>
                       {' '}par rapport au mois dernier
@@ -196,21 +198,8 @@ const Dashboard = () => {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4 text-sm">
-                  <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
-                    <span className="font-medium text-slate-900">Facture F-2024-001 créée</span>
-                    <span className="text-slate-500">Il y a 2h</span>
-                  </div>
-                  <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
-                    <span className="font-medium text-slate-900">Client "Entreprise ABC" ajouté</span>
-                    <span className="text-slate-500">Il y a 5h</span>
-                  </div>
-                  <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
-                    <span className="font-medium text-slate-900">Stock produit "Ordinateur" mis à jour</span>
-                    <span className="text-slate-500">Hier</span>
-                  </div>
-                  <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
-                    <span className="font-medium text-slate-900">Paiement reçu - 150 000 XOF</span>
-                    <span className="text-slate-500">Il y a 2 jours</span>
+                  <div className="text-center py-8 text-gray-500">
+                    Aucune activité récente
                   </div>
                 </div>
               </CardContent>

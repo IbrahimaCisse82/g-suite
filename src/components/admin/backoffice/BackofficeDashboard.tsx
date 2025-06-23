@@ -3,6 +3,7 @@ import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   Clock, 
   CheckCircle, 
@@ -11,9 +12,13 @@ import {
   Building2,
   FileBarChart,
   ShoppingBag,
-  Globe2
+  Globe2,
+  Settings,
+  Users
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { ModuleMaintenanceManager } from './ModuleMaintenanceManager';
+import { CompanyAccountsManager } from './CompanyAccountsManager';
 
 interface PendingRequest {
   id: string;
@@ -81,7 +86,7 @@ export const BackofficeDashboard = () => {
           Dashboard Admin Backoffice
         </h1>
         <p className="text-gray-600">
-          Gérez les demandes de licences et supervisez l'activité du système
+          Gérez les demandes de licences, la maintenance des modules et supervisez l'activité du système
         </p>
       </div>
 
@@ -136,25 +141,53 @@ export const BackofficeDashboard = () => {
         </Card>
       </div>
 
-      {/* Demandes en cours */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <Key className="w-5 h-5" />
-            <span>Demandes de Licence en Cours</span>
-            <Badge variant="outline" className="ml-2">
-              0 en attente
-            </Badge>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <p className="text-gray-500 text-center py-8">
-              Aucune demande de licence en cours
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Tabs pour les différentes sections */}
+      <Tabs defaultValue="overview" className="space-y-4">
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="overview" className="flex items-center space-x-2">
+            <Key className="w-4 h-4" />
+            <span>Vue d'ensemble</span>
+          </TabsTrigger>
+          <TabsTrigger value="maintenance" className="flex items-center space-x-2">
+            <Settings className="w-4 h-4" />
+            <span>Maintenance</span>
+          </TabsTrigger>
+          <TabsTrigger value="accounts" className="flex items-center space-x-2">
+            <Users className="w-4 h-4" />
+            <span>Comptes</span>
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="overview">
+          {/* Demandes en cours */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Key className="w-5 h-5" />
+                <span>Demandes de Licence en Cours</span>
+                <Badge variant="outline" className="ml-2">
+                  0 en attente
+                </Badge>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <p className="text-gray-500 text-center py-8">
+                  Aucune demande de licence en cours
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="maintenance">
+          <ModuleMaintenanceManager />
+        </TabsContent>
+
+        <TabsContent value="accounts">
+          <CompanyAccountsManager />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

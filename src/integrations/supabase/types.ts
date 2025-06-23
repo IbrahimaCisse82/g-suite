@@ -117,6 +117,50 @@ export type Database = {
         }
         Relationships: []
       }
+      company_accounts_status: {
+        Row: {
+          company_id: string
+          created_at: string
+          id: string
+          last_activity: string | null
+          status: string
+          suspension_reason: string | null
+          updated_at: string
+          validity_end_date: string | null
+          validity_start_date: string
+        }
+        Insert: {
+          company_id: string
+          created_at?: string
+          id?: string
+          last_activity?: string | null
+          status?: string
+          suspension_reason?: string | null
+          updated_at?: string
+          validity_end_date?: string | null
+          validity_start_date?: string
+        }
+        Update: {
+          company_id?: string
+          created_at?: string
+          id?: string
+          last_activity?: string | null
+          status?: string
+          suspension_reason?: string | null
+          updated_at?: string
+          validity_end_date?: string | null
+          validity_start_date?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "company_accounts_status_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: true
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       company_subscriptions: {
         Row: {
           company_id: string | null
@@ -400,6 +444,45 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      module_maintenance: {
+        Row: {
+          created_at: string
+          disabled_at: string
+          disabled_by: string
+          estimated_end_time: string | null
+          id: string
+          is_disabled: boolean
+          maintenance_reason: string | null
+          module_name: string
+          sub_module_name: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          disabled_at?: string
+          disabled_by: string
+          estimated_end_time?: string | null
+          id?: string
+          is_disabled?: boolean
+          maintenance_reason?: string | null
+          module_name: string
+          sub_module_name?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          disabled_at?: string
+          disabled_by?: string
+          estimated_end_time?: string | null
+          id?: string
+          is_disabled?: boolean
+          maintenance_reason?: string | null
+          module_name?: string
+          sub_module_name?: string | null
+          updated_at?: string
+        }
+        Relationships: []
       }
       paid_account_requests: {
         Row: {

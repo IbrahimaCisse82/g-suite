@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -29,10 +30,7 @@ import UsersSettings from "./pages/UsersSettings";
 import LicensesSettings from "./pages/LicensesSettings";
 import Security from "./pages/Security";
 import NotFound from "./pages/NotFound";
-import { AdminPanel } from "./pages/AdminPanel";
 import AdminLogin from "./pages/AdminLogin";
-import CompanyAdminSetup from "./pages/CompanyAdminSetup";
-import { AdminUserManagement } from "./pages/AdminUserManagement";
 import TrialActivation from "./pages/TrialActivation";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
@@ -115,10 +113,7 @@ function App() {
             </Route>
             
             {/* Routes admin */}
-            <Route path="/admin" element={<AdminPanel />} />
             <Route path="/admin/login" element={<AdminLogin />} />
-            <Route path="/admin/company-setup" element={<CompanyAdminSetup />} />
-            <Route path="/admin/users" element={<AdminUserManagement />} />
             
             {/* Routes backoffice admin */}
             <Route path="/admin-backoffice" element={<AdminBackoffice />} />

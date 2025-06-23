@@ -15,47 +15,7 @@ interface User {
   companyName: string;
 }
 
-const mockUsers: User[] = [
-  {
-    id: '1',
-    email: 'admin@entreprise.com',
-    firstName: 'Jean',
-    lastName: 'Dupont',
-    role: 'manager',
-    phone: '+33 1 23 45 67 89',
-    isActive: true,
-    lastLogin: '2024-01-15 10:30',
-    createdAt: '2024-01-01',
-    companyId: 'comp-1',
-    companyName: 'SARL Tech Solutions'
-  },
-  {
-    id: '2',
-    email: 'comptable@entreprise.com',
-    firstName: 'Marie',
-    lastName: 'Martin',
-    role: 'comptable',
-    phone: '+33 1 98 76 54 32',
-    isActive: true,
-    lastLogin: '2024-01-14 16:45',
-    createdAt: '2024-01-05',
-    companyId: 'comp-1',
-    companyName: 'SARL Tech Solutions'
-  },
-  {
-    id: '3',
-    email: 'commercial@commerce.sn',
-    firstName: 'Amadou',
-    lastName: 'Diallo',
-    role: 'commercial',
-    phone: '+221 77 123 45 67',
-    isActive: false,
-    lastLogin: '2024-01-10 08:15',
-    createdAt: '2023-12-15',
-    companyId: 'comp-2',
-    companyName: 'SA Commerce Général'
-  }
-];
+const mockUsers: User[] = [];
 
 const roleLabels = {
   manager: 'Manager',

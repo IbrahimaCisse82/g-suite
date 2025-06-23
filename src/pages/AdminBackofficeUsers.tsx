@@ -7,11 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 
 const AdminBackofficeUsers = () => {
-  const users = [
-    { id: '1', name: 'Jean Dupont', email: 'jean@example.com', company: 'SARL Tech Solutions', role: 'Admin', status: 'active' },
-    { id: '2', name: 'Marie Martin', email: 'marie@example.com', company: 'SA Commerce Général', role: 'Admin', status: 'active' },
-    { id: '3', name: 'Amadou Diallo', email: 'amadou@example.com', company: 'Cabinet Comptable Expert', role: 'Admin', status: 'inactive' },
-  ];
+  const users: any[] = [];
 
   return (
     <AdminBackofficeLayout>
@@ -63,7 +59,7 @@ const AdminBackofficeUsers = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600">Nouveaux ce mois</p>
-                  <p className="text-2xl font-bold text-purple-600">8</p>
+                  <p className="text-2xl font-bold text-purple-600">0</p>
                 </div>
                 <UserPlus className="w-8 h-8 text-purple-600" />
               </div>
@@ -76,45 +72,53 @@ const AdminBackofficeUsers = () => {
             <CardTitle>Liste des Utilisateurs</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b">
-                    <th className="text-left p-4">Nom</th>
-                    <th className="text-left p-4">Email</th>
-                    <th className="text-left p-4">Entreprise</th>
-                    <th className="text-left p-4">Rôle</th>
-                    <th className="text-left p-4">Statut</th>
-                    <th className="text-left p-4">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {users.map((user) => (
-                    <tr key={user.id} className="border-b hover:bg-gray-50">
-                      <td className="p-4 font-medium">{user.name}</td>
-                      <td className="p-4 text-gray-600">{user.email}</td>
-                      <td className="p-4">{user.company}</td>
-                      <td className="p-4">
-                        <Badge variant="outline">{user.role}</Badge>
-                      </td>
-                      <td className="p-4">
-                        <Badge className={user.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}>
-                          {user.status === 'active' ? 'Actif' : 'Inactif'}
-                        </Badge>
-                      </td>
-                      <td className="p-4">
-                        <div className="flex space-x-2">
-                          <Button size="sm" variant="outline">Modifier</Button>
-                          <Button size="sm" variant={user.status === 'active' ? 'destructive' : 'default'}>
-                            {user.status === 'active' ? 'Désactiver' : 'Activer'}
-                          </Button>
-                        </div>
-                      </td>
+            {users.length === 0 ? (
+              <div className="text-center py-8">
+                <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <p className="text-gray-500">Aucun utilisateur enregistré</p>
+                <p className="text-sm text-gray-400">Les utilisateurs apparaîtront ici une fois qu'ils auront créé leur compte</p>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b">
+                      <th className="text-left p-4">Nom</th>
+                      <th className="text-left p-4">Email</th>
+                      <th className="text-left p-4">Entreprise</th>
+                      <th className="text-left p-4">Rôle</th>
+                      <th className="text-left p-4">Statut</th>
+                      <th className="text-left p-4">Actions</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {users.map((user) => (
+                      <tr key={user.id} className="border-b hover:bg-gray-50">
+                        <td className="p-4 font-medium">{user.name}</td>
+                        <td className="p-4 text-gray-600">{user.email}</td>
+                        <td className="p-4">{user.company}</td>
+                        <td className="p-4">
+                          <Badge variant="outline">{user.role}</Badge>
+                        </td>
+                        <td className="p-4">
+                          <Badge className={user.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}>
+                            {user.status === 'active' ? 'Actif' : 'Inactif'}
+                          </Badge>
+                        </td>
+                        <td className="p-4">
+                          <div className="flex space-x-2">
+                            <Button size="sm" variant="outline">Modifier</Button>
+                            <Button size="sm" variant={user.status === 'active' ? 'destructive' : 'default'}>
+                              {user.status === 'active' ? 'Désactiver' : 'Activer'}
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

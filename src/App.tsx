@@ -32,7 +32,6 @@ import Security from "./pages/Security";
 import NotFound from "./pages/NotFound";
 import { AdminPanel } from "./pages/AdminPanel";
 import AdminLogin from "./pages/AdminLogin";
-import { AdminSetup } from "./pages/AdminSetup";
 import AdminSetupSuccess from "./pages/AdminSetupSuccess";
 import CompanyAdminSetup from "./pages/CompanyAdminSetup";
 import { AdminUserManagement } from "./pages/AdminUserManagement";
@@ -120,7 +119,6 @@ function App() {
             {/* Routes admin */}
             <Route path="/admin" element={<AdminPanel />} />
             <Route path="/admin/login" element={<AdminLogin />} />
-            <Route path="/admin/setup" element={<AdminSetup />} />
             <Route path="/admin/setup-success" element={<AdminSetupSuccess />} />
             <Route path="/admin/company-setup" element={<CompanyAdminSetup />} />
             <Route path="/admin/users" element={<AdminUserManagement />} />

@@ -4,7 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { LayoutDashboard, Users, FileText, Package, TrendingUp, DollarSign } from 'lucide-react';
 import { Layout } from '@/components/Layout';
 import { InitialSetupModal } from '@/components/setup/InitialSetupModal';
+import { TPESimplifiedDashboard } from '@/components/tpe/TPESimplifiedDashboard';
 import { useInitialSetup } from '@/hooks/useInitialSetup';
+import { useProfileAccess } from '@/hooks/useProfileAccess';
 
 const mockStats = [
   {
@@ -43,6 +45,11 @@ const mockStats = [
 
 const Dashboard = () => {
   const { needsSetup, isLoading, completeSetup } = useInitialSetup();
+  const { moduleType, profile } = useProfileAccess();
+
+  // Vérifier si l'utilisateur préfère l'interface TPE simplifiée
+  const isTPEMode = localStorage.getItem('tpe_selected_module') || moduleType === 'entreprise';
+  const companySize = profile?.companies?.employee_count || 'unknown';
 
   if (isLoading) {
     return (
@@ -61,6 +68,37 @@ const Dashboard = () => {
     );
   }
 
+  // Interface TPE simplifiée pour les petites entreprises
+  if (isTPEMode && (companySize === 'solo' || companySize === 'micro')) {
+    return (
+      <Layout>
+        <div className="gradient-bg min-h-full">
+          <div className="p-8">
+            <div className="mb-8">
+              <h1 className="text-4xl font-bold text-slate-900 mb-2 flex items-center">
+                <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center mr-4">
+                  <LayoutDashboard className="w-6 h-6 text-white" />
+                </div>
+                Mon activité
+              </h1>
+              <p className="text-xl text-slate-600">
+                Vue d'ensemble simplifiée pour votre TPE
+              </p>
+            </div>
+
+            <TPESimplifiedDashboard />
+          </div>
+
+          <InitialSetupModal 
+            isOpen={needsSetup} 
+            onComplete={completeSetup}
+          />
+        </div>
+      </Layout>
+    );
+  }
+
+  // Interface complète pour les entreprises plus importantes
   return (
     <Layout>
       <div className="gradient-bg min-h-full">
@@ -180,7 +218,6 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Initial Setup Modal */}
         <InitialSetupModal 
           isOpen={needsSetup} 
           onComplete={completeSetup}

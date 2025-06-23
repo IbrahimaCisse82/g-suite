@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -6,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Shield, AlertTriangle, Clock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useSecureAdminAuth } from '@/hooks/useSecureAdminAuth';
+import { useEnhancedAdminAuth } from '@/hooks/useSecureAdminAuth';
 import { useEnhancedSecurity } from '@/hooks/useEnhancedSecurity';
 import { SecurityValidator } from '@/utils/securityValidation';
 import { useToast } from '@/hooks/use-toast';
@@ -21,7 +20,7 @@ export const EnhancedAdminLoginForm = () => {
   const [remainingAttempts, setRemainingAttempts] = useState<number | null>(null);
   
   const navigate = useNavigate();
-  const { login } = useSecureAdminAuth();
+  const { login } = useEnhancedAdminAuth();
   const { checkRateLimit, logSecurityEvent, securityState } = useEnhancedSecurity();
   const { toast } = useToast();
 

@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2, Shield, Eye, EyeOff } from 'lucide-react';
-import { useSecureAdminAuth } from '@/hooks/useSecureAdminAuth';
+import { useEnhancedAdminAuth } from '@/hooks/useSecureAdminAuth';
 import { PasswordCreationModal } from './PasswordCreationModal';
 import { GSuiteLogo } from '@/components/ui/gsuite-logo';
 
@@ -18,7 +18,7 @@ export const SecureAdminLoginForm = () => {
   const [error, setError] = useState('');
   const [showPasswordCreation, setShowPasswordCreation] = useState(false);
   
-  const { login } = useSecureAdminAuth();
+  const { login } = useEnhancedAdminAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {

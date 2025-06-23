@@ -3,12 +3,12 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { LogOut, User, Shield } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
-import { useSecureAdminAuth } from '@/hooks/useSecureAdminAuth';
+import { useEnhancedAdminAuth } from '@/hooks/useSecureAdminAuth';
 import { useNavigate } from 'react-router-dom';
 
 export const Header = () => {
   const { user, signOut } = useAuth();
-  const { isAuthenticated: isAdmin, adminEmail, logout: adminLogout } = useSecureAdminAuth();
+  const { isAuthenticated: isAdmin, adminEmail, logout: adminLogout } = useEnhancedAdminAuth();
   const navigate = useNavigate();
 
   const handleSignOut = async () => {

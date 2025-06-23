@@ -1,26 +1,25 @@
 
 import React from 'react';
-import { SidebarProvider, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
-import { EnterpriseHeader } from './enterprise/EnterpriseHeader';
+import { Sidebar } from './Sidebar';
+import { Header } from './Header';
+import { useAuth } from '@/hooks/useAuth';
 
 interface LayoutProps {
   children: React.ReactNode;
 }
 
 export const Layout = ({ children }: LayoutProps) => {
+  const { user } = useAuth();
+
   return (
-    <SidebarProvider>
-      <div className="min-h-screen flex w-full">
-        <EnterpriseHeader />
-        <SidebarInset>
-          <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
-            <SidebarTrigger className="-ml-1" />
-          </header>
-          <main className="flex-1 overflow-auto">
-            {children}
-          </main>
-        </SidebarInset>
+    <div className="flex h-screen bg-gray-50">
+      {user && <Sidebar />}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <Header />
+        <main className="flex-1 overflow-auto">
+          {children}
+        </main>
       </div>
-    </SidebarProvider>
+    </div>
   );
 };

@@ -14,19 +14,32 @@ export const useCreateContact = () => {
     mutationFn: async (contact: Omit<ContactInsert, 'company_id' | 'contact_number'>) => {
       console.log('Creating contact with data:', contact);
       
-      // Mode test : créer un contact sans authentification
-      console.log('🧪 Mode test : Création de contact sans authentification');
-      
-      // Utiliser un company_id fictif pour les tests
-      const testCompanyId = '00000000-0000-0000-0000-000000000001';
-      
-      const contactNumber = await generateContactNumber(contact.type || 'client', testCompanyId);
+      // Vérifier l'authentification
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        console.error('User not authenticated');
+        throw new Error('Vous devez être connecté pour créer un contact');
+      }
+
+      // Récupérer le profil utilisateur pour obtenir company_id
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('company_id')
+        .eq('id', user.id)
+        .single();
+
+      if (profileError || !profile?.company_id) {
+        console.error('No company associated with user:', profileError);
+        throw new Error('Aucune entreprise associée à votre compte');
+      }
+
+      const contactNumber = await generateContactNumber(contact.type || 'client', profile.company_id);
 
       const { data, error } = await supabase
         .from('contacts')
         .insert({ 
           ...contact, 
-          company_id: testCompanyId,
+          company_id: profile.company_id,
           contact_number: contactNumber
         })
         .select()

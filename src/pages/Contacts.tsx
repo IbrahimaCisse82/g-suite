@@ -10,10 +10,44 @@ import { ContactsDialogs } from '@/components/contacts/ContactsDialogs';
 import { useContacts } from '@/hooks/useContacts';
 import { useContactsHandlers } from '@/hooks/useContactsHandlers';
 import { Layout } from '@/components/Layout';
+import { useAuth } from '@/hooks/useAuth';
+import { Button } from '@/components/ui/button';
+import { LogIn } from 'lucide-react';
 
 export const Contacts = () => {
+  const { user, loading: authLoading } = useAuth();
   const { data: contacts = [], isLoading, error } = useContacts();
   const contactsHandlers = useContactsHandlers();
+
+  // Redirection vers la page de connexion si pas authentifié
+  if (!authLoading && !user) {
+    return (
+      <Layout>
+        <div className="gradient-bg min-h-full">
+          <div className="p-8">
+            <div className="text-center">
+              <div className="mx-auto w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center mb-6">
+                <LogIn className="w-12 h-12 text-blue-600" />
+              </div>
+              <h1 className="text-3xl font-bold text-readable-primary mb-4">
+                Authentification requise
+              </h1>
+              <p className="text-readable-secondary mb-6">
+                Vous devez être connecté pour accéder à la gestion des contacts.
+              </p>
+              <Button 
+                onClick={() => window.location.href = '/user-login'}
+                className="bg-blue-600 hover:bg-blue-700 text-white"
+              >
+                <LogIn className="w-4 h-4 mr-2" />
+                Se connecter
+              </Button>
+            </div>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
 
   // Gestion des erreurs de chargement des contacts
   if (error) {
@@ -22,8 +56,8 @@ export const Contacts = () => {
       <Layout>
         <div className="gradient-bg min-h-full">
           <div className="p-8">
-            <div className="mb-4 p-4 bg-yellow-100 rounded-lg">
-              <p className="text-sm text-yellow-800">Erreur contacts: {error.message}</p>
+            <div className="mb-4 p-4 bg-red-100 rounded-lg">
+              <p className="text-sm text-red-800">Erreur contacts: {error.message}</p>
             </div>
             <ContactsErrorView />
           </div>
@@ -32,8 +66,8 @@ export const Contacts = () => {
     );
   }
 
-  // Affichage du loading pendant le chargement des contacts
-  if (isLoading) {
+  // Affichage du loading pendant le chargement
+  if (authLoading || isLoading) {
     return (
       <Layout>
         <div className="gradient-bg min-h-full">
@@ -60,10 +94,11 @@ export const Contacts = () => {
     <Layout>
       <div className="gradient-bg min-h-full">
         <div className="p-8">
-          {/* Info de debug pour le développement */}
+          {/* Info utilisateur connecté */}
           <div className="mb-4 p-4 bg-green-100 rounded-lg">
-            <p className="text-sm text-green-800">Mode test: Accès autorisé sans authentification</p>
-            <p className="text-sm text-green-800">Contacts chargés: {contacts.length}</p>
+            <p className="text-sm text-green-800">
+              Connecté en tant que: {user?.email} | Contacts chargés: {contacts.length}
+            </p>
           </div>
 
           <ContactsHeader onCreateContact={() => contactsHandlers.setIsCreateDialogOpen(true)} />

@@ -80,6 +80,7 @@ function App() {
             <Route path="/" element={<Landing />} />
             <Route path="/index" element={<Index />} />
             <Route path="/login" element={<UserLogin />} />
+            <Route path="/user-login" element={<UserLogin />} />
             <Route path="/register" element={<CompanyRegistration />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/accounting" element={<Accounting />} />
@@ -106,6 +107,7 @@ function App() {
             <Route path="/security" element={<Security />} />
             <Route path="/admin" element={<AdminPanel />} />
             <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/admin-login" element={<AdminLogin />} />
             <Route path="/admin/setup" element={<AdminSetup />} />
             <Route path="/admin/setup-success" element={<AdminSetupSuccess />} />
             <Route path="/admin/company-setup" element={<CompanyAdminSetup />} />
@@ -131,6 +133,7 @@ function App() {
             <Route path="/solutions/commerciale" element={<CommercialeSolution />} />
             <Route path="/admin/backend" element={<AdminBackend />} />
             <Route path="/admin/backoffice" element={<AdminBackoffice />} />
+            <Route path="/admin-backoffice" element={<AdminBackoffice />} />
             <Route path="/admin/backoffice/users" element={<AdminBackofficeUsers />} />
             <Route path="/admin/backoffice/companies" element={<AdminBackofficeCompanies />} />
             <Route path="/admin/backoffice/stats" element={<AdminBackofficeStats />} />

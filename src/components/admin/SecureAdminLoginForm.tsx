@@ -34,7 +34,7 @@ export const SecureAdminLoginForm = () => {
         if (result.isFirstLogin) {
           setShowPasswordCreation(true);
         } else {
-          navigate('/admin-backoffice');
+          navigate('/admin');
         }
       }
     } catch (error: any) {
@@ -47,7 +47,7 @@ export const SecureAdminLoginForm = () => {
 
   const handlePasswordCreated = () => {
     setShowPasswordCreation(false);
-    navigate('/admin-backoffice');
+    navigate('/admin');
   };
 
   return (
@@ -79,7 +79,7 @@ export const SecureAdminLoginForm = () => {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@g-suiteapp.com"
+                  placeholder="support@g-suiteapp.com"
                   required
                   className="h-12 border-gray-300 focus:border-green-500 focus:ring-green-500"
                 />

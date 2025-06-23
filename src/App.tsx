@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -76,7 +77,9 @@ function App() {
             <Route path="/" element={<Landing />} />
             <Route path="/index" element={<Index />} />
             <Route path="/login" element={<UserLogin />} />
+            <Route path="/user-login" element={<UserLogin />} />
             <Route path="/register" element={<CompanyRegistration />} />
+            <Route path="/company-registration" element={<CompanyRegistration />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/trial-activation" element={<TrialActivation />} />
@@ -141,9 +144,13 @@ function App() {
             <Route path="/docs" element={<ProductDocumentation />} />
             <Route path="/about" element={<AboutUs />} />
             <Route path="/legal" element={<LegalNotices />} />
+            <Route path="/legal-notices" element={<LegalNotices />} />
             <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms" element={<TermsOfService />} />
+            <Route path="/terms-of-service" element={<TermsOfService />} />
             <Route path="/cookies" element={<CookiesPolicy />} />
+            <Route path="/cookies-policy" element={<CookiesPolicy />} />
             
             {/* Route 404 */}
             <Route path="*" element={<NotFound />} />

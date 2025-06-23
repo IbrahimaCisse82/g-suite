@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -112,10 +111,8 @@ function App() {
               <Route path="subscriptions" element={<SubscriptionSettings />} />
             </Route>
             
-            {/* Routes admin */}
-            <Route path="/admin/login" element={<AdminLogin />} />
-            
             {/* Routes backoffice admin */}
+            <Route path="/admin-backoffice/login" element={<AdminLogin />} />
             <Route path="/admin-backoffice" element={<AdminBackoffice />} />
             <Route path="/admin-backoffice/users" element={<AdminBackofficeUsers />} />
             <Route path="/admin-backoffice/companies" element={<AdminBackofficeCompanies />} />

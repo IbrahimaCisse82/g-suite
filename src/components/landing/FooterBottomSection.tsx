@@ -69,8 +69,8 @@ export const FooterBottomSection = ({ onSocialClick, onNavigation }: FooterBotto
           Cookies
         </Link>
         <Link 
-          to="/admin-login" 
-          onClick={() => onNavigation('/admin-login')}
+          to="/admin-backoffice/login" 
+          onClick={() => onNavigation('/admin-backoffice/login')}
           className="hover:!text-green-400 transition-colors text-xs opacity-50 hover:opacity-100"
         >
           Admin

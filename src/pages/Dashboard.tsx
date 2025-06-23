@@ -48,8 +48,8 @@ const Dashboard = () => {
 
   // Vérifier si l'utilisateur préfère l'interface TPE simplifiée
   const isTPEMode = localStorage.getItem('tpe_selected_module') || moduleType === 'entreprise';
-  // Simuler une taille d'entreprise pour la démo (en réalité, cela viendrait des données de l'entreprise)
-  const companySize = 'micro'; // Pour l'instant, on simule une micro-entreprise
+  // Simuler une taille d'entreprise pour la démo - peut être 'solo', 'micro', ou 'small'
+  const companySize = Math.random() > 0.5 ? 'micro' : 'solo';
 
   if (isLoading) {
     return (

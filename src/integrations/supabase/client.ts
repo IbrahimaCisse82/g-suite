@@ -6,7 +6,21 @@ import type { Database } from './types';
 const SUPABASE_URL = "https://vlovapygmxwqubsdiarz.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZsb3ZhcHlnbXh3cXVic2RpYXJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk2ODY0MzksImV4cCI6MjA2NTI2MjQzOX0.j_n7RXAgXohJpwW1b5YemaWF2CYu_0O49J0jaqkt2Jo";
 
-// Import the supabase client like this:
-// import { supabase } from "@/integrations/supabase/client";
-
-export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+// Create Supabase client with secure configuration
+export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+  auth: {
+    storage: typeof window !== 'undefined' ? window.localStorage : undefined,
+    persistSession: true,
+    autoRefreshToken: true,
+    detectSessionInUrl: true,
+    flowType: 'pkce'
+  },
+  db: {
+    schema: 'public'
+  },
+  global: {
+    headers: {
+      'X-Client-Info': 'supabase-js-web'
+    }
+  }
+});

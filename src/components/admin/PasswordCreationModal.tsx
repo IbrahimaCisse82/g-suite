@@ -1,10 +1,28 @@
 
 import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Shield, AlertTriangle, Eye, EyeOff } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Eye, EyeOff, Lock, Shield, CheckCircle, X } from 'lucide-react';
+import { SecurityService } from '@/services/securityService';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
+
+interface PasswordRequirement {
+  text: string;
+  test: (password: string) => boolean;
+}
+
+const passwordRequirements: PasswordRequirement[] = [
+  { text: "Au moins 12 caractères", test: (p) => p.length >= 12 },
+  { text: "Une majuscule", test: (p) => /[A-Z]/.test(p) },
+  { text: "Une minuscule", test: (p) => /[a-z]/.test(p) },
+  { text: "Un chiffre", test: (p) => /[0-9]/.test(p) },
+  { text: "Un caractère spécial", test: (p) => /[^A-Za-z0-9]/.test(p) },
+  { text: "Pas de caractères répétitifs", test: (p) => !/(.)\1{2,}/.test(p) }
+];
 
 interface PasswordCreationModalProps {
   email: string;
@@ -12,133 +30,245 @@ interface PasswordCreationModalProps {
   onCancel: () => void;
 }
 
-export const PasswordCreationModal = ({ email, onPasswordCreated, onCancel }: PasswordCreationModalProps) => {
-  const [newPasswordData, setNewPasswordData] = useState({
-    newPassword: '',
-    confirmPassword: ''
-  });
+export const PasswordCreationModal: React.FC<PasswordCreationModalProps> = ({
+  email,
+  onPasswordCreated,
+  onCancel
+}) => {
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [errors, setErrors] = useState<string[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  const { toast } = useToast();
+
+  const isPasswordValid = passwordRequirements.every(req => req.test(password));
+  const passwordsMatch = password === confirmPassword && password.length > 0;
+  const canSubmit = isPasswordValid && passwordsMatch && !isLoading;
+
+  const handlePasswordChange = (value: string) => {
+    // Sanitize input to prevent XSS
+    const sanitizedValue = SecurityService.sanitizeInput(value);
+    setPassword(sanitizedValue);
+    setError('');
+  };
+
+  const handleConfirmPasswordChange = (value: string) => {
+    const sanitizedValue = SecurityService.sanitizeInput(value);
+    setConfirmPassword(sanitizedValue);
+    setError('');
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setErrors([]);
-    setLoading(true);
-
-    // Validation
-    const validationErrors: string[] = [];
     
-    if (newPasswordData.newPassword.length < 8) {
-      validationErrors.push('Le mot de passe doit contenir au moins 8 caractères');
-    }
-    
-    if (newPasswordData.newPassword !== newPasswordData.confirmPassword) {
-      validationErrors.push('Les mots de passe ne correspondent pas');
-    }
+    if (!canSubmit) return;
 
-    if (validationErrors.length > 0) {
-      setErrors(validationErrors);
-      setLoading(false);
-      return;
-    }
+    setIsLoading(true);
+    setError('');
 
     try {
-      // Here you would typically call your password update function
-      // For now, we'll just simulate success
-      setTimeout(() => {
-        setLoading(false);
-        onPasswordCreated();
-      }, 1000);
-    } catch (error) {
-      setErrors(['Erreur lors de la création du mot de passe']);
-      setLoading(false);
+      // Validate password strength using our security service
+      const isStrong = await SecurityService.validatePasswordStrength(password);
+      if (!isStrong) {
+        throw new Error('Le mot de passe ne respecte pas les critères de sécurité');
+      }
+
+      // Log security event
+      await SecurityService.logSecurityAudit({
+        eventType: 'admin_password_creation',
+        userIdentifier: email,
+        success: true
+      });
+
+      // Call edge function to securely update password
+      const { data, error: updateError } = await supabase.functions.invoke('update-admin-password', {
+        body: { 
+          email: SecurityService.sanitizeInput(email), 
+          password: password // Password will be hashed server-side
+        }
+      });
+
+      if (updateError || !data?.success) {
+        throw new Error(data?.error || 'Erreur lors de la mise à jour du mot de passe');
+      }
+
+      toast({
+        title: "Mot de passe créé",
+        description: "Votre mot de passe administrateur a été configuré avec succès"
+      });
+
+      onPasswordCreated();
+
+    } catch (error: any) {
+      console.error('Password creation error:', error);
+      
+      await SecurityService.logSecurityAudit({
+        eventType: 'admin_password_creation_failed',
+        userIdentifier: email,
+        success: false,
+        errorMessage: error.message
+      });
+
+      setError(error.message || 'Erreur lors de la création du mot de passe');
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <div className="mx-auto w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
-            <Shield className="w-8 h-8 text-blue-600" />
-          </div>
-          <CardTitle className="text-2xl">Première connexion</CardTitle>
-          <CardDescription>
-            Créez un nouveau mot de passe sécurisé pour {email}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {errors.length > 0 && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                <div className="flex items-center mb-2">
-                  <AlertTriangle className="w-4 h-4 text-red-600 mr-2" />
-                  <span className="text-sm font-medium text-red-800">Erreurs :</span>
-                </div>
-                <ul className="list-disc list-inside text-sm text-red-700">
-                  {errors.map((error, index) => (
-                    <li key={index}>{error}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
+    <Dialog open={true} onOpenChange={onCancel}>
+      <DialogContent className="max-w-md">
+        <DialogHeader>
+          <DialogTitle className="flex items-center space-x-2">
+            <Shield className="w-5 h-5 text-green-600" />
+            <span>Création du mot de passe administrateur</span>
+          </DialogTitle>
+          <DialogDescription>
+            Créez un mot de passe sécurisé pour votre compte administrateur
+          </DialogDescription>
+        </DialogHeader>
 
-            <div className="space-y-2">
-              <Label htmlFor="newPassword">Nouveau mot de passe</Label>
-              <div className="relative">
-                <Input
-                  id="newPassword"
-                  type={showPassword ? "text" : "password"}
-                  value={newPasswordData.newPassword}
-                  onChange={(e) => setNewPasswordData(prev => ({ ...prev, newPassword: e.target.value }))}
-                  placeholder="Minimum 8 caractères"
-                  required
-                  minLength={8}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
-                >
-                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                </button>
-              </div>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="space-y-2">
+            <Label htmlFor="password">Nouveau mot de passe</Label>
+            <div className="relative">
+              <Input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => handlePasswordChange(e.target.value)}
+                placeholder="Créez un mot de passe sécurisé"
+                required
+                maxLength={128}
+                className="pr-12"
+                autoComplete="new-password"
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="absolute right-2 top-2 h-8 w-8 p-0"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? (
+                  <EyeOff className="h-4 w-4" />
+                ) : (
+                  <Eye className="h-4 w-4" />
+                )}
+              </Button>
             </div>
+          </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirmer le mot de passe</Label>
+          <div className="space-y-2">
+            <Label htmlFor="confirmPassword">Confirmer le mot de passe</Label>
+            <div className="relative">
               <Input
                 id="confirmPassword"
-                type="password"
-                value={newPasswordData.confirmPassword}
-                onChange={(e) => setNewPasswordData(prev => ({ ...prev, confirmPassword: e.target.value }))}
-                placeholder="Confirmer le mot de passe"
+                type={showConfirmPassword ? "text" : "password"}
+                value={confirmPassword}
+                onChange={(e) => handleConfirmPasswordChange(e.target.value)}
+                placeholder="Confirmez votre mot de passe"
                 required
+                maxLength={128}
+                className="pr-12"
+                autoComplete="new-password"
               />
-            </div>
-
-            <div className="flex space-x-2">
-              <Button 
+              <Button
                 type="button"
-                variant="outline"
-                onClick={onCancel}
-                className="flex-1"
-                disabled={loading}
+                variant="ghost"
+                size="sm"
+                className="absolute right-2 top-2 h-8 w-8 p-0"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               >
-                Annuler
-              </Button>
-              <Button 
-                type="submit" 
-                className="flex-1" 
-                disabled={loading}
-              >
-                {loading ? 'Création...' : 'Créer le mot de passe'}
+                {showConfirmPassword ? (
+                  <EyeOff className="h-4 w-4" />
+                ) : (
+                  <Eye className="h-4 w-4" />
+                )}
               </Button>
             </div>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
+          </div>
+
+          {/* Password requirements checklist */}
+          <div className="bg-slate-50 rounded-lg p-4">
+            <h4 className="text-sm font-medium text-slate-900 mb-3">
+              Exigences du mot de passe :
+            </h4>
+            <div className="space-y-2">
+              {passwordRequirements.map((requirement, index) => {
+                const isValid = requirement.test(password);
+                return (
+                  <div key={index} className="flex items-center space-x-2">
+                    {isValid ? (
+                      <CheckCircle className="w-4 h-4 text-green-600" />
+                    ) : (
+                      <X className="w-4 h-4 text-slate-400" />
+                    )}
+                    <span className={`text-sm ${isValid ? 'text-green-700' : 'text-slate-600'}`}>
+                      {requirement.text}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Password match indicator */}
+          {confirmPassword && (
+            <div className="flex items-center space-x-2">
+              {passwordsMatch ? (
+                <>
+                  <CheckCircle className="w-4 h-4 text-green-600" />
+                  <span className="text-sm text-green-700">Les mots de passe correspondent</span>
+                </>
+              ) : (
+                <>
+                  <X className="w-4 h-4 text-red-500" />
+                  <span className="text-sm text-red-600">Les mots de passe ne correspondent pas</span>
+                </>
+              )}
+            </div>
+          )}
+
+          {error && (
+            <Alert className="border-red-200 bg-red-50">
+              <AlertDescription className="text-red-800">
+                {error}
+              </AlertDescription>
+            </Alert>
+          )}
+
+          <div className="flex space-x-3">
+            <Button
+              type="submit"
+              disabled={!canSubmit}
+              className="flex-1"
+            >
+              {isLoading ? (
+                <>
+                  <Lock className="w-4 h-4 mr-2 animate-spin" />
+                  Création...
+                </>
+              ) : (
+                <>
+                  <Lock className="w-4 h-4 mr-2" />
+                  Créer le mot de passe
+                </>
+              )}
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onCancel}
+              disabled={isLoading}
+            >
+              Annuler
+            </Button>
+          </div>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 };

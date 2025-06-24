@@ -1,109 +1,175 @@
 
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
+import * as bcrypt from 'https://deno.land/x/bcrypt@v0.4.1/mod.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-interface AdminCredentialsRequest {
+interface VerifyCredentialsRequest {
   email: string;
   password: string;
-  action?: string;
-  newPassword?: string;
 }
 
-serve(async (req: Request) => {
+const supabase = createClient(
+  Deno.env.get('SUPABASE_URL') ?? '',
+  Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+);
+
+const sanitizeInput = (input: string): string => {
+  if (!input) return input;
+  return input.trim().replace(/[<>"'&;]/g, '');
+};
+
+const validateEmailFormat = (email: string): boolean => {
+  const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+  return emailRegex.test(email) && email.length <= 255 && email.length >= 5;
+};
+
+const handler = async (req: Request): Promise<Response> => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
-  try {
-    const supabase = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+  if (req.method !== 'POST') {
+    return new Response(
+      JSON.stringify({ error: 'Method not allowed' }),
+      { status: 405, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
+  }
 
-    const { email, password, action, newPassword }: AdminCredentialsRequest = await req.json();
+  try {
+    const { email, password }: VerifyCredentialsRequest = await req.json();
 
-    console.log(`Admin authentication attempt for: ${email}`);
-
-    // Handle password update action
-    if (action === 'update_password') {
-      if (!newPassword) {
-        return new Response(
-          JSON.stringify({ success: false, error: 'Nouveau mot de passe requis' }),
-          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
-
-      const { error: updateError } = await supabase
-        .from('system_admins')
-        .update({ 
-          password: newPassword,
-          is_first_login: false,
-          updated_at: new Date().toISOString()
-        })
-        .eq('email', email)
-        .eq('is_active', true);
-
-      if (updateError) {
-        console.error('Password update error:', updateError);
-        return new Response(
-          JSON.stringify({ success: false, error: 'Erreur lors de la mise à jour du mot de passe' }),
-          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
-
+    // Input validation and sanitization
+    const sanitizedEmail = sanitizeInput(email);
+    
+    if (!sanitizedEmail || !password) {
+      console.error('Missing required fields');
       return new Response(
-        JSON.stringify({ success: true }),
-        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        JSON.stringify({ 
+          valid: false, 
+          error: 'Email et mot de passe requis' 
+        }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    // Verify admin credentials
-    const { data: adminData, error } = await supabase
+    // Validate email format
+    if (!validateEmailFormat(sanitizedEmail)) {
+      console.error('Invalid email format:', sanitizedEmail);
+      return new Response(
+        JSON.stringify({ 
+          valid: false, 
+          error: 'Format d\'email invalide' 
+        }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Get admin data
+    const { data: adminData, error: adminError } = await supabase
       .from('system_admins')
-      .select('email, password, is_first_login, is_active, name')
-      .eq('email', email)
-      .eq('is_active', true)
+      .select('id, email, password, is_active, is_first_login')
+      .eq('email', sanitizedEmail)
       .single();
 
-    if (error || !adminData) {
-      console.log('Admin not found or inactive:', error);
+    if (adminError || !adminData) {
+      console.error('Admin not found or error:', adminError);
       return new Response(
-        JSON.stringify({ valid: false, error: 'Administrateur non trouvé ou inactif' }),
+        JSON.stringify({ 
+          valid: false, 
+          error: 'Identifiants invalides' 
+        }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Check if admin is active
+    if (!adminData.is_active) {
+      console.error('Admin account is inactive');
+      return new Response(
+        JSON.stringify({ 
+          valid: false, 
+          error: 'Compte administrateur désactivé' 
+        }),
+        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Special case for first login - allow any password initially
+    if (adminData.is_first_login && !adminData.password) {
+      console.log('First login detected for admin:', sanitizedEmail);
+      return new Response(
+        JSON.stringify({ 
+          valid: true, 
+          isFirstLogin: true 
+        }),
         { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    // Simple password verification (in production, use proper hashing)
-    if (adminData.password !== password) {
-      console.log('Invalid password for admin:', email);
+    // Verify password
+    if (!adminData.password) {
+      console.error('No password set for admin');
       return new Response(
-        JSON.stringify({ valid: false, error: 'Mot de passe incorrect' }),
-        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        JSON.stringify({ 
+          valid: false, 
+          error: 'Mot de passe non configuré' 
+        }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    console.log('Admin authentication successful:', email);
+    const isPasswordValid = await bcrypt.compare(password, adminData.password);
+    
+    if (!isPasswordValid) {
+      console.error('Invalid password for admin:', sanitizedEmail);
+      
+      // Log failed login attempt
+      await supabase
+        .from('security_audit_log')
+        .insert({
+          event_type: 'admin_login_failed',
+          user_identifier: sanitizedEmail,
+          success: false,
+          error_message: 'Invalid password',
+          user_agent: req.headers.get('user-agent') || 'Unknown'
+        });
+
+      return new Response(
+        JSON.stringify({ 
+          valid: false, 
+          error: 'Identifiants invalides' 
+        }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    console.log('Admin credentials verified successfully:', sanitizedEmail);
 
     return new Response(
       JSON.stringify({ 
         valid: true, 
-        isFirstLogin: adminData.is_first_login,
-        adminName: adminData.name
+        isFirstLogin: false 
       }),
       { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
 
   } catch (error) {
-    console.error('Error in verify-admin-credentials function:', error);
+    console.error('Verify credentials error:', error);
+    
     return new Response(
-      JSON.stringify({ valid: false, error: 'Erreur interne du serveur' }),
+      JSON.stringify({ 
+        valid: false, 
+        error: 'Erreur interne du serveur' 
+      }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
-});
+};
+
+serve(handler);

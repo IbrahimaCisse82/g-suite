@@ -1,8 +1,6 @@
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
-import { ArrowRight, Play, Star, Users, CheckCircle, Shield, Zap, Sparkles } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { CheckCircle, Shield, Zap, Sparkles, Users, Star } from 'lucide-react';
 
 const HeroSection = () => {
   return (
@@ -66,26 +64,6 @@ const HeroSection = () => {
                     <span className="text-slate-700 font-medium">{feature.text}</span>
                   </div>
                 ))}
-              </div>
-
-              {/* Appels à l'action */}
-              <div className="flex flex-col sm:flex-row gap-6 pt-6">
-                <Link to="/dashboard">
-                  <Button size="lg" className="bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white text-lg px-10 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:scale-105">
-                    <span>Commencer gratuitement</span>
-                    <ArrowRight className="ml-3 w-5 h-5" />
-                  </Button>
-                </Link>
-                <Link to="/about">
-                  <Button 
-                    size="lg" 
-                    variant="outline" 
-                    className="text-lg px-10 py-4 rounded-xl border-2 border-slate-300 hover:bg-slate-50 transition-all transform hover:scale-105"
-                  >
-                    <Play className="mr-3 w-5 h-5" />
-                    Voir la démo
-                  </Button>
-                </Link>
               </div>
 
               {/* Statistiques de confiance avec animations */}

@@ -54,6 +54,17 @@ import ComptabiliteSolution from '@/pages/solutions/ComptabiliteSolution';
 import CommercialeSolution from '@/pages/solutions/CommercialeSolution';
 import EntrepriseSolution from '@/pages/solutions/EntrepriseSolution';
 
+// Import static pages
+import Security from '@/pages/Security';
+import Integrations from '@/pages/Integrations';
+import Mobile from '@/pages/Mobile';
+import HelpCenter from '@/pages/HelpCenter';
+import ProductDocumentation from '@/pages/ProductDocumentation';
+import LegalNotices from '@/pages/LegalNotices';
+import PrivacyPolicy from '@/pages/PrivacyPolicy';
+import TermsOfService from '@/pages/TermsOfService';
+import CookiesPolicy from '@/pages/CookiesPolicy';
+
 // Import admin components
 import { SecureAdminLoginForm } from '@/components/admin/SecureAdminLoginForm';
 

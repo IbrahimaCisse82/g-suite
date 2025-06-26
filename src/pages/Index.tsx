@@ -1,11 +1,21 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Index = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Redirection automatique vers la page d'accueil principale
+    navigate('/accueil', { replace: true });
+  }, [navigate]);
+
+  // Affichage temporaire pendant la redirection
   return (
     <div className="min-h-screen flex items-center justify-center bg-background">
       <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto mb-4"></div>
+        <p className="text-muted-foreground">Redirection vers l'accueil...</p>
       </div>
     </div>
   );

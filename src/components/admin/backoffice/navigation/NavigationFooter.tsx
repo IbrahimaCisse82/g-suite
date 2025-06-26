@@ -2,11 +2,14 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { LogOut, Building2 } from 'lucide-react';
+import { useAdminAuthentication } from '@/hooks/useAdminAuthentication';
 
 export const NavigationFooter = () => {
-  const handleLogout = () => {
-    // Logic de déconnexion - redirection vers la page principale
-    window.location.href = '/';
+  const { logout } = useAdminAuthentication();
+
+  const handleLogout = async () => {
+    // Utiliser le système d'authentification administrateur approprié
+    await logout();
   };
 
   return (

@@ -13,8 +13,8 @@ export const Layout = ({ children }: LayoutProps) => {
   const { user } = useAuth();
   const { isAuthenticated: isAdmin } = useAdminAuthentication();
 
-  // Afficher la sidebar si l'utilisateur est connecté OU si c'est un admin
-  const shouldShowSidebar = user || isAdmin;
+  // Afficher la sidebar toujours (pour le moment)
+  const shouldShowSidebar = true; // Changé pour toujours afficher
 
   return (
     <div className="flex h-screen bg-gray-50">

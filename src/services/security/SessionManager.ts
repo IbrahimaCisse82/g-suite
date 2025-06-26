@@ -26,7 +26,8 @@ export class SessionManager {
         .from('admin_sessions')
         .update({ is_active: false })
         .lt('expires_at', new Date().toISOString())
-        .eq('is_active', true);
+        .eq('is_active', true)
+        .select();
 
       if (error) throw error;
       return data?.length || 0;

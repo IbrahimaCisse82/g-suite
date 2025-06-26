@@ -64,10 +64,10 @@ export const useUnifiedValidation = (config: ValidationConfig = {}) => {
           validation = SecurityValidator.validateTreasuryData(sanitizedData);
           break;
         case 'contact':
-          validation = this.validateContactData(sanitizedData);
+          validation = validateContactData(sanitizedData);
           break;
         case 'product':
-          validation = this.validateProductData(sanitizedData);
+          validation = validateProductData(sanitizedData);
           break;
         default:
           validation = { valid: false, errors: ['Type de validation non supporté'] };

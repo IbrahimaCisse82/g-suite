@@ -1,6 +1,12 @@
 
 import { supabase } from '@/integrations/supabase/client';
 
+interface RateLimitRecord {
+  attempt_count: number;
+  window_start: string;
+  blocked_until?: string;
+}
+
 export class RateLimiter {
   static async checkRateLimit(
     identifier: string,
@@ -28,7 +34,7 @@ export class RateLimiter {
       // Get current attempts in window
       const { data: attempts, error } = await supabase
         .from('rate_limits')
-        .select('attempt_count')
+        .select('attempt_count, window_start')
         .eq('identifier', identifier)
         .eq('action_type', actionType)
         .gt('window_start', windowStart.toISOString())
@@ -62,7 +68,7 @@ export class RateLimiter {
           identifier,
           action_type: actionType,
           attempt_count: currentAttempts + 1,
-          window_start: attempts ? attempts.window_start : new Date().toISOString()
+          window_start: attempts?.window_start || new Date().toISOString()
         });
 
       return true;

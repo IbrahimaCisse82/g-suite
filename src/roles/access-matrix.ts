@@ -23,6 +23,7 @@ export const MODULE_ACCESS_MATRIX: Record<
       "dashboard",
       "accounting",
       "contacts",
+      "quotes",
       "invoicing",
       "purchases",
       "products",
@@ -41,9 +42,10 @@ export const MODULE_ACCESS_MATRIX: Record<
       "treasury",
       "budget",
     ],
-    // Commercial : contacts, facturation, achats
+    // Commercial : contacts, devis, facturation, achats
     commercial: [
       "contacts",
+      "quotes",
       "invoicing",
       "purchases",
     ],
@@ -84,9 +86,10 @@ export const MODULE_ACCESS_MATRIX: Record<
   },
   // SOLUTION COMMERCIALE
   commercial: {
-    // Manager : contacts, facturation, achats, produits, stock, paramètres
+    // Manager : contacts, devis, facturation, achats, produits, stock, paramètres
     manager: [
       "contacts",
+      "quotes",
       "invoicing",
       "purchases",
       "products",
@@ -96,9 +99,10 @@ export const MODULE_ACCESS_MATRIX: Record<
     ],
     // Comptable : aucun accès
     comptable: [],
-    // Commercial : contacts, facturation, achats
+    // Commercial : contacts, devis, facturation, achats
     commercial: [
-      "contacts",
+      "contacts",  
+      "quotes",
       "invoicing",
       "purchases",
     ],
@@ -119,6 +123,7 @@ export const PATH_FEATURE_MAP: Record<string, string> = {
   "/dashboard": "dashboard",
   "/accounting": "accounting",
   "/contacts": "contacts",
+  "/quotes": "quotes",
   "/invoicing": "invoicing",
   "/purchases": "purchases",
   "/products": "products",

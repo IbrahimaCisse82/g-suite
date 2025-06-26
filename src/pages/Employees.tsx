@@ -4,6 +4,7 @@ import { Layout } from '@/components/Layout';
 import { EmployeeHeader } from '@/components/employees/EmployeeHeader';
 import { EmployeeForm } from '@/components/employees/EmployeeForm';
 import { EmployeeTable } from '@/components/employees/EmployeeTable';
+import { EmployeeStats } from '@/components/employees/EmployeeStats';
 import { Card, CardContent } from '@/components/ui/card';
 import { useEmployees } from '@/hooks/useEmployees';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
@@ -57,6 +58,8 @@ const Employees = () => {
           onCreateEmployee={() => setShowCreateForm(true)}
           totalEmployees={employees.length}
         />
+
+        <EmployeeStats employees={employees} />
 
         <Card>
           <CardContent className="p-6">

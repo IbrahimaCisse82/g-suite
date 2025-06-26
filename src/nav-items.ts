@@ -17,7 +17,8 @@ import {
   Receipt,
   Coins,
   UsersIcon,
-  Target
+  Target,
+  FileCheck
 } from "lucide-react";
 
 export const navItems = [
@@ -37,6 +38,12 @@ export const navItems = [
     title: "Contacts",
     to: "/contacts",
     icon: Users,
+    variant: "ghost" as const,
+  },
+  {
+    title: "Devis",
+    to: "/quotes",
+    icon: FileCheck,
     variant: "ghost" as const,
   },
   {

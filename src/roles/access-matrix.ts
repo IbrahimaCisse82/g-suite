@@ -30,7 +30,7 @@ export const MODULE_ACCESS_MATRIX: Record<
       "treasury",
       "reports",
       "analytics",
-      "budget",
+      "training",
       "settings",
     ],
     // Comptable : comptabilité, trésorerie, budget
@@ -123,5 +123,6 @@ export const PATH_FEATURE_MAP: Record<string, string> = {
   "/reports": "reports",
   "/analytics": "analytics",
   "/budget": "budget",
+  "/training": "training",
   "/settings": "settings",
 };

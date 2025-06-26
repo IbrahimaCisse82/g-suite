@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -14,7 +13,7 @@ import {
   AlertTriangle,
   User
 } from 'lucide-react';
-import { useEnhancedAdminAuth } from '@/hooks/useEnhancedAdminAuth';
+import { useAdminAuthentication } from '@/hooks/useAdminAuthentication';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -35,7 +34,7 @@ interface AdminSidecarProps {
 }
 
 export const AdminSidecar = ({ isOpen, onClose }: AdminSidecarProps) => {
-  const { adminEmail, logout } = useEnhancedAdminAuth();
+  const { adminEmail, logout } = useAdminAuthentication();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
 

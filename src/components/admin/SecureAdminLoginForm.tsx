@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -6,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2, Shield, Eye, EyeOff } from 'lucide-react';
-import { useEnhancedAdminAuth } from '@/hooks/useSecureAdminAuth';
+import { useAdminAuthentication } from '@/hooks/useAdminAuthentication';
 import { PasswordCreationModal } from './PasswordCreationModal';
 import { GSuiteLogo } from '@/components/ui/gsuite-logo';
 
@@ -18,7 +19,7 @@ export const SecureAdminLoginForm = () => {
   const [error, setError] = useState('');
   const [showPasswordCreation, setShowPasswordCreation] = useState(false);
   
-  const { login } = useEnhancedAdminAuth();
+  const { login } = useAdminAuthentication();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {

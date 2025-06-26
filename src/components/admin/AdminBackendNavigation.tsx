@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
@@ -11,7 +12,7 @@ import {
   FileBarChart
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useEnhancedAdminAuth } from '@/hooks/useSecureAdminAuth';
+import { useAdminAuthentication } from '@/hooks/useAdminAuthentication';
 import { GSuiteLogo } from '@/components/ui/gsuite-logo';
 
 const adminMenuItems = [
@@ -22,7 +23,7 @@ const adminMenuItems = [
 
 export const AdminBackendNavigation = () => {
   const location = useLocation();
-  const { logout } = useEnhancedAdminAuth();
+  const { logout } = useAdminAuthentication();
 
   const handleLogout = () => {
     logout();

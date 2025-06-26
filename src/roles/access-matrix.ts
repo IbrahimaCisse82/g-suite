@@ -28,6 +28,8 @@ export const MODULE_ACCESS_MATRIX: Record<
       "products",
       "stock",
       "treasury",
+      "budget",
+      "employees",
       "reports",
       "analytics",
       "training",
@@ -50,7 +52,7 @@ export const MODULE_ACCESS_MATRIX: Record<
       "products",
       "stock",
     ],
-    // Caissier : trésorerie
+    // Caissier : trésorerie uniquement
     caissier: [
       "treasury",
     ],
@@ -62,6 +64,7 @@ export const MODULE_ACCESS_MATRIX: Record<
       "accounting",
       "treasury",
       "budget",
+      "employees",
       "settings",
     ],
     // Comptable : comptabilité, trésorerie, budget
@@ -88,6 +91,7 @@ export const MODULE_ACCESS_MATRIX: Record<
       "purchases",
       "products",
       "stock",
+      "employees",
       "settings",
     ],
     // Comptable : aucun accès
@@ -120,9 +124,10 @@ export const PATH_FEATURE_MAP: Record<string, string> = {
   "/products": "products",
   "/stock": "stock",
   "/treasury": "treasury",
+  "/budget": "budget",
+  "/employees": "employees",
   "/reports": "reports",
   "/analytics": "analytics",
-  "/budget": "budget",
   "/training": "training",
   "/settings": "settings",
 };

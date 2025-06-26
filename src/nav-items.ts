@@ -1,31 +1,108 @@
 
-import { 
-  LayoutDashboard, 
-  FileText, 
-  Users, 
-  ShoppingCart, 
-  TrendingUp, 
-  Settings,
+import {
+  LayoutDashboard,
   Calculator,
-  PieChart,
-  CreditCard,
-  Building,
+  Users,
+  FileText,
+  ShoppingCart,
   Package,
   Warehouse,
-  GraduationCap
-} from 'lucide-react';
+  TrendingUp,
+  BarChart3,
+  PiggyBank,
+  Settings,
+  BookOpen,
+  HelpCircle,
+  UserPlus,
+  Receipt,
+  Coins,
+  UsersIcon,
+  Target
+} from "lucide-react";
 
 export const navItems = [
-  { icon: LayoutDashboard, label: 'Tableau de bord', path: '/dashboard' },
-  { icon: Calculator, label: 'Comptabilité générale', path: '/accounting' },
-  { icon: Users, label: 'Clients & Fournisseurs', path: '/contacts' },
-  { icon: FileText, label: 'Facturation', path: '/invoicing' },
-  { icon: ShoppingCart, label: 'Achats', path: '/purchases' },
-  { icon: Package, label: 'Produits', path: '/products' },
-  { icon: Warehouse, label: 'Stock', path: '/stock' },
-  { icon: CreditCard, label: 'Trésorerie', path: '/treasury' },
-  { icon: PieChart, label: 'Rapports', path: '/reports' },
-  { icon: TrendingUp, label: 'Analyse', path: '/analytics' },
-  { icon: GraduationCap, label: 'Formation', path: '/training' },
-  { icon: Settings, label: 'Paramètres', path: '/settings' },
+  {
+    title: "Tableau de bord",
+    to: "/dashboard",
+    icon: LayoutDashboard,
+    variant: "default" as const,
+  },
+  {
+    title: "Comptabilité",
+    to: "/accounting",
+    icon: Calculator,
+    variant: "ghost" as const,
+  },
+  {
+    title: "Contacts",
+    to: "/contacts",
+    icon: Users,
+    variant: "ghost" as const,
+  },
+  {
+    title: "Facturation",
+    to: "/invoicing",
+    icon: FileText,
+    variant: "ghost" as const,
+  },
+  {
+    title: "Achats",
+    to: "/purchases",
+    icon: ShoppingCart,
+    variant: "ghost" as const,
+  },
+  {
+    title: "Produits",
+    to: "/products",
+    icon: Package,
+    variant: "ghost" as const,
+  },
+  {
+    title: "Stock",
+    to: "/stock",
+    icon: Warehouse,
+    variant: "ghost" as const,
+  },
+  {
+    title: "Trésorerie",
+    to: "/treasury",
+    icon: Coins,
+    variant: "ghost" as const,
+  },
+  {
+    title: "Budget",
+    to: "/budget",
+    icon: Target,
+    variant: "ghost" as const,
+  },
+  {
+    title: "Employés",
+    to: "/employees",
+    icon: UsersIcon,
+    variant: "ghost" as const,
+  },
+  {
+    title: "Rapports",
+    to: "/reports",
+    icon: BarChart3,
+    variant: "ghost" as const,
+  },
+  {
+    title: "Analytics",
+    to: "/analytics",
+    icon: TrendingUp,
+    variant: "ghost" as const,
+  },
+  {
+    title: "Formation",
+    to: "/training-support",
+    icon: BookOpen,
+    variant: "ghost" as const,
+  },
+  {
+    title: "Paramètres",
+    to: "/settings",
+    icon: Settings,
+    variant: "ghost" as const,
+  }
 ];

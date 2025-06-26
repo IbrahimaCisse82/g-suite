@@ -1,10 +1,21 @@
 
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { useQuoteValidation } from './useQuoteValidation';
 
 export function useQuoteActions(refetch: () => void) {
+  const { validateQuoteData } = useQuoteValidation();
+
   const createQuote = async (quoteData: any) => {
     try {
+      // Valider et nettoyer les données
+      const validation = validateQuoteData(quoteData);
+      if (!validation.isValid) {
+        return;
+      }
+
+      const sanitizedData = validation.sanitizedData;
+      
       const { data: { user } } = await supabase.auth.getUser();
       
       if (!user) {
@@ -20,14 +31,14 @@ export function useQuoteActions(refetch: () => void) {
         .insert({
           quote_number: quoteNumber,
           company_id: user.id,
-          contact_id: quoteData.contact_id,
-          quote_date: quoteData.quote_date,
-          validity_date: quoteData.validity_date,
+          contact_id: sanitizedData.contact_id,
+          quote_date: sanitizedData.quote_date,
+          validity_date: sanitizedData.validity_date,
           status: 'draft',
-          subtotal: quoteData.subtotal || 0,
-          tax_amount: quoteData.tax_amount || 0,
-          total_amount: quoteData.total_amount || 0,
-          notes: quoteData.notes
+          subtotal: sanitizedData.subtotal || 0,
+          tax_amount: sanitizedData.tax_amount || 0,
+          total_amount: sanitizedData.total_amount || 0,
+          notes: sanitizedData.notes
         })
         .select()
         .single();
@@ -39,11 +50,11 @@ export function useQuoteActions(refetch: () => void) {
       }
 
       // Ajouter les lignes du devis
-      if (quoteData.items && quoteData.items.length > 0) {
+      if (sanitizedData.items && sanitizedData.items.length > 0) {
         const { error: itemsError } = await supabase
           .from('quote_lines')
           .insert(
-            quoteData.items.map((item: any) => ({
+            sanitizedData.items.map((item: any) => ({
               quote_id: quote.id,
               description: item.description || item.product_name,
               quantity: item.quantity || 1,

@@ -1,48 +1,14 @@
 
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { LayoutDashboard, Users, FileText, Package, TrendingUp, DollarSign } from 'lucide-react';
 import { Layout } from '@/components/Layout';
 import { InitialSetupModal } from '@/components/setup/InitialSetupModal';
 import { TPESimplifiedDashboard } from '@/components/tpe/TPESimplifiedDashboard';
 import { useInitialSetup } from '@/hooks/useInitialSetup';
 import { useProfileAccess } from '@/hooks/useProfileAccess';
-
-// Données réelles - pas de données mockées
-const mockStats = [
-  {
-    title: 'Chiffre d\'affaires',
-    value: '0 XOF',
-    change: '0%',
-    icon: DollarSign,
-    color: 'text-green-600',
-    bgColor: 'bg-green-50'
-  },
-  {
-    title: 'Factures en attente',
-    value: '0',
-    change: '0',
-    icon: FileText,
-    color: 'text-orange-600',
-    bgColor: 'bg-orange-50'
-  },
-  {
-    title: 'Produits en stock',
-    value: '0',
-    change: '0',
-    icon: Package,
-    color: 'text-blue-600',
-    bgColor: 'bg-blue-50'
-  },
-  {
-    title: 'Clients actifs',
-    value: '0',
-    change: '0',
-    icon: Users,
-    color: 'text-purple-600',
-    bgColor: 'bg-purple-50'
-  }
-];
+import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
+import { StatsCards } from '@/components/dashboard/StatsCards';
+import { QuickActions } from '@/components/dashboard/QuickActions';
+import { RecentActivity } from '@/components/dashboard/RecentActivity';
 
 const Dashboard = () => {
   const { needsSetup, isLoading, completeSetup } = useInitialSetup();
@@ -76,21 +42,12 @@ const Dashboard = () => {
       <Layout>
         <div className="gradient-bg min-h-full">
           <div className="p-8">
-            <div className="mb-8">
-              <h1 className="text-4xl font-bold text-slate-900 mb-2 flex items-center">
-                <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center mr-4">
-                  <LayoutDashboard className="w-6 h-6 text-white" />
-                </div>
-                Mon activité
-              </h1>
-              <p className="text-xl text-slate-600">
-                Vue d'ensemble simplifiée pour votre TPE
-              </p>
-            </div>
-
+            <DashboardHeader 
+              title="Mon activité" 
+              subtitle="Vue d'ensemble simplifiée pour votre TPE" 
+            />
             <TPESimplifiedDashboard />
           </div>
-
           <InitialSetupModal 
             isOpen={needsSetup} 
             onComplete={completeSetup}
@@ -105,108 +62,16 @@ const Dashboard = () => {
     <Layout>
       <div className="gradient-bg min-h-full">
         <div className="p-8">
-          <div className="mb-8">
-            <h1 className="text-4xl font-bold text-slate-900 mb-2 flex items-center">
-              <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center mr-4">
-                <LayoutDashboard className="w-6 h-6 text-white" />
-              </div>
-              Tableau de bord
-            </h1>
-            <p className="text-xl text-slate-600">
-              Aperçu de votre activité commerciale
-            </p>
-          </div>
-
-          {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            {mockStats.map((stat, index) => {
-              const Icon = stat.icon;
-              return (
-                <Card key={index} className="border-0 shadow-lg card-hover bg-white">
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium text-slate-700">{stat.title}</CardTitle>
-                    <div className={`w-10 h-10 rounded-lg ${stat.bgColor} flex items-center justify-center`}>
-                      <Icon className={`h-5 w-5 ${stat.color}`} />
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-3xl font-bold text-slate-900 mb-1">{stat.value}</div>
-                    <p className="text-sm text-slate-600">
-                      <span className="text-slate-500 font-medium">
-                        {stat.change}
-                      </span>
-                      {' '}par rapport au mois dernier
-                    </p>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
-
-          {/* Quick Actions */}
+          <DashboardHeader 
+            title="Tableau de bord" 
+            subtitle="Aperçu de votre activité commerciale" 
+          />
+          <StatsCards />
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card className="border-0 shadow-lg bg-white card-hover">
-              <CardHeader>
-                <CardTitle className="text-xl text-slate-900 flex items-center">
-                  <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center mr-3">
-                    <TrendingUp className="w-4 h-4 text-white" />
-                  </div>
-                  Actions rapides
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between p-4 border border-slate-200 rounded-xl hover:bg-slate-50 cursor-pointer transition-colors group">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center group-hover:bg-blue-100 transition-colors">
-                        <FileText className="w-5 h-5 text-blue-600" />
-                      </div>
-                      <span className="font-medium text-slate-900">Créer une facture</span>
-                    </div>
-                    <TrendingUp className="w-4 h-4 text-slate-400 group-hover:text-slate-600 transition-colors" />
-                  </div>
-                  <div className="flex items-center justify-between p-4 border border-slate-200 rounded-xl hover:bg-slate-50 cursor-pointer transition-colors group">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center group-hover:bg-green-100 transition-colors">
-                        <Users className="w-5 h-5 text-green-600" />
-                      </div>
-                      <span className="font-medium text-slate-900">Ajouter un client</span>
-                    </div>
-                    <TrendingUp className="w-4 h-4 text-slate-400 group-hover:text-slate-600 transition-colors" />
-                  </div>
-                  <div className="flex items-center justify-between p-4 border border-slate-200 rounded-xl hover:bg-slate-50 cursor-pointer transition-colors group">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-purple-50 rounded-lg flex items-center justify-center group-hover:bg-purple-100 transition-colors">
-                        <Package className="w-5 h-5 text-purple-600" />
-                      </div>
-                      <span className="font-medium text-slate-900">Gérer le stock</span>
-                    </div>
-                    <TrendingUp className="w-4 h-4 text-slate-400 group-hover:text-slate-600 transition-colors" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="border-0 shadow-lg bg-white card-hover">
-              <CardHeader>
-                <CardTitle className="text-xl text-slate-900 flex items-center">
-                  <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center mr-3">
-                    <FileText className="w-4 h-4 text-white" />
-                  </div>
-                  Activité récente
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4 text-sm">
-                  <div className="text-center py-8 text-gray-500">
-                    Aucune activité récente
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            <QuickActions />
+            <RecentActivity />
           </div>
         </div>
-
         <InitialSetupModal 
           isOpen={needsSetup} 
           onComplete={completeSetup}

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -59,6 +58,7 @@ export const useAdminAuthentication = () => {
         .single();
 
       if (error || !adminData) {
+        console.log('Admin session check failed:', error);
         await logout();
         return;
       }
@@ -96,7 +96,12 @@ export const useAdminAuthentication = () => {
 
       console.log('Edge function response:', { data, error });
 
-      if (error || !data?.valid) {
+      if (error) {
+        console.error('Edge function error:', error);
+        throw new Error('Erreur de connexion au serveur');
+      }
+
+      if (!data?.valid) {
         throw new Error(data?.error || 'Identifiants administrateur invalides');
       }
 
@@ -130,6 +135,22 @@ export const useAdminAuthentication = () => {
 
     } catch (error: any) {
       console.error('Admin login error:', error);
+      
+      // Show user-friendly error messages
+      if (error.message.includes('fetch')) {
+        toast({
+          title: "Erreur de connexion",
+          description: "Impossible de se connecter au serveur. Veuillez réessayer.",
+          variant: "destructive"
+        });
+      } else {
+        toast({
+          title: "Erreur d'authentification",
+          description: error.message || 'Identifiants invalides',
+          variant: "destructive"
+        });
+      }
+      
       throw error;
     }
   };

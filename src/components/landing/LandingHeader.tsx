@@ -33,8 +33,8 @@ export const LandingHeader = () => {
           
           <nav className="hidden md:flex items-center space-x-6">
             <Link 
-              to="/" 
-              onClick={() => handleNavigation('/')}
+              to="/accueil" 
+              onClick={() => handleNavigation('/accueil')}
               className="text-slate-600 hover:text-slate-900 transition-colors font-medium"
             >
               Accueil

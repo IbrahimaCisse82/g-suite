@@ -11,15 +11,19 @@ export function useAccessControl() {
 
   // Détection du module actif avec fallback sécurisé
   const getActiveModule = (): ModuleType => {
-    const moduleFromProfile = 
-      profile?.companies?.plan_type ||
-      profile?.active_module ||
-      profile?.plan_type;
-    
-    if (["entreprise", "comptable", "commercial"].includes(moduleFromProfile)) {
-      return moduleFromProfile as ModuleType;
+    // Vérifier si companies existe et est un tableau non vide
+    if (profile?.companies && Array.isArray(profile.companies) && profile.companies.length > 0) {
+      // Prendre la première company et vérifier ses propriétés
+      const company = profile.companies[0];
+      const moduleFromCompany = company?.plan_type || company?.module_type;
+      
+      if (["entreprise", "comptable", "commercial"].includes(moduleFromCompany)) {
+        return moduleFromCompany as ModuleType;
+      }
     }
-    return "entreprise"; // Fallback par défaut
+    
+    // Fallback par défaut
+    return "entreprise";
   };
 
   const moduleType = getActiveModule();

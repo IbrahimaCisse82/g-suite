@@ -71,6 +71,10 @@ import CookiesPolicy from '@/pages/CookiesPolicy';
 
 // Import admin components
 import { SecureAdminLoginForm } from '@/components/admin/SecureAdminLoginForm';
+import AdminBackoffice from '@/pages/AdminBackoffice';
+import AdminBackofficeStats from '@/pages/AdminBackofficeStats';
+import AdminBackofficeRoles from '@/pages/AdminBackofficeRoles';
+import AdminBackofficeDatabase from '@/pages/AdminBackofficeDatabase';
 
 // Create QueryClient instance
 const queryClient = new QueryClient({
@@ -131,6 +135,10 @@ function App() {
 
             {/* Admin routes */}
             <Route path="/admin-backoffice/login" element={<SecureAdminLoginForm />} />
+            <Route path="/admin-backoffice" element={<AdminBackoffice />} />
+            <Route path="/admin-backoffice/stats" element={<AdminBackofficeStats />} />
+            <Route path="/admin-backoffice/roles" element={<AdminBackofficeRoles />} />
+            <Route path="/admin-backoffice/database" element={<AdminBackofficeDatabase />} />
 
             {/* Authentication routes */}
             <Route path="/auth/login" element={<UserLogin />} />

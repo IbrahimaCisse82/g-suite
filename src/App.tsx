@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'sonner';
@@ -38,6 +37,8 @@ import NotFound from '@/pages/NotFound';
 import TPEAssistant from '@/pages/TPEAssistant';
 import TPEGuides from '@/pages/TPEGuides';
 import JournalComptablePage from '@/pages/JournalComptable';
+import GrandLivrePage from '@/pages/GrandLivre';
+import BalanceGeneralePage from '@/pages/BalanceGenerale';
 
 // Import settings components
 import SettingsLayout from '@/pages/SettingsLayout';
@@ -89,6 +90,8 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/accounting" element={<Accounting />} />
             <Route path="/journal-comptable" element={<JournalComptablePage />} />
+            <Route path="/grand-livre" element={<GrandLivrePage />} />
+            <Route path="/balance-generale" element={<BalanceGeneralePage />} />
             <Route path="/contacts" element={<Contacts />} />
             <Route path="/quotes" element={<Quotes />} />
             <Route path="/invoicing" element={<Invoicing />} />

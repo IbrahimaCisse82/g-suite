@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -6,9 +5,11 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { BookOpen, Plus, Search, Filter, Download } from 'lucide-react';
+import { BookOpen, Plus, Search, Filter, Download, AlertTriangle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { EcritureValidator } from './EcritureValidator';
+import { useEcritureValidation } from '@/hooks/useEcritureValidation';
 
 interface JournalEntry {
   id: string;
@@ -21,6 +22,7 @@ interface JournalEntry {
   credit: number;
   reference: string;
   created_at: string;
+  is_validated: boolean;
 }
 
 export const JournalComptable = () => {
@@ -29,6 +31,9 @@ export const JournalComptable = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedPeriod, setSelectedPeriod] = useState('current-month');
   const [selectedJournal, setSelectedJournal] = useState('all');
+  const [showValidationErrors, setShowValidationErrors] = useState(false);
+  
+  const { validateEcriture } = useEcritureValidation();
 
   useEffect(() => {
     loadJournalEntries();
@@ -44,7 +49,7 @@ export const JournalComptable = () => {
         return;
       }
 
-      // Simuler des données de journal pour la démo
+      // Simuler des données de journal avec validation pour la démo
       const mockEntries: JournalEntry[] = [
         {
           id: '1',
@@ -56,7 +61,8 @@ export const JournalComptable = () => {
           debit: 118000,
           credit: 0,
           reference: 'FAC-2024-001',
-          created_at: '2024-01-15T10:00:00Z'
+          created_at: '2024-01-15T10:00:00Z',
+          is_validated: true
         },
         {
           id: '2',
@@ -68,7 +74,8 @@ export const JournalComptable = () => {
           debit: 0,
           credit: 100000,
           reference: 'FAC-2024-001',
-          created_at: '2024-01-15T10:00:00Z'
+          created_at: '2024-01-15T10:00:00Z',
+          is_validated: true
         },
         {
           id: '3',
@@ -80,7 +87,22 @@ export const JournalComptable = () => {
           debit: 0,
           credit: 18000,
           reference: 'FAC-2024-001',
-          created_at: '2024-01-15T10:00:00Z'
+          created_at: '2024-01-15T10:00:00Z',
+          is_validated: true
+        },
+        // Écriture déséquilibrée pour test
+        {
+          id: '4',
+          piece_number: 'AC001',
+          date: '2024-01-16',
+          account_number: '601000',
+          account_name: 'Achats de marchandises',
+          description: 'Achat marchandises',
+          debit: 50000,
+          credit: 0,
+          reference: 'FACT-FOUR-001',
+          created_at: '2024-01-16T10:00:00Z',
+          is_validated: false
         }
       ];
 
@@ -93,9 +115,41 @@ export const JournalComptable = () => {
     }
   };
 
+  const validateAllEntries = () => {
+    const pieceNumbers = [...new Set(entries.map(e => e.piece_number))];
+    let hasErrors = false;
+
+    pieceNumbers.forEach(pieceNumber => {
+      const pieceEntries = entries.filter(e => e.piece_number === pieceNumber);
+      const ecriture = {
+        date: pieceEntries[0]?.date || '',
+        piece_number: pieceNumber,
+        description: pieceEntries[0]?.description || '',
+        lines: pieceEntries.map(entry => ({
+          account_number: entry.account_number,
+          account_name: entry.account_name,
+          debit: entry.debit,
+          credit: entry.credit
+        }))
+      };
+
+      const validation = validateEcriture(ecriture);
+      if (!validation.isValid || !validation.isBalanced) {
+        hasErrors = true;
+      }
+    });
+
+    setShowValidationErrors(hasErrors);
+    
+    if (hasErrors) {
+      toast.error('Des écritures non conformes ont été détectées');
+    } else {
+      toast.success('Toutes les écritures sont conformes SYSCOHADA');
+    }
+  };
+
   const exportJournal = () => {
     toast.success('Export du journal en cours...');
-    // Implémentation de l'export
   };
 
   const filteredEntries = entries.filter(entry =>
@@ -106,6 +160,7 @@ export const JournalComptable = () => {
 
   const totalDebit = filteredEntries.reduce((sum, entry) => sum + entry.debit, 0);
   const totalCredit = filteredEntries.reduce((sum, entry) => sum + entry.credit, 0);
+  const nonValidatedEntries = entries.filter(e => !e.is_validated).length;
 
   return (
     <div className="space-y-6">
@@ -120,6 +175,10 @@ export const JournalComptable = () => {
           </div>
         </div>
         <div className="flex space-x-2">
+          <Button onClick={validateAllEntries} variant="outline">
+            <AlertTriangle className="w-4 h-4 mr-2" />
+            Valider Écritures
+          </Button>
           <Button onClick={exportJournal} variant="outline">
             <Download className="w-4 h-4 mr-2" />
             Exporter
@@ -130,6 +189,20 @@ export const JournalComptable = () => {
           </Button>
         </div>
       </div>
+
+      {/* Alerte validation */}
+      {nonValidatedEntries > 0 && (
+        <Card className="border-yellow-200 bg-yellow-50">
+          <CardContent className="pt-6">
+            <div className="flex items-center space-x-2 text-yellow-800">
+              <AlertTriangle className="w-5 h-5" />
+              <span className="font-medium">
+                {nonValidatedEntries} écriture(s) non validée(s) - Vérification SYSCOHADA requise
+              </span>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Filtres */}
       <Card>
@@ -177,7 +250,7 @@ export const JournalComptable = () => {
       </Card>
 
       {/* Récapitulatif */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
           <CardContent className="pt-6">
             <div className="text-center">
@@ -208,6 +281,16 @@ export const JournalComptable = () => {
             </div>
           </CardContent>
         </Card>
+        <Card>
+          <CardContent className="pt-6">
+            <div className="text-center">
+              <p className="text-sm text-gray-600">Conformité</p>
+              <p className={`text-2xl font-bold ${nonValidatedEntries === 0 ? 'text-green-600' : 'text-yellow-600'}`}>
+                {nonValidatedEntries === 0 ? 'Conforme' : 'À vérifier'}
+              </p>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Table du journal */}
@@ -233,6 +316,7 @@ export const JournalComptable = () => {
                     <TableHead>Référence</TableHead>
                     <TableHead className="text-right">Débit</TableHead>
                     <TableHead className="text-right">Crédit</TableHead>
+                    <TableHead>Statut</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -255,6 +339,11 @@ export const JournalComptable = () => {
                       </TableCell>
                       <TableCell className="text-right font-medium">
                         {entry.credit > 0 ? `${entry.credit.toLocaleString()} XOF` : ''}
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant={entry.is_validated ? "default" : "secondary"}>
+                          {entry.is_validated ? "Validée" : "Brouillon"}
+                        </Badge>
                       </TableCell>
                     </TableRow>
                   ))}

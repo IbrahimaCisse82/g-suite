@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'sonner';
@@ -32,6 +33,11 @@ import Employees from '@/pages/Employees';
 import { Reports } from '@/pages/Reports';
 import { Analytics } from '@/pages/Analytics';
 import NotFound from '@/pages/NotFound';
+
+// Import TPE-specific pages
+import TPEAssistant from '@/pages/TPEAssistant';
+import TPEGuides from '@/pages/TPEGuides';
+import JournalComptablePage from '@/pages/JournalComptable';
 
 // Import settings components
 import SettingsLayout from '@/pages/SettingsLayout';
@@ -82,6 +88,7 @@ function App() {
             {/* Core application routes */}
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/accounting" element={<Accounting />} />
+            <Route path="/journal-comptable" element={<JournalComptablePage />} />
             <Route path="/contacts" element={<Contacts />} />
             <Route path="/quotes" element={<Quotes />} />
             <Route path="/invoicing" element={<Invoicing />} />
@@ -93,6 +100,10 @@ function App() {
             <Route path="/employees" element={<Employees />} />
             <Route path="/reports" element={<Reports />} />
             <Route path="/analytics" element={<Analytics />} />
+
+            {/* TPE-specific routes */}
+            <Route path="/tpe-assistant" element={<TPEAssistant />} />
+            <Route path="/tpe-guides" element={<TPEGuides />} />
 
             {/* Settings routes */}
             <Route path="/settings" element={<SettingsLayout />}>

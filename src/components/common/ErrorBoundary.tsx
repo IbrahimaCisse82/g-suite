@@ -1,8 +1,8 @@
 
 import React, { Component, ErrorInfo, ReactNode } from 'react';
+import { AlertTriangle, RefreshCw } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { AlertTriangle, RefreshCw } from 'lucide-react';
 
 interface Props {
   children: ReactNode;
@@ -23,54 +23,65 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('ErrorBoundary caught an error:', error, errorInfo);
+    console.error('Application error:', error, errorInfo);
+    
+    // Log error to monitoring service
+    this.logError(error, errorInfo);
   }
 
-  private handleRefresh = () => {
+  private logError = async (error: Error, errorInfo: ErrorInfo) => {
+    try {
+      // In production, send to error monitoring service
+      console.error('Error boundary caught:', {
+        message: error.message,
+        stack: error.stack,
+        componentStack: errorInfo.componentStack
+      });
+    } catch (loggingError) {
+      console.error('Failed to log error:', loggingError);
+    }
+  };
+
+  private handleRetry = () => {
     this.setState({ hasError: false, error: undefined });
+  };
+
+  private handleReload = () => {
     window.location.reload();
   };
 
   public render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-          <Card className="max-w-md w-full">
-            <CardHeader className="text-center">
-              <div className="mx-auto w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mb-4">
-                <AlertTriangle className="w-6 h-6 text-red-600" />
-              </div>
-              <CardTitle className="text-xl font-semibold text-gray-900">
-                Une erreur s'est produite
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+          <Card className="w-full max-w-md">
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2 text-red-600">
+                <AlertTriangle className="w-5 h-5" />
+                <span>Une erreur s'est produite</span>
               </CardTitle>
             </CardHeader>
-            <CardContent className="text-center space-y-4">
+            <CardContent className="space-y-4">
               <p className="text-gray-600">
-                Nous nous excusons pour ce désagrément. Une erreur inattendue s'est produite.
+                Nous sommes désolés, une erreur inattendue s'est produite. 
+                Veuillez réessayer ou recharger la page.
               </p>
-              <div className="space-y-2">
-                <Button onClick={this.handleRefresh} className="w-full">
+              
+              {process.env.NODE_ENV === 'development' && this.state.error && (
+                <div className="bg-red-50 p-3 rounded text-sm text-red-800">
+                  <strong>Erreur:</strong> {this.state.error.message}
+                </div>
+              )}
+              
+              <div className="flex space-x-2">
+                <Button onClick={this.handleRetry} variant="outline">
                   <RefreshCw className="w-4 h-4 mr-2" />
-                  Actualiser la page
+                  Réessayer
                 </Button>
-                <Button 
-                  variant="outline" 
-                  onClick={() => window.location.href = '/dashboard'}
-                  className="w-full"
-                >
-                  Retour au tableau de bord
+                <Button onClick={this.handleReload}>
+                  Recharger la page
                 </Button>
               </div>
-              {process.env.NODE_ENV === 'development' && this.state.error && (
-                <details className="mt-4 text-left">
-                  <summary className="cursor-pointer text-sm text-gray-500">
-                    Détails de l'erreur (développement)
-                  </summary>
-                  <pre className="mt-2 text-xs bg-gray-100 p-2 rounded overflow-auto">
-                    {this.state.error.stack}
-                  </pre>
-                </details>
-              )}
             </CardContent>
           </Card>
         </div>

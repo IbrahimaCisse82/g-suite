@@ -11,18 +11,22 @@ export function useAccessControl() {
 
   // Détection du module actif avec fallback sécurisé
   const getActiveModule = (): ModuleType => {
-    // Vérifier si companies existe et est un tableau non vide
+    // Pour l'instant, on utilise le business_sector ou on définit par défaut
+    // En attendant l'ajout des champs plan_type/module_type dans la base
     if (profile?.companies && Array.isArray(profile.companies) && profile.companies.length > 0) {
-      // Prendre la première company et vérifier ses propriétés
       const company = profile.companies[0];
-      const moduleFromCompany = company?.plan_type || company?.module_type;
       
-      if (["entreprise", "comptable", "commercial"].includes(moduleFromCompany)) {
-        return moduleFromCompany as ModuleType;
+      // Logique temporaire basée sur le secteur d'activité
+      const businessSector = company?.business_sector?.toLowerCase();
+      
+      if (businessSector?.includes('comptable') || businessSector?.includes('accounting')) {
+        return "comptable";
+      } else if (businessSector?.includes('commercial') || businessSector?.includes('sales')) {
+        return "commercial";
       }
     }
     
-    // Fallback par défaut
+    // Fallback par défaut - solution entreprise complète
     return "entreprise";
   };
 

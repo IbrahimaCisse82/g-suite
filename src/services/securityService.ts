@@ -5,7 +5,7 @@ import { SessionManager } from './security/SessionManager';
 import { RateLimiter } from './security/RateLimiter';
 
 // Re-export types and interfaces for backward compatibility
-export { SecurityEvent } from './security/SecurityLogger';
+export type { SecurityEvent } from './security/SecurityLogger';
 
 export class SecurityService {
   // Security logging methods

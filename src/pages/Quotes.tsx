@@ -1,16 +1,13 @@
 
 import React, { useState } from 'react';
 import { Layout } from '@/components/Layout';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { QuoteForm } from '@/components/quotes/QuoteForm';
+import { QuotesHeader } from '@/components/quotes/QuotesHeader';
+import { QuotesTable } from '@/components/quotes/QuotesTable';
 import { useQuotes } from '@/hooks/useQuotes';
 import { useContacts } from '@/hooks/useContacts';
-import { Plus, FileText, ArrowRight } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-import { format } from 'date-fns';
-import { fr } from 'date-fns/locale';
 
 const Quotes = () => {
   const { quotes, loading, createQuote, convertQuoteToInvoice, deleteQuote } = useQuotes();
@@ -34,18 +31,20 @@ const Quotes = () => {
     }
   };
 
-  const getStatusBadge = (status: string) => {
-    const statusConfig = {
-      draft: { label: 'Brouillon', variant: 'secondary' as const },
-      sent: { label: 'Envoyé', variant: 'default' as const },
-      accepted: { label: 'Accepté', variant: 'default' as const },
-      rejected: { label: 'Refusé', variant: 'destructive' as const },
-      expired: { label: 'Expiré', variant: 'outline' as const },
-      converted: { label: 'Converti', variant: 'default' as const }
-    };
-    
-    const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.draft;
-    return <Badge variant={config.variant}>{config.label}</Badge>;
+  const handleViewQuote = (quote: any) => {
+    console.log('Viewing quote:', quote);
+    // TODO: Implement quote details view
+  };
+
+  const handleEditQuote = (quote: any) => {
+    console.log('Editing quote:', quote);
+    // TODO: Implement quote editing
+  };
+
+  const handleDeleteQuote = async (quote: any) => {
+    if (confirm('Êtes-vous sûr de vouloir supprimer ce devis ?')) {
+      await deleteQuote(quote.id);
+    }
   };
 
   if (loading) {
@@ -64,88 +63,20 @@ const Quotes = () => {
   return (
     <Layout>
       <div className="space-y-6">
-        <div className="flex justify-between items-center mb-6">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900 flex items-center">
-              <FileText className="mr-3 h-8 w-8" />
-              Devis
-            </h1>
-            <p className="text-gray-600">Gestion des devis et propositions commerciales</p>
-          </div>
-          <Button onClick={() => setShowCreateForm(true)} className="flex items-center gap-2">
-            <Plus className="h-4 w-4" />
-            Nouveau Devis
-          </Button>
-        </div>
+        <QuotesHeader 
+          onCreateQuote={() => setShowCreateForm(true)}
+          totalQuotes={quotes.length}
+        />
 
         <Card>
           <CardContent className="p-6">
-            {quotes.length === 0 ? (
-              <div className="text-center py-12">
-                <p className="text-gray-500 mb-4">Aucun devis créé pour le moment</p>
-                <button
-                  onClick={() => setShowCreateForm(true)}
-                  className="text-blue-600 hover:text-blue-800"
-                >
-                  Créer votre premier devis
-                </button>
-              </div>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b">
-                      <th className="text-left py-3">Numéro</th>
-                      <th className="text-left py-3">Client</th>
-                      <th className="text-left py-3">Date</th>
-                      <th className="text-left py-3">Validité</th>
-                      <th className="text-right py-3">Montant</th>
-                      <th className="text-left py-3">Statut</th>
-                      <th className="text-right py-3">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {quotes.map((quote) => (
-                      <tr key={quote.id} className="border-b hover:bg-gray-50">
-                        <td className="py-3 font-medium">{quote.quote_number}</td>
-                        <td className="py-3">{(quote as any).contacts?.name || 'N/A'}</td>
-                        <td className="py-3">
-                          {format(new Date(quote.quote_date), 'dd/MM/yyyy', { locale: fr })}
-                        </td>
-                        <td className="py-3">
-                          {format(new Date(quote.validity_date), 'dd/MM/yyyy', { locale: fr })}
-                        </td>
-                        <td className="text-right py-3">
-                          {quote.total_amount.toLocaleString('fr-FR')} XOF
-                        </td>
-                        <td className="py-3">{getStatusBadge(quote.status)}</td>
-                        <td className="text-right py-3">
-                          <div className="flex justify-end space-x-2">
-                            {quote.status === 'accepted' && (
-                              <Button
-                                size="sm"
-                                onClick={() => handleConvertToInvoice(quote.id)}
-                                className="flex items-center gap-1"
-                              >
-                                <ArrowRight className="h-3 w-3" />
-                                Convertir
-                              </Button>
-                            )}
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => deleteQuote(quote.id)}
-                            >
-                              Supprimer
-                            </Button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
+            <QuotesTable
+              quotes={quotes}
+              onView={handleViewQuote}
+              onEdit={handleEditQuote}
+              onDelete={handleDeleteQuote}
+              onConvertToInvoice={handleConvertToInvoice}
+            />
           </CardContent>
         </Card>
 

@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'sonner';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-// Import page components that exist
+// Import page components
 import Index from '@/pages/Index';
 import Landing from '@/pages/Landing';
 import AboutUs from '@/pages/AboutUs';
@@ -12,16 +12,14 @@ import Contact from '@/pages/Contact';
 import Formation from '@/pages/Formation';
 import QuoteRequest from '@/pages/QuoteRequest';
 
-// Import authentication components that exist
+// Import authentication components
 import UserLogin from '@/pages/UserLogin';
 import ResetPassword from '@/pages/ResetPassword';
 import TrialActivation from '@/pages/TrialActivation';
 
-// Import application components (using correct import syntax)
+// Import core application components
 import Dashboard from '@/pages/Dashboard';
 import { Accounting } from '@/pages/Accounting';
-import { ChartOfAccounts } from '@/pages/ChartOfAccounts';
-import { FinancialStatements } from '@/pages/FinancialStatements';
 import { Contacts } from '@/pages/Contacts';
 import Quotes from '@/pages/Quotes';
 import { Invoicing } from '@/pages/Invoicing';
@@ -29,13 +27,13 @@ import { Purchases } from '@/pages/Purchases';
 import { Products } from '@/pages/Products';
 import { Stock } from '@/pages/Stock';
 import { Treasury } from '@/pages/Treasury';
+import Budget from '@/pages/Budget';
+import Employees from '@/pages/Employees';
 import { Reports } from '@/pages/Reports';
 import { Analytics } from '@/pages/Analytics';
 import NotFound from '@/pages/NotFound';
-import Budget from '@/pages/Budget';
-import Employees from '@/pages/Employees';
 
-// Import settings components that exist
+// Import settings components
 import SettingsLayout from '@/pages/SettingsLayout';
 import { Settings } from '@/pages/Settings';
 import ProfileSettings from '@/pages/ProfileSettings';
@@ -48,7 +46,7 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 5 * 60 * 1000, // 5 minutes
-      gcTime: 10 * 60 * 1000, // 10 minutes (renamed from cacheTime)
+      gcTime: 10 * 60 * 1000, // 10 minutes
     },
   },
 });
@@ -70,11 +68,9 @@ function App() {
           <Route path="/auth/reset-password" element={<ResetPassword />} />
           <Route path="/trial-activation/:token" element={<TrialActivation />} />
 
-          {/* Protected application routes */}
+          {/* Core application routes */}
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/accounting" element={<Accounting />} />
-          <Route path="/chart-of-accounts" element={<ChartOfAccounts />} />
-          <Route path="/financial-statements" element={<FinancialStatements />} />
           <Route path="/contacts" element={<Contacts />} />
           <Route path="/quotes" element={<Quotes />} />
           <Route path="/invoicing" element={<Invoicing />} />

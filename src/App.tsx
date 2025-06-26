@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'sonner';
@@ -48,6 +49,14 @@ import UsersSettings from '@/pages/UsersSettings';
 import { SubscriptionSettings } from '@/pages/SubscriptionSettings';
 import LicensesSettings from '@/pages/LicensesSettings';
 
+// Import solution pages
+import ComptabiliteSolution from '@/pages/solutions/ComptabiliteSolution';
+import CommercialeSolution from '@/pages/solutions/CommercialeSolution';
+import EntrepriseSolution from '@/pages/solutions/EntrepriseSolution';
+
+// Import admin components
+import { SecureAdminLoginForm } from '@/components/admin/SecureAdminLoginForm';
+
 // Create QueryClient instance
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -75,14 +84,36 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/accueil" element={<Landing />} />
             <Route path="/landing" element={<Landing />} />
             <Route path="/about" element={<AboutUs />} />
+            <Route path="/about-us" element={<AboutUs />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/formation" element={<Formation />} />
             <Route path="/quote-request" element={<QuoteRequest />} />
 
+            {/* Solution pages */}
+            <Route path="/solutions/comptabilite" element={<ComptabiliteSolution />} />
+            <Route path="/solutions/commerciale" element={<CommercialeSolution />} />
+            <Route path="/solutions/entreprise" element={<EntrepriseSolution />} />
+
+            {/* Static pages */}
+            <Route path="/security" element={<Security />} />
+            <Route path="/integrations" element={<Integrations />} />
+            <Route path="/mobile" element={<Mobile />} />
+            <Route path="/help-center" element={<HelpCenter />} />
+            <Route path="/product-documentation" element={<ProductDocumentation />} />
+            <Route path="/legal-notices" element={<LegalNotices />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/terms-of-service" element={<TermsOfService />} />
+            <Route path="/cookies-policy" element={<CookiesPolicy />} />
+
+            {/* Admin routes */}
+            <Route path="/admin-backoffice/login" element={<SecureAdminLoginForm />} />
+
             {/* Authentication routes */}
             <Route path="/auth/login" element={<UserLogin />} />
+            <Route path="/user-login" element={<UserLogin />} />
             <Route path="/auth/reset-password" element={<ResetPassword />} />
             <Route path="/trial-activation/:token" element={<TrialActivation />} />
 

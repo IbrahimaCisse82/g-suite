@@ -14,7 +14,7 @@ import { fr } from 'date-fns/locale';
 
 const Quotes = () => {
   const { quotes, loading, createQuote, convertQuoteToInvoice, deleteQuote } = useQuotes();
-  const { contacts } = useContacts();
+  const { data: contacts = [] } = useContacts();
   const [showCreateForm, setShowCreateForm] = useState(false);
 
   const handleCreateQuote = async (quoteData: any) => {

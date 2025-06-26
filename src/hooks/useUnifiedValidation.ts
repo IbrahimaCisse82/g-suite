@@ -1,13 +1,9 @@
 
 import { useState, useCallback } from 'react';
-import { SecurityValidator } from '@/utils/securityValidation';
 import { toast } from 'sonner';
-
-interface ValidationResult {
-  isValid: boolean;
-  errors: string[];
-  sanitizedData?: any;
-}
+import { SecurityValidator } from '@/validation/core/SecurityValidator';
+import { BusinessValidator } from '@/validation/business/BusinessValidator';
+import { ValidationResult, ValidationType } from '@/validation/types';
 
 interface ValidationConfig {
   enableRateLimit?: boolean;
@@ -21,7 +17,7 @@ export const useUnifiedValidation = (config: ValidationConfig = {}) => {
 
   const validateForm = useCallback(async (
     data: any,
-    validationType: 'invoice' | 'purchase' | 'treasury' | 'contact' | 'product'
+    validationType: ValidationType
   ): Promise<ValidationResult> => {
     setIsValidating(true);
     
@@ -35,10 +31,14 @@ export const useUnifiedValidation = (config: ValidationConfig = {}) => {
       
       // Rate limiting check if enabled
       if (config.enableRateLimit) {
-        const rateLimitOk = await SecurityValidator.checkRateLimit(
+        // Import SecurityService dynamically to avoid circular dependency
+        const { SecurityService } = await import('@/services/securityService');
+        const rateLimitOk = await SecurityService.checkRateLimit(
           `validation_${validationType}`,
+          'validation',
           5,
-          60000 // 1 minute window
+          1,
+          1
         );
         
         if (!rateLimitOk) {
@@ -52,16 +52,16 @@ export const useUnifiedValidation = (config: ValidationConfig = {}) => {
       }
       
       // Perform validation based on type
-      let validation;
+      let validation: ValidationResult;
       switch (validationType) {
         case 'invoice':
-          validation = SecurityValidator.validateInvoiceData(sanitizedData);
+          validation = BusinessValidator.validateInvoiceData(sanitizedData);
           break;
         case 'purchase':
-          validation = SecurityValidator.validatePurchaseData(sanitizedData);
+          validation = BusinessValidator.validatePurchaseData(sanitizedData);
           break;
         case 'treasury':
-          validation = SecurityValidator.validateTreasuryData(sanitizedData);
+          validation = BusinessValidator.validateTreasuryData(sanitizedData);
           break;
         case 'contact':
           validation = validateContactData(sanitizedData);
@@ -70,18 +70,12 @@ export const useUnifiedValidation = (config: ValidationConfig = {}) => {
           validation = validateProductData(sanitizedData);
           break;
         default:
-          validation = { valid: false, errors: ['Type de validation non supporté'] };
+          validation = { isValid: false, errors: ['Type de validation non supporté'] };
       }
       
-      const result: ValidationResult = {
-        isValid: validation.valid,
-        errors: validation.errors,
-        sanitizedData: validation.valid ? sanitizedData : undefined
-      };
-      
       // Show user-friendly error messages
-      if (!result.isValid) {
-        result.errors.forEach(error => {
+      if (!validation.isValid) {
+        validation.errors.forEach(error => {
           toast.error(error);
         });
       }
@@ -89,13 +83,13 @@ export const useUnifiedValidation = (config: ValidationConfig = {}) => {
       // Log validation if enabled
       if (config.enableLogging) {
         console.log(`Validation ${validationType}:`, {
-          isValid: result.isValid,
-          errorCount: result.errors.length
+          isValid: validation.isValid,
+          errorCount: validation.errors.length
         });
       }
       
-      setLastValidation(result);
-      return result;
+      setLastValidation(validation);
+      return validation;
       
     } catch (error) {
       console.error('Validation error:', error);
@@ -110,7 +104,7 @@ export const useUnifiedValidation = (config: ValidationConfig = {}) => {
     }
   }, [config]);
 
-  const validateContactData = (data: any) => {
+  const validateContactData = (data: any): ValidationResult => {
     const errors: string[] = [];
     
     if (!data.name || data.name.trim().length < 2) {
@@ -129,10 +123,14 @@ export const useUnifiedValidation = (config: ValidationConfig = {}) => {
       errors.push('Limite de crédit invalide');
     }
     
-    return { valid: errors.length === 0, errors };
+    return { 
+      isValid: errors.length === 0, 
+      errors,
+      sanitizedData: errors.length === 0 ? SecurityValidator.sanitizeObject(data) : undefined
+    };
   };
 
-  const validateProductData = (data: any) => {
+  const validateProductData = (data: any): ValidationResult => {
     const errors: string[] = [];
     
     if (!data.name || data.name.trim().length < 2) {
@@ -151,7 +149,11 @@ export const useUnifiedValidation = (config: ValidationConfig = {}) => {
       errors.push('Quantité en stock invalide');
     }
     
-    return { valid: errors.length === 0, errors };
+    return { 
+      isValid: errors.length === 0, 
+      errors,
+      sanitizedData: errors.length === 0 ? SecurityValidator.sanitizeObject(data) : undefined
+    };
   };
 
   const clearValidation = useCallback(() => {

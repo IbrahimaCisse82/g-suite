@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { SecurityService } from '@/services/securityService';
+import { useNavigate } from 'react-router-dom';
 
 interface AdminSession {
   isAuthenticated: boolean;
@@ -18,7 +19,7 @@ interface LoginResult {
   requiresPasswordChange?: boolean;
 }
 
-export const useEnhancedAdminAuth = () => {
+export const useAdminAuthentication = () => {
   const [session, setSession] = useState<AdminSession>({
     isAuthenticated: false,
     adminEmail: null,
@@ -27,6 +28,7 @@ export const useEnhancedAdminAuth = () => {
     lastActivity: null
   });
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
     checkAdminSession();
@@ -239,6 +241,9 @@ export const useEnhancedAdminAuth = () => {
         title: "Déconnexion sécurisée",
         description: "Vous avez été déconnecté du panneau d'administration"
       });
+
+      // Rediriger vers la landing page
+      navigate('/');
 
     } catch (error) {
       console.error('Logout error:', error);

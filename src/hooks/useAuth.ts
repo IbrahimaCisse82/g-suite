@@ -1,56 +1,65 @@
 
-import { useState, useEffect } from 'react';
-import { User, Session } from '@supabase/supabase-js';
+import { useEffect, useState } from 'react';
+import { User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
-
-interface AuthState {
-  user: User | null;
-  session: Session | null;
-  loading: boolean;
-}
+import { toast } from 'sonner';
 
 export const useAuth = () => {
-  const [authState, setAuthState] = useState<AuthState>({
-    user: null,
-    session: null,
-    loading: true
-  });
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Écouter les changements d'état d'authentification
+    // Vérifier la session existante
+    const getSession = async () => {
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        console.log('Current session:', session); // Debug log
+        
+        if (error) {
+          console.error('Error getting session:', error);
+        } else {
+          setUser(session?.user ?? null);
+        }
+      } catch (error) {
+        console.error('Error in getSession:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getSession();
+
+    // Écouter les changements d'authentification
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        console.log('Auth state changed:', event, session?.user?.email);
-        setAuthState({
-          user: session?.user ?? null,
-          session: session,
-          loading: false
-        });
+      async (event, session) => {
+        console.log('Auth state changed:', event, session?.user); // Debug log
+        setUser(session?.user ?? null);
+        setLoading(false);
       }
     );
-
-    // Récupérer la session existante
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      console.log('Initial session:', session?.user?.email);
-      setAuthState({
-        user: session?.user ?? null,
-        session: session,
-        loading: false
-      });
-    });
 
     return () => subscription.unsubscribe();
   }, []);
 
   const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      console.error('Error signing out:', error);
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        console.error('Error signing out:', error);
+        toast.error('Erreur lors de la déconnexion');
+      } else {
+        toast.success('Déconnexion réussie');
+      }
+    } catch (error) {
+      console.error('Error in signOut:', error);
+      toast.error('Erreur lors de la déconnexion');
     }
   };
 
   return {
-    ...authState,
-    signOut
+    user,
+    loading,
+    signOut,
+    isAuthenticated: !!user
   };
 };

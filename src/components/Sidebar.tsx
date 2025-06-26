@@ -45,6 +45,8 @@ export const Sidebar = () => {
   const location = useLocation();
   const { filterNavigationItems, isLoading } = useAccessControl();
 
+  console.log('Sidebar rendering, location:', location.pathname); // Debug log
+
   if (isLoading) {
     return (
       <div className="w-64 bg-sidebar flex flex-col border-r border-sidebar-border p-6">
@@ -56,6 +58,7 @@ export const Sidebar = () => {
   }
 
   const filteredMenuItems = filterNavigationItems(menuItems);
+  console.log('Filtered menu items:', filteredMenuItems.length); // Debug log
 
   return (
     <div className="w-64 bg-sidebar text-sidebar-foreground flex flex-col border-r border-sidebar-border">

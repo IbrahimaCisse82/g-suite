@@ -11,8 +11,6 @@ import AboutUs from '@/pages/AboutUs';
 import Contact from '@/pages/Contact';
 import Formation from '@/pages/Formation';
 import QuoteRequest from '@/pages/QuoteRequest';
-import LegalNotices from '@/pages/LegalNotices';
-import ProductDocumentation from '@/pages/ProductDocumentation';
 
 // Import authentication components that exist
 import UserLogin from '@/pages/UserLogin';
@@ -45,7 +43,7 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 5 * 60 * 1000, // 5 minutes
-      cacheTime: 10 * 60 * 1000, // 10 minutes
+      gcTime: 10 * 60 * 1000, // 10 minutes (renamed from cacheTime)
     },
   },
 });
@@ -61,8 +59,6 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/formation" element={<Formation />} />
           <Route path="/quote-request" element={<QuoteRequest />} />
-          <Route path="/legal-notices" element={<LegalNotices />} />
-          <Route path="/product-documentation" element={<ProductDocumentation />} />
 
           {/* Authentication routes */}
           <Route path="/auth/login" element={<UserLogin />} />

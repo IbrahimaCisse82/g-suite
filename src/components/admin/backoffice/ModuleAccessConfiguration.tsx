@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
@@ -196,6 +197,7 @@ export const ModuleAccessConfiguration = () => {
                                 <Switch
                                   checked={hasAccess}
                                   onCheckedChange={() => toggleModuleAccess(solutionKey, roleKey, moduleKey)}
+                                  size="sm"
                                 />
                               </td>
                             );

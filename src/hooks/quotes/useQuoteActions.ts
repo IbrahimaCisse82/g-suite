@@ -20,13 +20,13 @@ export function useQuoteActions(refetch: () => void) {
         .insert({
           quote_number: quoteNumber,
           company_id: user.id,
-          client_id: quoteData.client_id,
+          contact_id: quoteData.contact_id,
           quote_date: quoteData.quote_date,
           validity_date: quoteData.validity_date,
           status: 'draft',
-          subtotal_amount: quoteData.subtotal_amount,
-          tax_amount: quoteData.tax_amount,
-          total_amount: quoteData.total_amount,
+          subtotal: quoteData.subtotal || 0,
+          tax_amount: quoteData.tax_amount || 0,
+          total_amount: quoteData.total_amount || 0,
           notes: quoteData.notes
         })
         .select()
@@ -41,15 +41,14 @@ export function useQuoteActions(refetch: () => void) {
       // Ajouter les lignes du devis
       if (quoteData.items && quoteData.items.length > 0) {
         const { error: itemsError } = await supabase
-          .from('quote_items')
+          .from('quote_lines')
           .insert(
             quoteData.items.map((item: any) => ({
               quote_id: quote.id,
-              product_name: item.product_name,
-              description: item.description,
-              quantity: item.quantity,
-              unit_price: item.unit_price,
-              total_price: item.total_price
+              description: item.description || item.product_name,
+              quantity: item.quantity || 1,
+              unit_price: item.unit_price || 0,
+              product_id: item.product_id
             }))
           );
 

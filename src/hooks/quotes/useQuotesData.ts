@@ -27,13 +27,12 @@ export function useQuotesData() {
             email,
             phone
           ),
-          quote_items (
+          quote_lines (
             id,
-            product_name,
             description,
             quantity,
             unit_price,
-            total_price
+            product_id
           )
         `)
         .eq('company_id', user.id)

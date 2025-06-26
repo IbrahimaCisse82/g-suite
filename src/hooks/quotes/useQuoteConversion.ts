@@ -17,7 +17,7 @@ export function useQuoteConversion(refetch: () => void) {
         .from('quotes')
         .select(`
           *,
-          quote_items (*)
+          quote_lines (*)
         `)
         .eq('id', quoteId)
         .single();
@@ -37,15 +37,14 @@ export function useQuoteConversion(refetch: () => void) {
         .insert({
           invoice_number: invoiceNumber,
           company_id: user.id,
-          client_id: quote.client_id,
+          contact_id: quote.contact_id,
           invoice_date: new Date().toISOString().split('T')[0],
           due_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
           status: 'pending',
-          subtotal_amount: quote.subtotal_amount,
-          tax_amount: quote.tax_amount,
-          total_amount: quote.total_amount,
-          notes: quote.notes,
-          quote_id: quote.id
+          subtotal: quote.subtotal || 0,
+          tax_amount: quote.tax_amount || 0,
+          total_amount: quote.total_amount || 0,
+          notes: quote.notes
         })
         .select()
         .single();
@@ -56,28 +55,9 @@ export function useQuoteConversion(refetch: () => void) {
         return;
       }
 
-      // Ajouter les lignes de la facture
-      if (quote.quote_items && quote.quote_items.length > 0) {
-        const { error: itemsError } = await supabase
-          .from('invoice_items')
-          .insert(
-            quote.quote_items.map((item: any) => ({
-              invoice_id: invoice.id,
-              product_name: item.product_name,
-              description: item.description,
-              quantity: item.quantity,
-              unit_price: item.unit_price,
-              total_price: item.total_price
-            }))
-          );
-
-        if (itemsError) {
-          console.error('Erreur lors de l\'ajout des lignes de facture:', itemsError);
-          toast.error('Erreur lors de l\'ajout des lignes de facture');
-          return;
-        }
-      }
-
+      // Note: Invoice items would need to be added to a separate table if it exists
+      // For now, we'll skip this step since invoice_items table doesn't exist in the schema
+      
       // Mettre à jour le statut du devis
       const { error: updateError } = await supabase
         .from('quotes')

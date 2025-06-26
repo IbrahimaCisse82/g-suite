@@ -37,9 +37,13 @@ import NotFound from '@/pages/NotFound';
 // Import TPE-specific pages
 import TPEAssistant from '@/pages/TPEAssistant';
 import TPEGuides from '@/pages/TPEGuides';
+import TPEOnboarding from '@/pages/TPEOnboarding';
 import JournalComptablePage from '@/pages/JournalComptable';
 import GrandLivrePage from '@/pages/GrandLivre';
 import BalanceGeneralePage from '@/pages/BalanceGenerale';
+
+// Import company registration
+import CompanyRegistration from '@/pages/CompanyRegistration';
 
 // Import settings components
 import SettingsLayout from '@/pages/SettingsLayout';
@@ -102,6 +106,12 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/formation" element={<Formation />} />
             <Route path="/quote-request" element={<QuoteRequest />} />
+
+            {/* Company registration routes */}
+            <Route path="/company-registration" element={<CompanyRegistration />} />
+
+            {/* TPE routes */}
+            <Route path="/tpe/onboarding" element={<TPEOnboarding />} />
 
             {/* Solution pages */}
             <Route path="/solutions/comptabilite" element={<ComptabiliteSolution />} />

@@ -61,8 +61,8 @@ export const Sidebar = () => {
   console.log('Filtered menu items:', filteredMenuItems.length); // Debug log
 
   return (
-    <div className="w-64 bg-sidebar text-sidebar-foreground flex flex-col border-r border-sidebar-border">
-      <div className="p-6 border-b border-sidebar-border">
+    <div className="w-64 bg-sidebar text-sidebar-foreground flex flex-col border-r border-sidebar-border min-h-screen">
+      <div className="p-6 border-b border-sidebar-border flex-shrink-0">
         <div className="flex items-center space-x-3">
           <GSuiteLogo size={40} />
           <div>
@@ -72,7 +72,7 @@ export const Sidebar = () => {
         </div>
       </div>
       
-      <nav className="flex-1 p-4 space-y-2">
+      <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
         {filteredMenuItems.map((item) => {
           const Icon = item.icon;
           const isActive = location.pathname === item.path;
@@ -80,20 +80,20 @@ export const Sidebar = () => {
             <Link
               key={item.path}
               to={item.path}
-              className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+              className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 text-sm font-medium w-full ${
                 isActive 
                   ? 'bg-green-600 text-white shadow-lg' 
                   : 'text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-foreground'
               }`}
             >
-              <Icon className="w-5 h-5" />
-              <span className="font-medium">{item.label}</span>
+              <Icon className="w-5 h-5 flex-shrink-0" />
+              <span className="truncate">{item.label}</span>
             </Link>
           );
         })}
       </nav>
       
-      <div className="p-4 border-t border-sidebar-border">
+      <div className="p-4 border-t border-sidebar-border flex-shrink-0">
         <div className="text-xs text-sidebar-foreground/50">
           © 2024 G-Suite v1.0
         </div>

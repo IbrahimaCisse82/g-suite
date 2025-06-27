@@ -8,6 +8,8 @@ import { QuotesHeader } from '@/components/quotes/QuotesHeader';
 import { QuotesTable } from '@/components/quotes/QuotesTable';
 import { useQuotes } from '@/hooks/useQuotes';
 import { useContacts } from '@/hooks/useContacts';
+import { PageTransition } from '@/components/common/PageTransition';
+import { OptimizedCard } from '@/components/common/OptimizedCard';
 
 const Quotes = () => {
   const { quotes, loading, createQuote, convertQuoteToInvoice, deleteQuote } = useQuotes();
@@ -50,10 +52,16 @@ const Quotes = () => {
   if (loading) {
     return (
       <Layout>
-        <div className="flex items-center justify-center h-64">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="mt-2 text-gray-600">Chargement des devis...</p>
+        <div className="gradient-bg min-h-full">
+          <div className="p-8">
+            <div className="animate-pulse">
+              <div className="h-8 bg-gray-200 rounded w-64 mb-4"></div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className="h-32 bg-gray-200 rounded-xl"></div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </Layout>
@@ -62,34 +70,40 @@ const Quotes = () => {
 
   return (
     <Layout>
-      <div className="space-y-6">
-        <QuotesHeader 
-          onCreateQuote={() => setShowCreateForm(true)}
-          totalQuotes={quotes.length}
-        />
+      <PageTransition>
+        <div className="gradient-bg min-h-full">
+          <div className="p-8">
+            <div className="space-y-6">
+              <QuotesHeader 
+                onCreateQuote={() => setShowCreateForm(true)}
+                totalQuotes={quotes.length}
+              />
 
-        <Card>
-          <CardContent className="p-6">
-            <QuotesTable
-              quotes={quotes}
-              onView={handleViewQuote}
-              onEdit={handleEditQuote}
-              onDelete={handleDeleteQuote}
-              onConvertToInvoice={handleConvertToInvoice}
-            />
-          </CardContent>
-        </Card>
+              <OptimizedCard className="animate-fade-in">
+                <CardContent className="p-0">
+                  <QuotesTable
+                    quotes={quotes}
+                    onView={handleViewQuote}
+                    onEdit={handleEditQuote}
+                    onDelete={handleDeleteQuote}
+                    onConvertToInvoice={handleConvertToInvoice}
+                  />
+                </CardContent>
+              </OptimizedCard>
 
-        <Dialog open={showCreateForm} onOpenChange={setShowCreateForm}>
-          <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
-            <QuoteForm
-              onSubmit={handleCreateQuote}
-              onCancel={() => setShowCreateForm(false)}
-              contacts={contacts}
-            />
-          </DialogContent>
-        </Dialog>
-      </div>
+              <Dialog open={showCreateForm} onOpenChange={setShowCreateForm}>
+                <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto bg-white">
+                  <QuoteForm
+                    onSubmit={handleCreateQuote}
+                    onCancel={() => setShowCreateForm(false)}
+                    contacts={contacts}
+                  />
+                </DialogContent>
+              </Dialog>
+            </div>
+          </div>
+        </div>
+      </PageTransition>
     </Layout>
   );
 };

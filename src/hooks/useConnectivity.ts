@@ -45,6 +45,24 @@ export const useConnectivity = () => {
     }));
   }, []);
 
+  const fetchWithTimeout = useCallback(async (url: string, timeout: number = 3000) => {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+    try {
+      const response = await fetch(url, {
+        method: 'HEAD',
+        cache: 'no-cache',
+        signal: controller.signal
+      });
+      clearTimeout(timeoutId);
+      return response;
+    } catch (error) {
+      clearTimeout(timeoutId);
+      throw error;
+    }
+  }, []);
+
   useEffect(() => {
     // Écouter les événements de connectivité
     window.addEventListener('online', handleOnline);
@@ -63,11 +81,7 @@ export const useConnectivity = () => {
       if (navigator.onLine) {
         try {
           // Test avec une requête légère vers notre API
-          const response = await fetch('/api/health', { 
-            method: 'HEAD',
-            cache: 'no-cache',
-            timeout: 3000 
-          });
+          const response = await fetchWithTimeout('/api/health');
           
           if (!connectivity.isOnline && response.ok) {
             handleOnline();
@@ -86,7 +100,7 @@ export const useConnectivity = () => {
       if (interval) clearInterval(interval);
       clearInterval(connectivityCheck);
     };
-  }, [connectivity.isOnline, connectivity.lastOnlineTime, handleOnline, handleOffline]);
+  }, [connectivity.isOnline, connectivity.lastOnlineTime, handleOnline, handleOffline, fetchWithTimeout]);
 
   const getOfflineDurationText = useCallback(() => {
     if (connectivity.isOnline || !offlineDuration) return null;

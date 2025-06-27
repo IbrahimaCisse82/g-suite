@@ -1,11 +1,12 @@
 
 import React, { memo } from 'react';
-import { Card, CardProps } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { usePerformance } from '@/hooks/usePerformance';
 
-interface OptimizedCardProps extends CardProps {
+interface OptimizedCardProps extends React.HTMLAttributes<HTMLDivElement> {
   trackRender?: boolean;
   componentName?: string;
+  children?: React.ReactNode;
 }
 
 export const OptimizedCard = memo<OptimizedCardProps>(({ 

@@ -3,11 +3,12 @@ import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { usePerformance } from './usePerformance';
 import { memoryCache, sessionCache } from '@/utils/cache';
 
-interface OptimizedQueryOptions<T> extends UseQueryOptions<T> {
+interface OptimizedQueryOptions<T> extends Omit<UseQueryOptions<T>, 'gcTime'> {
   enableMemoryCache?: boolean;
   enableSessionCache?: boolean;
   cacheTTL?: number;
   context?: string;
+  gcTime?: number;
 }
 
 export function useOptimizedQuery<T>(
@@ -21,6 +22,7 @@ export function useOptimizedQuery<T>(
     cacheTTL = 5 * 60 * 1000,
     queryKey,
     queryFn,
+    gcTime,
     ...queryOptions
   } = options;
 
@@ -77,7 +79,7 @@ export function useOptimizedQuery<T>(
     queryKey,
     queryFn: enhancedQueryFn,
     staleTime: cacheTTL / 2, // Consider data stale after half the cache TTL
-    cacheTime: cacheTTL,
+    gcTime: gcTime || cacheTTL,
     ...queryOptions
   });
 }

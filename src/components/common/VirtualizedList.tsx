@@ -12,14 +12,14 @@ interface VirtualizedListProps<T> {
   overscan?: number;
 }
 
-export const VirtualizedList = memo(<T,>({
+function VirtualizedListComponent<T>({
   items,
   itemHeight,
   height,
   renderItem,
   className,
   overscan = 5
-}: VirtualizedListProps<T>) => {
+}: VirtualizedListProps<T>) {
   const {
     visibleItems,
     totalHeight,
@@ -60,6 +60,6 @@ export const VirtualizedList = memo(<T,>({
       </div>
     </div>
   );
-}) as <T>(props: VirtualizedListProps<T>) => React.ReactElement;
+}
 
-VirtualizedList.displayName = 'VirtualizedList';
+export const VirtualizedList = memo(VirtualizedListComponent) as typeof VirtualizedListComponent;

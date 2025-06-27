@@ -44,47 +44,48 @@ export const useCreateTreasuryTransaction = () => {
 
       if (!profile?.company_id) throw new Error('No company associated with user');
 
-      // Start a transaction to update both the transaction and account balance
-      const { data, error } = await supabase.rpc('create_treasury_transaction', {
-        p_company_id: profile.company_id,
-        p_account_id: transaction.account_id,
-        p_transaction_type: transaction.transaction_type,
-        p_amount: transaction.amount,
-        p_description: transaction.description,
-        p_category: transaction.category,
-        p_transaction_date: transaction.transaction_date
-      });
+      // Insert the transaction
+      const { data: transactionData, error: transactionError } = await supabase
+        .from('treasury_transactions')
+        .insert({ 
+          ...transaction, 
+          company_id: profile.company_id
+        })
+        .select()
+        .single();
 
-      if (error) {
-        // Fallback to simple insert if RPC doesn't exist
-        const { data: insertData, error: insertError } = await supabase
-          .from('treasury_transactions')
-          .insert({ 
-            ...transaction, 
-            company_id: profile.company_id
-          })
-          .select()
+      if (transactionError) throw transactionError;
+
+      // Update account balance if account_id is provided
+      if (transaction.account_id) {
+        const multiplier = transaction.transaction_type === 'income' ? 1 : -1;
+        const balanceChange = transaction.amount * multiplier;
+
+        // Get current balance
+        const { data: currentAccount, error: fetchError } = await supabase
+          .from('treasury_accounts')
+          .select('current_balance')
+          .eq('id', transaction.account_id)
           .single();
 
-        if (insertError) throw insertError;
+        if (fetchError) {
+          console.warn('Could not fetch current balance:', fetchError);
+        } else {
+          // Update the balance
+          const newBalance = (currentAccount.current_balance || 0) + balanceChange;
+          
+          const { error: updateError } = await supabase
+            .from('treasury_accounts')
+            .update({ current_balance: newBalance })
+            .eq('id', transaction.account_id);
 
-        // Update account balance manually
-        if (transaction.account_id) {
-          const multiplier = transaction.transaction_type === 'income' ? 1 : -1;
-          const { error: balanceError } = await supabase.rpc('update_account_balance', {
-            account_id: transaction.account_id,
-            amount_change: transaction.amount * multiplier
-          });
-
-          if (balanceError) {
-            console.warn('Could not update account balance:', balanceError);
+          if (updateError) {
+            console.warn('Could not update account balance:', updateError);
           }
         }
-
-        return insertData;
       }
 
-      return data;
+      return transactionData;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['treasury-transactions'] });

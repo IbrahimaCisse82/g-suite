@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Settings as SettingsIcon, User, Shield, CreditCard, Bell, Globe } from 'lucide-react';
+import { Settings as SettingsIcon, User, CreditCard, Bell, Globe } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Layout } from '@/components/Layout';
 
@@ -23,12 +23,6 @@ const settingsOptions = [
     description: 'Gérez vos licences et abonnements',
     icon: CreditCard,
     path: '/settings/licenses',
-  },
-  {
-    title: 'Sécurité',
-    description: 'Paramètres de sécurité et confidentialité',
-    icon: Shield,
-    path: '/security',
   },
   {
     title: 'Notifications',

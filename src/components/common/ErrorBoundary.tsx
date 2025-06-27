@@ -1,85 +1,98 @@
 
 import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { AlertTriangle, RefreshCw } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { AlertCircle, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface Props {
   children: ReactNode;
+  fallback?: ReactNode;
+  onError?: (error: Error, errorInfo: ErrorInfo) => void;
 }
 
 interface State {
   hasError: boolean;
   error?: Error;
+  errorInfo?: ErrorInfo;
 }
 
 export class ErrorBoundary extends Component<Props, State> {
-  public state: State = {
-    hasError: false
-  };
+  constructor(props: Props) {
+    super(props);
+    this.state = { hasError: false };
+  }
 
-  public static getDerivedStateFromError(error: Error): State {
+  static getDerivedStateFromError(error: Error): State {
     return { hasError: true, error };
   }
 
-  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('Application error:', error, errorInfo);
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.error('ErrorBoundary caught an error:', error, errorInfo);
     
-    // Log error to monitoring service
-    this.logError(error, errorInfo);
+    this.setState({
+      error,
+      errorInfo
+    });
+
+    // Call custom error handler if provided
+    if (this.props.onError) {
+      this.props.onError(error, errorInfo);
+    }
+
+    // Log to performance monitoring
+    if (window.performance && window.performance.mark) {
+      window.performance.mark(`error-${Date.now()}`);
+    }
   }
 
-  private logError = async (error: Error, errorInfo: ErrorInfo) => {
-    try {
-      // In production, send to error monitoring service
-      console.error('Error boundary caught:', {
-        message: error.message,
-        stack: error.stack,
-        componentStack: errorInfo.componentStack
-      });
-    } catch (loggingError) {
-      console.error('Failed to log error:', loggingError);
-    }
+  handleRetry = () => {
+    this.setState({ hasError: false, error: undefined, errorInfo: undefined });
   };
 
-  private handleRetry = () => {
-    this.setState({ hasError: false, error: undefined });
-  };
-
-  private handleReload = () => {
-    window.location.reload();
-  };
-
-  public render() {
+  render() {
     if (this.state.hasError) {
+      if (this.props.fallback) {
+        return this.props.fallback;
+      }
+
       return (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-          <Card className="w-full max-w-md">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2 text-red-600">
-                <AlertTriangle className="w-5 h-5" />
-                <span>Une erreur s'est produite</span>
+        <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50">
+          <Card className="max-w-md w-full">
+            <CardHeader className="text-center">
+              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <AlertCircle className="w-8 h-8 text-red-600" />
+              </div>
+              <CardTitle className="text-xl text-gray-900">
+                Une erreur s'est produite
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="text-center space-y-4">
               <p className="text-gray-600">
-                Nous sommes désolés, une erreur inattendue s'est produite. 
-                Veuillez réessayer ou recharger la page.
+                L'application a rencontré une erreur inattendue. Veuillez réessayer.
               </p>
               
               {process.env.NODE_ENV === 'development' && this.state.error && (
-                <div className="bg-red-50 p-3 rounded text-sm text-red-800">
-                  <strong>Erreur:</strong> {this.state.error.message}
-                </div>
+                <details className="text-left bg-gray-100 p-4 rounded-lg">
+                  <summary className="cursor-pointer font-medium text-red-600 mb-2">
+                    Détails de l'erreur (développement)
+                  </summary>
+                  <pre className="text-xs overflow-auto">
+                    {this.state.error.toString()}
+                    {this.state.errorInfo?.componentStack}
+                  </pre>
+                </details>
               )}
-              
-              <div className="flex space-x-2">
-                <Button onClick={this.handleRetry} variant="outline">
-                  <RefreshCw className="w-4 h-4 mr-2" />
+
+              <div className="flex gap-2 justify-center">
+                <Button onClick={this.handleRetry} className="flex items-center gap-2">
+                  <RefreshCw className="w-4 h-4" />
                   Réessayer
                 </Button>
-                <Button onClick={this.handleReload}>
-                  Recharger la page
+                <Button 
+                  variant="outline" 
+                  onClick={() => window.location.reload()}
+                >
+                  Actualiser la page
                 </Button>
               </div>
             </CardContent>

@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { Toaster } from 'sonner';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { ErrorBoundary } from '@/components/common/ErrorBoundary';
+import { PerformanceMonitor } from '@/components/common/PerformanceMonitor';
 import { queryClient } from '@/config/queryClient';
 import { AppRoutes } from '@/routes/AppRoutes';
 
@@ -24,6 +25,7 @@ function App() {
               },
             }}
           />
+          <PerformanceMonitor />
         </BrowserRouter>
       </QueryClientProvider>
     </ErrorBoundary>

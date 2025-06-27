@@ -1,16 +1,23 @@
 
-import React from 'react';
+import React, { Suspense } from 'react';
+import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import { Layout } from '@/components/Layout';
 import { PageTransition } from '@/components/common/PageTransition';
-import { AuthGuard } from '@/features/auth/components/AuthGuard';
-import { ContactsErrorView } from '@/components/contacts/ContactsErrorView';
 import { PageLoader } from '@/components/common/PageLoader';
-import { useContactsLogic } from './hooks/useContactsLogic';
-import { ContactsHeader } from './components/ContactsHeader';
+import { ContactsErrorView } from '@/components/contacts/ContactsErrorView';
 import { ContactsContent } from './components/ContactsContent';
 import { ContactsDialogs } from './components/ContactsDialogs';
+import { useContactsLogic } from './hooks/useContactsLogic';
+import { usePerformance } from '@/hooks/usePerformance';
 
-const ContactsPage = React.memo(() => {
+const ContactsPage = () => {
+  const { measurePageLoad } = usePerformance();
+  const endMeasure = React.useMemo(() => measurePageLoad('Contacts'), [measurePageLoad]);
+
+  React.useEffect(() => {
+    return endMeasure;
+  }, [endMeasure]);
+
   const {
     contacts,
     loading,
@@ -34,7 +41,7 @@ const ContactsPage = React.memo(() => {
   if (loading) {
     return (
       <Layout>
-        <PageLoader text="Chargement des contacts..." rows={5} />
+        <PageLoader text="Chargement des contacts..." />
       </Layout>
     );
   }
@@ -48,23 +55,20 @@ const ContactsPage = React.memo(() => {
   }
 
   return (
-    <AuthGuard>
+    <ErrorBoundary fallback={<ContactsErrorView error={new Error('Erreur dans le composant Contacts')} />}>
       <Layout>
         <PageTransition>
           <div className="gradient-bg min-h-full">
             <div className="p-8">
-              <ContactsHeader 
-                onCreateContact={openCreateForm}
-                totalContacts={contacts.length}
-              />
-
-              <ContactsContent
-                contacts={contacts}
-                onViewContact={handleViewContact}
-                onEditContact={handleEditContactClick}
-                onDeleteContact={handleDeleteContact}
-                onCreateContact={openCreateForm}
-              />
+              <Suspense fallback={<PageLoader type="skeleton" rows={3} />}>
+                <ContactsContent
+                  contacts={contacts}
+                  onViewContact={handleViewContact}
+                  onEditContact={handleEditContactClick}
+                  onDeleteContact={handleDeleteContact}
+                  onCreateContact={openCreateForm}
+                />
+              </Suspense>
 
               <ContactsDialogs
                 showCreateForm={showCreateForm}
@@ -79,9 +83,8 @@ const ContactsPage = React.memo(() => {
           </div>
         </PageTransition>
       </Layout>
-    </AuthGuard>
+    </ErrorBoundary>
   );
-});
+};
 
-ContactsPage.displayName = 'ContactsPage';
 export default ContactsPage;

@@ -1,5 +1,5 @@
 
-import { useQuery, UseQueryOptions } from '@tanstack/react-query';
+import { useQuery, UseQueryOptions, QueryFunction } from '@tanstack/react-query';
 import { usePerformance } from './usePerformance';
 import { memoryCache, sessionCache } from '@/utils/cache';
 
@@ -29,7 +29,7 @@ export function useOptimizedQuery<T>(
   const cacheKey = Array.isArray(queryKey) ? queryKey.join('_') : String(queryKey);
 
   // Enhanced query function with caching
-  const enhancedQueryFn = async () => {
+  const enhancedQueryFn: QueryFunction<T> = async () => {
     const endMeasure = measureOperation(`query_${cacheKey}`);
 
     try {
@@ -57,8 +57,11 @@ export function useOptimizedQuery<T>(
         }
       }
 
-      // Fetch data
-      if (!queryFn) throw new Error('Query function is required');
+      // Fetch data - ensure queryFn is callable
+      if (!queryFn || typeof queryFn !== 'function') {
+        throw new Error('Query function is required and must be callable');
+      }
+      
       const data = await queryFn();
 
       // Cache the result

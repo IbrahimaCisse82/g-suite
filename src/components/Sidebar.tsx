@@ -1,6 +1,6 @@
 
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   LayoutDashboard, 
   FileText, 
@@ -14,14 +14,18 @@ import {
   Warehouse,
   GraduationCap,
   Globe2,
-  ShoppingBag,
   FileBarChart,
   Target,
   UsersIcon,
-  FileCheck
+  FileCheck,
+  LogOut,
+  Menu,
+  X
 } from 'lucide-react';
 import { useAccessControl } from "@/hooks/useAccessControl";
 import { GSuiteLogo } from '@/components/ui/gsuite-logo';
+import { Button } from '@/components/ui/button';
+import { useAuth } from '@/hooks/useAuth';
 
 const menuItems = [
   { icon: LayoutDashboard, label: 'Tableau de bord', path: '/dashboard', feature: "dashboard" },
@@ -41,15 +45,25 @@ const menuItems = [
   { icon: Settings, label: 'Paramètres', path: '/settings', feature: "settings" },
 ];
 
-export const Sidebar = () => {
+interface SidebarProps {
+  isCollapsed?: boolean;
+  onToggle?: () => void;
+}
+
+export const Sidebar = ({ isCollapsed = false, onToggle }: SidebarProps) => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { signOut } = useAuth();
   const { filterNavigationItems, isLoading } = useAccessControl();
 
-  console.log('Sidebar rendering, location:', location.pathname); // Debug log
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/');
+  };
 
   if (isLoading) {
     return (
-      <div className="w-64 bg-sidebar flex flex-col border-r border-sidebar-border p-6">
+      <div className={`${isCollapsed ? 'w-16' : 'w-64'} bg-sidebar flex flex-col border-r border-sidebar-border p-6 transition-all duration-300`}>
         <div className="animate-pulse h-6 bg-gray-200 rounded mb-4" />
         <div className="animate-pulse h-4 bg-gray-100 mb-2 rounded" />
         <div className="animate-pulse h-4 bg-gray-100 mb-2 rounded" />
@@ -58,20 +72,40 @@ export const Sidebar = () => {
   }
 
   const filteredMenuItems = filterNavigationItems(menuItems);
-  console.log('Filtered menu items:', filteredMenuItems.length); // Debug log
 
   return (
-    <div className="w-64 bg-sidebar text-sidebar-foreground flex flex-col border-r border-sidebar-border min-h-screen">
-      <div className="p-6 border-b border-sidebar-border flex-shrink-0">
-        <div className="flex items-center space-x-3">
-          <GSuiteLogo size={40} />
-          <div>
-            <h1 className="text-xl font-bold text-sidebar-foreground">G-Suite</h1>
-            <p className="text-sm text-sidebar-foreground/70">Gestion d'entreprise digitale</p>
-          </div>
+    <div className={`${isCollapsed ? 'w-16' : 'w-64'} bg-sidebar text-sidebar-foreground flex flex-col border-r border-sidebar-border min-h-screen transition-all duration-300`}>
+      {/* Header avec toggle */}
+      <div className="p-4 border-b border-sidebar-border flex-shrink-0">
+        <div className="flex items-center justify-between">
+          {!isCollapsed && (
+            <div className="flex items-center space-x-3">
+              <GSuiteLogo size={32} />
+              <div>
+                <h1 className="text-lg font-bold text-sidebar-foreground">G-Suite</h1>
+                <p className="text-xs text-sidebar-foreground/70">Gestion d'entreprise</p>
+              </div>
+            </div>
+          )}
+          {isCollapsed && (
+            <div className="flex justify-center">
+              <GSuiteLogo size={32} />
+            </div>
+          )}
+          {onToggle && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onToggle}
+              className="text-sidebar-foreground/80 hover:text-sidebar-foreground p-1"
+            >
+              {isCollapsed ? <Menu className="w-4 h-4" /> : <X className="w-4 h-4" />}
+            </Button>
+          )}
         </div>
       </div>
       
+      {/* Navigation */}
       <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
         {filteredMenuItems.map((item) => {
           const Icon = item.icon;
@@ -80,23 +114,39 @@ export const Sidebar = () => {
             <Link
               key={item.path}
               to={item.path}
-              className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 text-sm font-medium w-full ${
+              className={`flex items-center space-x-3 px-3 py-3 rounded-lg transition-all duration-200 text-sm font-medium w-full ${
                 isActive 
                   ? 'bg-green-600 text-white shadow-lg' 
                   : 'text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-foreground'
-              }`}
+              } ${isCollapsed ? 'justify-center' : ''}`}
+              title={isCollapsed ? item.label : undefined}
             >
               <Icon className="w-5 h-5 flex-shrink-0" />
-              <span className="truncate">{item.label}</span>
+              {!isCollapsed && <span className="truncate">{item.label}</span>}
             </Link>
           );
         })}
       </nav>
       
+      {/* Bouton de déconnexion */}
       <div className="p-4 border-t border-sidebar-border flex-shrink-0">
-        <div className="text-xs text-sidebar-foreground/50">
-          © 2024 G-Suite v1.0
-        </div>
+        <Button
+          variant="ghost"
+          onClick={handleSignOut}
+          className={`w-full text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-foreground flex items-center ${
+            isCollapsed ? 'justify-center px-2' : 'justify-start space-x-2'
+          }`}
+          title={isCollapsed ? 'Déconnexion' : undefined}
+        >
+          <LogOut className="w-4 h-4" />
+          {!isCollapsed && <span>Déconnexion</span>}
+        </Button>
+        
+        {!isCollapsed && (
+          <div className="text-xs text-sidebar-foreground/50 mt-2 text-center">
+            © 2024 G-Suite v1.0
+          </div>
+        )}
       </div>
     </div>
   );

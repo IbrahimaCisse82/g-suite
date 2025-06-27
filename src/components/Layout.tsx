@@ -1,7 +1,10 @@
 
-import React from 'react';
+import React, { useState } from 'react';
+import { useLocation, Link } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
+import { Button } from '@/components/ui/button';
+import { ArrowLeft, LayoutDashboard } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useAdminAuthentication } from '@/hooks/useAdminAuthentication';
 
@@ -12,15 +15,44 @@ interface LayoutProps {
 export const Layout = ({ children }: LayoutProps) => {
   const { user } = useAuth();
   const { isAuthenticated: isAdmin } = useAdminAuthentication();
+  const location = useLocation();
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
-  // Afficher la sidebar toujours (pour le moment)
-  const shouldShowSidebar = true; // Changé pour toujours afficher
+  const shouldShowSidebar = true;
+  const isDashboard = location.pathname === '/dashboard';
+
+  const toggleSidebar = () => {
+    setIsSidebarCollapsed(!isSidebarCollapsed);
+  };
 
   return (
     <div className="flex h-screen bg-gray-50">
-      {shouldShowSidebar && <Sidebar />}
+      {shouldShowSidebar && (
+        <Sidebar 
+          isCollapsed={isSidebarCollapsed} 
+          onToggle={toggleSidebar}
+        />
+      )}
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header />
+        
+        {/* Bouton retour au Dashboard (sauf si on est déjà sur le Dashboard) */}
+        {!isDashboard && (
+          <div className="px-6 py-3 border-b border-gray-200 bg-white">
+            <Link to="/dashboard">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="flex items-center space-x-2 text-gray-600 hover:text-gray-900"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                <LayoutDashboard className="w-4 h-4" />
+                <span>Retour au Dashboard</span>
+              </Button>
+            </Link>
+          </div>
+        )}
+        
         <main className="flex-1 overflow-auto">
           {children}
         </main>

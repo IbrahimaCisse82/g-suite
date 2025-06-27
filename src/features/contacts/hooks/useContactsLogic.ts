@@ -58,13 +58,13 @@ export const useContactsLogic = () => {
   const onContactEdited = useCallback(async (contactData: any) => {
     const endMeasure = measureOperation('Edit Contact');
     try {
-      await handleEditContact(editingContact?.id, contactData);
+      await handleEditContact(contactData);
       setShowEditForm(false);
       setEditingContact(null);
     } finally {
       endMeasure();
     }
-  }, [handleEditContact, editingContact, measureOperation]);
+  }, [handleEditContact, measureOperation]);
 
   return {
     // State

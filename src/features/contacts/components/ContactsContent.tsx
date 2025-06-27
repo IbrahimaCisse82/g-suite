@@ -42,7 +42,6 @@ export const ContactsContent = React.memo(({
             <Suspense fallback={<PageLoader type="skeleton" rows={5} />}>
               <ContactsTable
                 contacts={contacts}
-                onView={onViewContact}
                 onEdit={onEditContact}
                 onDelete={onDeleteContact}
               />

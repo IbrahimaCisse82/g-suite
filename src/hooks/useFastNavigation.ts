@@ -34,7 +34,8 @@ const componentCache = new Map();
 export const useFastNavigation = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { setRoute, setNavigating, addCachedRoute, cachedRoutes } = useAppStore();
+  const { setRoute, setNavigating, addCachedRoute } = useAppStore();
+  const cachedRoutes = useAppStore((state) => state.navigation.cachedRoutes);
 
   // Preload TOUS les composants critiques au démarrage
   useEffect(() => {

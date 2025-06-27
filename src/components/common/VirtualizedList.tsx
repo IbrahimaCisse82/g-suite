@@ -107,11 +107,10 @@ function VirtualizedListComponent<T>({
   );
 }
 
-// Créer un composant mémorisé avec le bon nom d'affichage
-const VirtualizedListMemo = memo(VirtualizedListComponent) as <T>(
-  props: VirtualizedListProps<T>
-) => React.ReactElement;
+// Create the memoized component with proper typing
+const VirtualizedList = memo(VirtualizedListComponent) as typeof VirtualizedListComponent;
 
-VirtualizedListMemo.displayName = 'VirtualizedList';
+// Set displayName on the memoized component
+(VirtualizedList as any).displayName = 'VirtualizedList';
 
-export const VirtualizedList = VirtualizedListMemo;
+export { VirtualizedList };

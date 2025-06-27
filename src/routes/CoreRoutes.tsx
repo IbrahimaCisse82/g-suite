@@ -13,7 +13,7 @@ import { Treasury } from '@/pages/Treasury';
 import Budget from '@/pages/Budget';
 import Employees from '@/pages/Employees';
 import { Reports } from '@/pages/Reports';
-import { Analytics } from '@/pages/Analytics';
+import Analytics from '@/pages/Analytics';
 import TrainingSupport from '@/pages/TrainingSupport';
 import JournalComptablePage from '@/pages/JournalComptable';
 import GrandLivrePage from '@/pages/GrandLivre';

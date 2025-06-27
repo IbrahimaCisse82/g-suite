@@ -1,3 +1,4 @@
+
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 
@@ -27,6 +28,7 @@ interface AppActions {
   
   // Performance actions
   addMetric: (operation: string, duration: number) => void;
+  addPageLoadTime: (page: string, duration: number) => void;
   togglePerformanceTracking: () => void;
   clearMetrics: () => void;
 }
@@ -80,6 +82,19 @@ export const useAppStore = create<AppState & AppActions>()(
         }
       }),
 
+    addPageLoadTime: (page, duration) =>
+      set((state) => {
+        const key = `page_load_${page}`;
+        if (!state.performance.metrics[key]) {
+          state.performance.metrics[key] = [];
+        }
+        state.performance.metrics[key].push(duration);
+        
+        if (state.performance.metrics[key].length > 10) {
+          state.performance.metrics[key] = state.performance.metrics[key].slice(-10);
+        }
+      }),
+
     togglePerformanceTracking: () =>
       set((state) => {
         state.performance.isEnabled = !state.performance.isEnabled;
@@ -95,5 +110,6 @@ export const useAppStore = create<AppState & AppActions>()(
 // Selectors for better performance
 export const useSidebarState = () => useAppStore((state) => state.navigation.sidebarCollapsed);
 export const useNavigationState = () => useAppStore((state) => state.navigation);
+export const useIsNavigating = () => useAppStore((state) => state.navigation.isNavigating);
 export const usePerformanceMetrics = () => useAppStore((state) => state.performance.metrics);
 export const useCachedRoutes = () => useAppStore((state) => state.navigation.cachedRoutes);

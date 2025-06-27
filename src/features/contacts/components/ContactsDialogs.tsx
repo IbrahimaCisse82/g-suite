@@ -9,13 +9,13 @@ interface ContactsDialogsProps {
   // Create form
   showCreateForm: boolean;
   onCloseCreateForm: () => void;
-  onContactCreated: (data: any) => void;
+  onContactCreated: (data: any) => Promise<void>;
   
   // Edit form
   showEditForm: boolean;
   editingContact: any;
   onCloseEditForm: () => void;
-  onContactEdited: (data: any) => void;
+  onContactEdited: (data: any) => Promise<void>;
 }
 
 export const ContactsDialogs = React.memo(({

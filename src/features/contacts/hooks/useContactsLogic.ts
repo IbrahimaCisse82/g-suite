@@ -1,6 +1,6 @@
 
 import { useState, useCallback } from 'react';
-import { useContacts } from '@/hooks/useContacts';
+import { useContactsQuery } from '@/hooks/contacts/useContactsQuery';
 import { useContactsHandlers } from '@/hooks/useContactsHandlers';
 import { usePerformance } from '@/hooks/usePerformance';
 
@@ -11,7 +11,7 @@ export const useContactsLogic = () => {
   const [editingContact, setEditingContact] = useState<any>(null);
   const [showEditForm, setShowEditForm] = useState(false);
   
-  const { contacts, loading, error } = useContacts();
+  const { data: contacts = [], isLoading: loading, error } = useContactsQuery();
   const { handleCreateContact, handleEditContact, handleDeleteContact } = useContactsHandlers();
   const { measureOperation } = usePerformance('Contacts');
 

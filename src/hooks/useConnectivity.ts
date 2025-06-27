@@ -27,11 +27,11 @@ export const useConnectivity = () => {
   const handleOnline = useCallback(async () => {
     const connectionType = updateConnectionInfo();
     
-    setConnectivity(prev => ({
+    setConnectivity({
       isOnline: true,
       lastOnlineTime: Date.now(),
       connectionType
-    }));
+    });
     
     setOfflineDuration(0);
     
@@ -82,14 +82,29 @@ export const useConnectivity = () => {
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
 
-    // Calculer la durée hors ligne
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, [handleOnline, handleOffline]);
+
+  // Separate effect for offline duration calculation
+  useEffect(() => {
     let interval: NodeJS.Timeout;
+    
     if (!connectivity.isOnline && connectivity.lastOnlineTime) {
       interval = setInterval(() => {
         setOfflineDuration(Date.now() - connectivity.lastOnlineTime!);
       }, 1000);
     }
 
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [connectivity.isOnline, connectivity.lastOnlineTime]);
+
+  // Separate effect for connectivity checks and cache cleanup
+  useEffect(() => {
     // Vérification périodique de la connectivité réelle
     const connectivityCheck = setInterval(async () => {
       if (navigator.onLine) {
@@ -118,13 +133,10 @@ export const useConnectivity = () => {
     }, 5 * 60 * 1000); // Nettoyage toutes les 5 minutes
 
     return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
-      if (interval) clearInterval(interval);
       clearInterval(connectivityCheck);
       clearInterval(cacheCleanup);
     };
-  }, [connectivity.isOnline, connectivity.lastOnlineTime, handleOnline, handleOffline, fetchWithTimeout]);
+  }, [connectivity.isOnline, fetchWithTimeout, handleOnline, handleOffline]);
 
   const getOfflineDurationText = useCallback(() => {
     if (connectivity.isOnline || !offlineDuration) return null;
@@ -138,12 +150,14 @@ export const useConnectivity = () => {
     return `${seconds}s`;
   }, [connectivity.isOnline, offlineDuration]);
 
+  const refresh = useCallback(() => {
+    const connectionType = updateConnectionInfo();
+    setConnectivity(prev => ({ ...prev, connectionType }));
+  }, [updateConnectionInfo]);
+
   return {
     ...connectivity,
     offlineDuration: getOfflineDurationText(),
-    refresh: () => {
-      const connectionType = updateConnectionInfo();
-      setConnectivity(prev => ({ ...prev, connectionType }));
-    }
+    refresh
   };
 };

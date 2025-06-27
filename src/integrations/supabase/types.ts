@@ -1598,8 +1598,62 @@ export type Database = {
         }
         Relationships: []
       }
+      treasury_accounts: {
+        Row: {
+          account_name: string
+          account_number: string | null
+          account_type: string
+          bank_name: string | null
+          branch: string | null
+          company_id: string
+          created_at: string
+          currency: string | null
+          current_balance: number | null
+          id: string
+          is_active: boolean | null
+          updated_at: string
+        }
+        Insert: {
+          account_name: string
+          account_number?: string | null
+          account_type: string
+          bank_name?: string | null
+          branch?: string | null
+          company_id: string
+          created_at?: string
+          currency?: string | null
+          current_balance?: number | null
+          id?: string
+          is_active?: boolean | null
+          updated_at?: string
+        }
+        Update: {
+          account_name?: string
+          account_number?: string | null
+          account_type?: string
+          bank_name?: string | null
+          branch?: string | null
+          company_id?: string
+          created_at?: string
+          currency?: string | null
+          current_balance?: number | null
+          id?: string
+          is_active?: boolean | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "treasury_accounts_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       treasury_transactions: {
         Row: {
+          account_id: string | null
           amount: number
           category: string | null
           company_id: string
@@ -1611,6 +1665,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          account_id?: string | null
           amount: number
           category?: string | null
           company_id: string
@@ -1622,6 +1677,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          account_id?: string | null
           amount?: number
           category?: string | null
           company_id?: string
@@ -1633,6 +1689,13 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "treasury_transactions_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "treasury_accounts"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "treasury_transactions_company_id_fkey"
             columns: ["company_id"]

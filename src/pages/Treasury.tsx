@@ -3,36 +3,65 @@ import React, { useState, useMemo, lazy, Suspense } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Plus, DollarSign, TrendingUp, TrendingDown, Wallet } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Plus, DollarSign, TrendingUp, TrendingDown, Wallet, Banknote } from 'lucide-react';
 import { Layout } from '@/components/Layout';
 import { PageTransition } from '@/components/common/PageTransition';
 import { OptimizedCard } from '@/components/common/OptimizedCard';
 import { LoadingButton } from '@/components/common/LoadingButton';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useTreasuryAccounts } from '@/hooks/useTreasuryAccounts';
+import { useTreasuryTransactions, useCreateTreasuryTransaction } from '@/hooks/useTreasuryTransactions';
+import { TreasuryAccountForm } from '@/components/treasury/TreasuryAccountForm';
+import { TreasuryAccountsTable } from '@/components/treasury/TreasuryAccountsTable';
 
 // Lazy load des composants lourds
 const TreasuryTable = lazy(() => import('@/components/treasury/TreasuryTable').then(module => ({ default: module.TreasuryTable })));
-const EnhancedTreasuryForm = lazy(() => import('@/components/treasury/EnhancedTreasuryForm').then(module => ({ default: module.EnhancedTreasuryForm })));
+const TreasuryForm = lazy(() => import('@/components/treasury/TreasuryForm').then(module => ({ default: module.TreasuryForm })));
 
 export const Treasury = () => {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isTransactionDialogOpen, setIsTransactionDialogOpen] = useState(false);
+  const [isAccountDialogOpen, setIsAccountDialogOpen] = useState(false);
+  const [editingAccount, setEditingAccount] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const transactions: any[] = []; // Mock data - replace with actual data hook
+
+  const { data: accounts = [] } = useTreasuryAccounts();
+  const { data: transactions = [] } = useTreasuryTransactions();
+  const createTransactionMutation = useCreateTreasuryTransaction();
 
   // Mémoisation des données pour éviter les recalculs
-  const treasuryStats = useMemo(() => ({
-    totalBalance: 0,
-    monthlyIncome: 0,
-    monthlyExpenses: 0,
-    monthlyResult: 0
-  }), [transactions]);
+  const treasuryStats = useMemo(() => {
+    const totalBalance = accounts.reduce((sum, account) => sum + (account.current_balance || 0), 0);
+    
+    const currentMonth = new Date().getMonth();
+    const currentYear = new Date().getFullYear();
+    
+    const monthlyTransactions = transactions.filter(t => {
+      const transactionDate = new Date(t.transaction_date);
+      return transactionDate.getMonth() === currentMonth && transactionDate.getFullYear() === currentYear;
+    });
+    
+    const monthlyIncome = monthlyTransactions
+      .filter(t => t.transaction_type === 'income')
+      .reduce((sum, t) => sum + (t.amount || 0), 0);
+    
+    const monthlyExpenses = monthlyTransactions
+      .filter(t => t.transaction_type === 'expense')
+      .reduce((sum, t) => sum + (t.amount || 0), 0);
 
-  const handleTreasurySubmit = async (transactionData: any) => {
+    return {
+      totalBalance,
+      monthlyIncome,
+      monthlyExpenses,
+      monthlyResult: monthlyIncome - monthlyExpenses
+    };
+  }, [accounts, transactions]);
+
+  const handleTransactionSubmit = async (transactionData: any) => {
     setIsLoading(true);
     try {
-      console.log('Treasury transaction submitted:', transactionData);
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
-      setIsDialogOpen(false);
+      await createTransactionMutation.mutateAsync(transactionData);
+      setIsTransactionDialogOpen(false);
     } catch (error) {
       console.error('Error submitting transaction:', error);
     } finally {
@@ -40,12 +69,14 @@ export const Treasury = () => {
     }
   };
 
-  const handleEdit = (transaction: any) => {
-    console.log('Edit transaction:', transaction);
+  const handleEditAccount = (account: any) => {
+    setEditingAccount(account);
+    setIsAccountDialogOpen(true);
   };
 
-  const handleDelete = (id: string) => {
-    console.log('Delete transaction:', id);
+  const handleCloseAccountDialog = () => {
+    setIsAccountDialogOpen(false);
+    setEditingAccount(null);
   };
 
   return (
@@ -60,7 +91,7 @@ export const Treasury = () => {
                 </div>
                 Gestion de trésorerie
               </h1>
-              <p className="text-xl text-readable-secondary">Suivez vos flux de trésorerie et transactions</p>
+              <p className="text-xl text-readable-secondary">Suivez vos flux de trésorerie et gérez vos comptes</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -70,7 +101,8 @@ export const Treasury = () => {
                   <DollarSign className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold text-readable-primary">{treasuryStats.totalBalance} FCFA</div>
+                  <div className="text-2xl font-bold text-readable-primary">{treasuryStats.totalBalance.toLocaleString()} XOF</div>
+                  <p className="text-xs text-muted-foreground">Tous comptes confondus</p>
                 </CardContent>
               </OptimizedCard>
               
@@ -80,7 +112,7 @@ export const Treasury = () => {
                   <TrendingUp className="h-4 w-4 text-green-600" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold text-green-600">{treasuryStats.monthlyIncome} FCFA</div>
+                  <div className="text-2xl font-bold text-green-600">{treasuryStats.monthlyIncome.toLocaleString()} XOF</div>
                 </CardContent>
               </OptimizedCard>
               
@@ -90,7 +122,7 @@ export const Treasury = () => {
                   <TrendingDown className="h-4 w-4 text-red-600" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold text-red-600">{treasuryStats.monthlyExpenses} FCFA</div>
+                  <div className="text-2xl font-bold text-red-600">{treasuryStats.monthlyExpenses.toLocaleString()} XOF</div>
                 </CardContent>
               </OptimizedCard>
               
@@ -100,46 +132,89 @@ export const Treasury = () => {
                   <DollarSign className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold text-readable-primary">{treasuryStats.monthlyResult} FCFA</div>
+                  <div className={`text-2xl font-bold ${treasuryStats.monthlyResult >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    {treasuryStats.monthlyResult.toLocaleString()} XOF
+                  </div>
                 </CardContent>
               </OptimizedCard>
             </div>
 
-            <div className="flex justify-between items-center mb-6 animate-fade-in [animation-delay:0.5s]">
-              <h2 className="text-2xl font-semibold text-readable-primary">Transactions</h2>
-              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                <DialogTrigger asChild>
-                  <LoadingButton className="bg-green-600 hover:bg-green-700">
-                    <Plus className="w-4 h-4 mr-2" />
-                    Nouvelle transaction
-                  </LoadingButton>
-                </DialogTrigger>
-                <DialogContent className="max-w-2xl bg-white">
-                  <DialogHeader>
-                    <DialogTitle className="text-readable-primary">Ajouter une transaction</DialogTitle>
-                  </DialogHeader>
-                  <Suspense fallback={<div className="space-y-4"><Skeleton className="h-10 w-full" /><Skeleton className="h-10 w-full" /></div>}>
-                    <EnhancedTreasuryForm 
-                      onSubmit={handleTreasurySubmit}
-                      onCancel={() => setIsDialogOpen(false)}
-                      loading={isLoading}
-                    />
-                  </Suspense>
-                </DialogContent>
-              </Dialog>
-            </div>
+            <Tabs defaultValue="transactions" className="space-y-6">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="transactions">Transactions</TabsTrigger>
+                <TabsTrigger value="accounts">Comptes</TabsTrigger>
+              </TabsList>
 
-            <OptimizedCard className="animate-fade-in [animation-delay:0.6s]">
-              <CardContent className="p-0">
-                <Suspense fallback={<div className="p-6 space-y-4">{Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-12 w-full" />)}</div>}>
-                  <TreasuryTable 
-                    transactions={transactions}
-                    onEdit={handleEdit}
-                    onDelete={handleDelete}
-                  />
-                </Suspense>
-              </CardContent>
-            </OptimizedCard>
+              <TabsContent value="transactions" className="space-y-6">
+                <div className="flex justify-between items-center animate-fade-in [animation-delay:0.5s]">
+                  <h2 className="text-2xl font-semibold text-readable-primary">Transactions</h2>
+                  <Dialog open={isTransactionDialogOpen} onOpenChange={setIsTransactionDialogOpen}>
+                    <DialogTrigger asChild>
+                      <LoadingButton className="bg-green-600 hover:bg-green-700">
+                        <Plus className="w-4 h-4 mr-2" />
+                        Nouvelle transaction
+                      </LoadingButton>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-2xl bg-white">
+                      <DialogHeader>
+                        <DialogTitle className="text-readable-primary">Ajouter une transaction</DialogTitle>
+                      </DialogHeader>
+                      <Suspense fallback={<div className="space-y-4"><Skeleton className="h-10 w-full" /><Skeleton className="h-10 w-full" /></div>}>
+                        <TreasuryForm 
+                          onSubmit={handleTransactionSubmit}
+                          onCancel={() => setIsTransactionDialogOpen(false)}
+                          loading={isLoading}
+                        />
+                      </Suspense>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+
+                <OptimizedCard className="animate-fade-in [animation-delay:0.6s]">
+                  <CardContent className="p-0">
+                    <Suspense fallback={<div className="p-6 space-y-4">{Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-12 w-full" />)}</div>}>
+                      <TreasuryTable 
+                        transactions={transactions}
+                        onEdit={() => {}}
+                        onDelete={() => {}}
+                      />
+                    </Suspense>
+                  </CardContent>
+                </OptimizedCard>
+              </TabsContent>
+
+              <TabsContent value="accounts" className="space-y-6">
+                <div className="flex justify-between items-center animate-fade-in [animation-delay:0.5s]">
+                  <h2 className="text-2xl font-semibold text-readable-primary">Comptes de trésorerie</h2>
+                  <Dialog open={isAccountDialogOpen} onOpenChange={setIsAccountDialogOpen}>
+                    <DialogTrigger asChild>
+                      <LoadingButton className="bg-blue-600 hover:bg-blue-700">
+                        <Banknote className="w-4 h-4 mr-2" />
+                        Nouveau compte
+                      </LoadingButton>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-2xl bg-white">
+                      <DialogHeader>
+                        <DialogTitle className="text-readable-primary">
+                          {editingAccount ? 'Modifier le compte' : 'Créer un compte de trésorerie'}
+                        </DialogTitle>
+                      </DialogHeader>
+                      <TreasuryAccountForm 
+                        onCancel={handleCloseAccountDialog}
+                        account={editingAccount}
+                        mode={editingAccount ? 'edit' : 'create'}
+                      />
+                    </DialogContent>
+                  </Dialog>
+                </div>
+
+                <OptimizedCard className="animate-fade-in [animation-delay:0.6s]">
+                  <CardContent className="p-6">
+                    <TreasuryAccountsTable onEdit={handleEditAccount} />
+                  </CardContent>
+                </OptimizedCard>
+              </TabsContent>
+            </Tabs>
           </div>
         </div>
       </PageTransition>

@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useTreasuryAccounts } from '@/hooks/useTreasuryAccounts';
 
 interface TreasuryFormProps {
   onSubmit: (transactionData: any) => void;
@@ -14,12 +15,15 @@ interface TreasuryFormProps {
 
 export const TreasuryForm = ({ onSubmit, onCancel, loading }: TreasuryFormProps) => {
   const [formData, setFormData] = useState({
+    account_id: '',
     transaction_type: '',
     amount: 0,
     description: '',
     category: '',
     transaction_date: new Date().toISOString().split('T')[0]
   });
+
+  const { data: accounts = [] } = useTreasuryAccounts();
 
   const categories = [
     'Ventes',
@@ -46,6 +50,25 @@ export const TreasuryForm = ({ onSubmit, onCancel, loading }: TreasuryFormProps)
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
+          <Label htmlFor="account_id">Compte de trésorerie</Label>
+          <Select 
+            value={formData.account_id} 
+            onValueChange={(value) => setFormData(prev => ({ ...prev, account_id: value }))}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Sélectionner un compte" />
+            </SelectTrigger>
+            <SelectContent>
+              {accounts.map((account) => (
+                <SelectItem key={account.id} value={account.id}>
+                  {account.account_name} ({account.currency})
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="space-y-2">
           <Label htmlFor="transaction_type">Type de transaction</Label>
           <Select 
             value={formData.transaction_type} 
@@ -62,7 +85,7 @@ export const TreasuryForm = ({ onSubmit, onCancel, loading }: TreasuryFormProps)
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="amount">Montant (XOF)</Label>
+          <Label htmlFor="amount">Montant</Label>
           <Input
             id="amount"
             type="number"

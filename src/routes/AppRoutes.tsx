@@ -12,13 +12,13 @@ import NotFound from '@/pages/NotFound';
 
 export const AppRoutes = () => (
   <Routes>
-    <StaticRoutes />
-    <TPERoutes />
-    <SolutionRoutes />
-    <AdminRoutes />
-    <AuthRoutes />
-    <CoreRoutes />
-    <SettingsRoutes />
+    {StaticRoutes()}
+    {TPERoutes()}
+    {SolutionRoutes()}
+    {AdminRoutes()}
+    {AuthRoutes()}
+    {CoreRoutes()}
+    {SettingsRoutes()}
     <Route path="*" element={<NotFound />} />
   </Routes>
 );

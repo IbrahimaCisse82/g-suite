@@ -13,7 +13,7 @@ import { OptimizedLayout } from '@/components/OptimizedLayout';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { LogIn } from 'lucide-react';
-import { OptimizedLink } from '@/components/common/OptimizedLink';
+import { UltraFastLink } from '@/components/common/UltraFastLink';
 import { useAdvancedPerformance } from '@/hooks/useAdvancedPerformance';
 import { PageLoader } from '@/components/common/PageLoader';
 
@@ -44,12 +44,12 @@ export const Contacts = () => {
               <p className="text-readable-secondary mb-6">
                 Vous devez être connecté pour accéder à la gestion des contacts.
               </p>
-              <OptimizedLink to="/user-login">
+              <UltraFastLink to="/user-login">
                 <Button className="bg-blue-600 hover:bg-blue-700 text-white">
                   <LogIn className="w-4 h-4 mr-2" />
                   Se connecter
                 </Button>
-              </OptimizedLink>
+              </UltraFastLink>
             </div>
           </div>
         </div>
@@ -78,7 +78,7 @@ export const Contacts = () => {
   if (authLoading || isLoading) {
     return (
       <OptimizedLayout>
-        <PageLoader type="skeleton" rows={4} text="Chargement des contacts..." />
+        <PageLoader type="skeleton" rows={4} text="Chargement ultra-rapide..." />
       </OptimizedLayout>
     );
   }
@@ -97,15 +97,14 @@ export const Contacts = () => {
           <div className="mb-4 p-4 bg-green-100 rounded-lg">
             <p className="text-sm text-green-800">
               {isDevelopmentMode && !user ? (
-                <>Mode développement - Accès autorisé | Contacts chargés: {contacts.length}</>
+                <>🚀 Navigation ultra-rapide activée | Contacts: {contacts.length}</>
               ) : (
-                <>Connecté en tant que: {mockUser?.email} | Contacts chargés: {contacts.length}</>
+                <>Connecté: {mockUser?.email} | Navigation optimisée | Contacts: {contacts.length}</>
               )}
             </p>
           </div>
 
           <ContactsHeader onCreateContact={handleCreateContact} />
-
           <ContactsStats contacts={contacts} />
 
           {/* Liste des contacts */}

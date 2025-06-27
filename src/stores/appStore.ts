@@ -1,7 +1,6 @@
 
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
-import { immer } from 'zustand/middleware/immer';
 
 interface AppState {
   // Navigation state
@@ -27,44 +26,48 @@ interface AppState {
 }
 
 export const useAppStore = create<AppState>()(
-  subscribeWithSelector(
-    immer((set, get) => ({
-      // Initial state
-      currentRoute: '/',
-      previousRoute: '/',
-      isNavigating: false,
-      pageLoadTimes: {},
-      cachedRoutes: new Set(),
-      sidebarCollapsed: false,
-      theme: 'light',
-      
-      // Actions
-      setRoute: (route) => set((state) => {
-        state.previousRoute = state.currentRoute;
-        state.currentRoute = route;
-      }),
-      
-      setNavigating: (isNavigating) => set((state) => {
-        state.isNavigating = isNavigating;
-      }),
-      
-      addPageLoadTime: (route, time) => set((state) => {
-        state.pageLoadTimes[route] = time;
-      }),
-      
-      addCachedRoute: (route) => set((state) => {
-        state.cachedRoutes.add(route);
-      }),
-      
-      toggleSidebar: () => set((state) => {
-        state.sidebarCollapsed = !state.sidebarCollapsed;
-      }),
-      
-      setTheme: (theme) => set((state) => {
-        state.theme = theme;
-      })
-    }))
-  )
+  subscribeWithSelector((set, get) => ({
+    // Initial state
+    currentRoute: '/',
+    previousRoute: '/',
+    isNavigating: false,
+    pageLoadTimes: {},
+    cachedRoutes: new Set(),
+    sidebarCollapsed: false,
+    theme: 'light',
+    
+    // Actions
+    setRoute: (route) => {
+      const state = get();
+      set({
+        previousRoute: state.currentRoute,
+        currentRoute: route,
+      });
+    },
+    
+    setNavigating: (isNavigating) => set({ isNavigating }),
+    
+    addPageLoadTime: (route, time) => {
+      const state = get();
+      set({
+        pageLoadTimes: { ...state.pageLoadTimes, [route]: time }
+      });
+    },
+    
+    addCachedRoute: (route) => {
+      const state = get();
+      const newCachedRoutes = new Set(state.cachedRoutes);
+      newCachedRoutes.add(route);
+      set({ cachedRoutes: newCachedRoutes });
+    },
+    
+    toggleSidebar: () => {
+      const state = get();
+      set({ sidebarCollapsed: !state.sidebarCollapsed });
+    },
+    
+    setTheme: (theme) => set({ theme })
+  }))
 );
 
 // Selectors optimisés

@@ -39,7 +39,7 @@ import {
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { GSuiteLogo } from '@/components/ui/gsuite-logo';
-import { OptimizedLink } from '@/components/common/OptimizedLink';
+import { UltraFastLink } from '@/components/common/UltraFastLink';
 
 const menuItems = [
   { icon: Globe2, label: 'Tableau de bord', path: '/dashboard' },
@@ -82,7 +82,7 @@ export const EnterpriseHeader = () => {
           <GSuiteLogo size={40} />
           <div>
             <h1 className="text-xl font-bold text-sidebar-foreground">G-Suite</h1>
-            <p className="text-sm text-sidebar-foreground/70">Gestion d'entreprise digitale</p>
+            <p className="text-sm text-sidebar-foreground/70">Navigation ultra-rapide</p>
           </div>
         </div>
       </SidebarHeader>
@@ -98,10 +98,10 @@ export const EnterpriseHeader = () => {
                 return (
                   <SidebarMenuItem key={item.path}>
                     <SidebarMenuButton asChild isActive={isActive}>
-                      <OptimizedLink to={item.path}>
+                      <UltraFastLink to={item.path}>
                         <Icon className="w-5 h-5" />
                         <span className="font-medium">{item.label}</span>
-                      </OptimizedLink>
+                      </UltraFastLink>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 );
@@ -127,7 +127,7 @@ export const EnterpriseHeader = () => {
           </SidebarMenuItem>
         </SidebarMenu>
         <div className="text-xs text-sidebar-foreground/50 text-center p-2">
-          © 2024 G-Suite Entreprise v1.0
+          © 2024 G-Suite Ultra-Fast v2.0
         </div>
       </SidebarFooter>
     </Sidebar>

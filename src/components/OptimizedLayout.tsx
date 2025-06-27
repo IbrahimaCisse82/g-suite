@@ -8,9 +8,8 @@ import { ArrowLeft, LayoutDashboard } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useAdminAuthentication } from '@/hooks/useAdminAuthentication';
 import { LoadingSpinner } from './common/LoadingSpinner';
-import { PageTransitionWrapper } from './common/PageTransitionWrapper';
-import { OptimizedLink } from './common/OptimizedLink';
-import { useAdvancedPerformance } from '@/hooks/useAdvancedPerformance';
+import { UltraFastLink } from './common/UltraFastLink';
+import { useUltraFastNavigation } from '@/hooks/useUltraFastNavigation';
 import { useSidebarState, useAppStore } from '@/stores/appStore';
 
 interface OptimizedLayoutProps {
@@ -29,33 +28,31 @@ export const OptimizedLayout = memo(({ children }: OptimizedLayoutProps) => {
   const location = useLocation();
   const isSidebarCollapsed = useSidebarState();
   const { toggleSidebar } = useAppStore();
-  const { measureOperation } = useAdvancedPerformance('OptimizedLayout');
+  const { preloadedRoutes } = useUltraFastNavigation();
 
   const shouldShowSidebar = true;
   const isDashboard = location.pathname === '/dashboard';
 
   const handleSidebarToggle = useCallback(() => {
-    const endMeasure = measureOperation('Sidebar Toggle');
     toggleSidebar();
-    endMeasure();
-  }, [toggleSidebar, measureOperation]);
+  }, [toggleSidebar]);
 
   const BackToDashboardButton = memo(() => {
     if (isDashboard) return null;
     
     return (
-      <div className="px-6 py-3 border-b border-gray-200 bg-white animate-fade-in">
-        <OptimizedLink to="/dashboard">
+      <div className="px-6 py-3 border-b border-gray-200 bg-white">
+        <UltraFastLink to="/dashboard">
           <Button
             variant="ghost"
             size="sm"
-            className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-all duration-200 hover:scale-105"
+            className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-all duration-100"
           >
             <ArrowLeft className="w-4 h-4" />
             <LayoutDashboard className="w-4 h-4" />
             <span>Retour au Dashboard</span>
           </Button>
-        </OptimizedLink>
+        </UltraFastLink>
       </div>
     );
   });
@@ -64,6 +61,13 @@ export const OptimizedLayout = memo(({ children }: OptimizedLayoutProps) => {
 
   return (
     <div className="flex h-screen bg-gray-50">
+      {/* Debug info pour voir les routes préchargées */}
+      {process.env.NODE_ENV === 'development' && (
+        <div className="fixed top-2 right-2 z-50 bg-green-100 p-2 rounded text-xs">
+          Routes préchargées: {preloadedRoutes.length}
+        </div>
+      )}
+      
       {shouldShowSidebar && (
         <Sidebar 
           isCollapsed={isSidebarCollapsed} 
@@ -74,11 +78,9 @@ export const OptimizedLayout = memo(({ children }: OptimizedLayoutProps) => {
         <Header />
         <BackToDashboardButton />
         <main className="flex-1 overflow-auto">
-          <PageTransitionWrapper>
-            <Suspense fallback={<LoadingSpinner fullScreen text="Chargement de la page..." />}>
-              <LazyContent>{children}</LazyContent>
-            </Suspense>
-          </PageTransitionWrapper>
+          <Suspense fallback={<LoadingSpinner fullScreen text="Navigation ultra-rapide..." />}>
+            <LazyContent>{children}</LazyContent>
+          </Suspense>
         </main>
       </div>
     </div>

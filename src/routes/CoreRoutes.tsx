@@ -29,15 +29,21 @@ export const CoreRoutes = () => (
   <>
     <Route path="/dashboard" element={<Dashboard />} />
     <Route path="/accounting" element={<Accounting />} />
-    <Route path="/journal-comptable" element={<JournalComptablePage />} />
-    <Route path="/grand-livre" element={<GrandLivrePage />} />
-    <Route path="/balance-generale" element={<BalanceGeneralePage />} />
+    
+    {/* Routes comptables principales */}
     <Route path="/chart-of-accounts" element={<ChartOfAccounts />} />
     <Route path="/financial-statements" element={<FinancialStatements />} />
     <Route path="/journal-entries" element={<JournalEntries />} />
     <Route path="/ledger" element={<Ledger />} />
     <Route path="/balance" element={<Balance />} />
     <Route path="/accounting-reports" element={<AccountingReports />} />
+    
+    {/* Routes comptables alternatives (pour compatibilité) */}
+    <Route path="/journal-comptable" element={<JournalComptablePage />} />
+    <Route path="/grand-livre" element={<GrandLivrePage />} />
+    <Route path="/balance-generale" element={<BalanceGeneralePage />} />
+    
+    {/* Autres routes */}
     <Route path="/contacts" element={<Contacts />} />
     <Route path="/quotes" element={<Quotes />} />
     <Route path="/invoicing" element={<Invoicing />} />

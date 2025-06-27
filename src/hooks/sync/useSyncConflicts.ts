@@ -30,7 +30,9 @@ export function useSyncConflicts(
       // Ici on devrait appeler une méthode du syncManager pour appliquer la résolution
       // Pour le moment, on simule la résolution
       
-      setConflicts(prev => prev.filter(c => c.id !== conflict.id));
+      // Fix: Filter conflicts directly instead of using a function
+      const updatedConflicts = conflicts.filter(c => c.id !== conflict.id);
+      setConflicts(updatedConflicts);
       
       toast.success('Conflit résolu', {
         description: `Le conflit pour ${conflict.type} a été résolu`
@@ -44,7 +46,7 @@ export function useSyncConflicts(
       });
       throw error;
     }
-  }, [strategies, setConflicts]);
+  }, [strategies, setConflicts, conflicts]);
 
   return {
     resolveConflict,

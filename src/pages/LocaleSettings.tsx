@@ -40,8 +40,7 @@ const LocaleSettings = React.memo(() => {
           <OptimizedCard 
             title="Paramètres de langue"
             icon={Globe}
-            className="animate-fade-in"
-            style={{ animationDelay: '0.1s' }}
+            className="animate-fade-in [animation-delay:0.1s]"
           >
             <div className="space-y-4">
               <div className="space-y-2">
@@ -85,8 +84,7 @@ const LocaleSettings = React.memo(() => {
           <OptimizedCard 
             title="Paramètres de date et heure"
             icon={Clock}
-            className="animate-fade-in"
-            style={{ animationDelay: '0.2s' }}
+            className="animate-fade-in [animation-delay:0.2s]"
           >
             <div className="space-y-4">
               <div className="space-y-2">
@@ -129,8 +127,7 @@ const LocaleSettings = React.memo(() => {
           <OptimizedCard 
             title="Paramètres de devise"
             icon={Calendar}
-            className="animate-fade-in"
-            style={{ animationDelay: '0.3s' }}
+            className="animate-fade-in [animation-delay:0.3s]"
           >
             <div className="space-y-4">
               <div className="space-y-2">

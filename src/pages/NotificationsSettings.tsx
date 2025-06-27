@@ -41,8 +41,7 @@ const NotificationsSettings = React.memo(() => {
           <OptimizedCard 
             title="Notifications par email"
             icon={Mail}
-            className="animate-fade-in"
-            style={{ animationDelay: '0.1s' }}
+            className="animate-fade-in [animation-delay:0.1s]"
           >
             <div className="space-y-4">
               <div className="flex items-center justify-between">
@@ -75,8 +74,7 @@ const NotificationsSettings = React.memo(() => {
           <OptimizedCard 
             title="Notifications push"
             icon={Smartphone}
-            className="animate-fade-in"
-            style={{ animationDelay: '0.2s' }}
+            className="animate-fade-in [animation-delay:0.2s]"
           >
             <div className="space-y-4">
               <div className="flex items-center justify-between">
@@ -101,8 +99,7 @@ const NotificationsSettings = React.memo(() => {
           <OptimizedCard 
             title="Notifications dans l'application"
             icon={Monitor}
-            className="animate-fade-in"
-            style={{ animationDelay: '0.3s' }}
+            className="animate-fade-in [animation-delay:0.3s]"
           >
             <div className="space-y-4">
               <div className="flex items-center justify-between">

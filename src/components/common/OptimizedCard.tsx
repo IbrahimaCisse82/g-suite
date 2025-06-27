@@ -6,6 +6,7 @@ interface OptimizedCardProps {
   title?: string;
   children: React.ReactNode;
   className?: string;
+  style?: React.CSSProperties;
   loading?: boolean;
   icon?: React.ComponentType<{ className?: string }>;
 }
@@ -14,11 +15,12 @@ export const OptimizedCard = React.memo(({
   title, 
   children, 
   className = '', 
+  style,
   loading = false,
   icon: Icon 
 }: OptimizedCardProps) => {
   return (
-    <Card className={`bg-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 ${className}`}>
+    <Card className={`bg-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 ${className}`} style={style}>
       {title && (
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center space-x-2 text-readable-primary">

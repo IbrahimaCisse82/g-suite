@@ -64,7 +64,7 @@ export const Treasury = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              <OptimizedCard className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
+              <OptimizedCard className="animate-fade-in [animation-delay:0.1s]">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium text-readable-primary">Solde total</CardTitle>
                   <DollarSign className="h-4 w-4 text-muted-foreground" />
@@ -74,7 +74,7 @@ export const Treasury = () => {
                 </CardContent>
               </OptimizedCard>
               
-              <OptimizedCard className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
+              <OptimizedCard className="animate-fade-in [animation-delay:0.2s]">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium text-readable-primary">Entrées ce mois</CardTitle>
                   <TrendingUp className="h-4 w-4 text-green-600" />
@@ -84,7 +84,7 @@ export const Treasury = () => {
                 </CardContent>
               </OptimizedCard>
               
-              <OptimizedCard className="animate-fade-in" style={{ animationDelay: '0.3s' }}>
+              <OptimizedCard className="animate-fade-in [animation-delay:0.3s]">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium text-readable-primary">Sorties ce mois</CardTitle>
                   <TrendingDown className="h-4 w-4 text-red-600" />
@@ -94,7 +94,7 @@ export const Treasury = () => {
                 </CardContent>
               </OptimizedCard>
               
-              <OptimizedCard className="animate-fade-in" style={{ animationDelay: '0.4s' }}>
+              <OptimizedCard className="animate-fade-in [animation-delay:0.4s]">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium text-readable-primary">Résultat mensuel</CardTitle>
                   <DollarSign className="h-4 w-4 text-muted-foreground" />
@@ -105,7 +105,7 @@ export const Treasury = () => {
               </OptimizedCard>
             </div>
 
-            <div className="flex justify-between items-center mb-6 animate-fade-in" style={{ animationDelay: '0.5s' }}>
+            <div className="flex justify-between items-center mb-6 animate-fade-in [animation-delay:0.5s]">
               <h2 className="text-2xl font-semibold text-readable-primary">Transactions</h2>
               <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <DialogTrigger asChild>
@@ -129,7 +129,7 @@ export const Treasury = () => {
               </Dialog>
             </div>
 
-            <OptimizedCard className="animate-fade-in" style={{ animationDelay: '0.6s' }}>
+            <OptimizedCard className="animate-fade-in [animation-delay:0.6s]">
               <CardContent className="p-0">
                 <Suspense fallback={<div className="p-6 space-y-4">{Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-12 w-full" />)}</div>}>
                   <TreasuryTable 

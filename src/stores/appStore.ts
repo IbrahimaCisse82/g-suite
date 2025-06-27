@@ -1,77 +1,99 @@
-
 import { create } from 'zustand';
-import { subscribeWithSelector } from 'zustand/middleware';
+import { immer } from 'zustand/middleware/immer';
 
-interface AppState {
-  // Navigation state
+interface NavigationState {
   currentRoute: string;
-  previousRoute: string;
   isNavigating: boolean;
-  
-  // Performance state
-  pageLoadTimes: Record<string, number>;
   cachedRoutes: Set<string>;
-  
-  // UI state
   sidebarCollapsed: boolean;
-  theme: 'light' | 'dark';
-  
-  // Actions
-  setRoute: (route: string) => void;
-  setNavigating: (isNavigating: boolean) => void;
-  addPageLoadTime: (route: string, time: number) => void;
-  addCachedRoute: (route: string) => void;
-  toggleSidebar: () => void;
-  setTheme: (theme: 'light' | 'dark') => void;
 }
 
-export const useAppStore = create<AppState>()(
-  subscribeWithSelector((set, get) => ({
+interface PerformanceState {
+  metrics: Record<string, number[]>;
+  isEnabled: boolean;
+}
+
+interface AppState {
+  navigation: NavigationState;
+  performance: PerformanceState;
+}
+
+interface AppActions {
+  // Navigation actions
+  setRoute: (route: string) => void;
+  setNavigating: (isNavigating: boolean) => void;
+  addCachedRoute: (route: string) => void;
+  toggleSidebar: () => void;
+  
+  // Performance actions
+  addMetric: (operation: string, duration: number) => void;
+  togglePerformanceTracking: () => void;
+  clearMetrics: () => void;
+}
+
+export const useAppStore = create<AppState & AppActions>()(
+  immer((set, get) => ({
     // Initial state
-    currentRoute: '/',
-    previousRoute: '/',
-    isNavigating: false,
-    pageLoadTimes: {},
-    cachedRoutes: new Set(),
-    sidebarCollapsed: false,
-    theme: 'light',
-    
-    // Actions
-    setRoute: (route) => {
-      const state = get();
-      set({
-        previousRoute: state.currentRoute,
-        currentRoute: route,
-      });
+    navigation: {
+      currentRoute: '/',
+      isNavigating: false,
+      cachedRoutes: new Set(),
+      sidebarCollapsed: false,
     },
-    
-    setNavigating: (isNavigating) => set({ isNavigating }),
-    
-    addPageLoadTime: (route, time) => {
-      const state = get();
-      set({
-        pageLoadTimes: { ...state.pageLoadTimes, [route]: time }
-      });
+    performance: {
+      metrics: {},
+      isEnabled: true,
     },
-    
-    addCachedRoute: (route) => {
-      const state = get();
-      const newCachedRoutes = new Set(state.cachedRoutes);
-      newCachedRoutes.add(route);
-      set({ cachedRoutes: newCachedRoutes });
-    },
-    
-    toggleSidebar: () => {
-      const state = get();
-      set({ sidebarCollapsed: !state.sidebarCollapsed });
-    },
-    
-    setTheme: (theme) => set({ theme })
+
+    // Navigation actions
+    setRoute: (route) =>
+      set((state) => {
+        state.navigation.currentRoute = route;
+      }),
+
+    setNavigating: (isNavigating) =>
+      set((state) => {
+        state.navigation.isNavigating = isNavigating;
+      }),
+
+    addCachedRoute: (route) =>
+      set((state) => {
+        state.navigation.cachedRoutes.add(route);
+      }),
+
+    toggleSidebar: () =>
+      set((state) => {
+        state.navigation.sidebarCollapsed = !state.navigation.sidebarCollapsed;
+      }),
+
+    // Performance actions
+    addMetric: (operation, duration) =>
+      set((state) => {
+        if (!state.performance.metrics[operation]) {
+          state.performance.metrics[operation] = [];
+        }
+        state.performance.metrics[operation].push(duration);
+        
+        // Keep only last 10 measurements
+        if (state.performance.metrics[operation].length > 10) {
+          state.performance.metrics[operation] = state.performance.metrics[operation].slice(-10);
+        }
+      }),
+
+    togglePerformanceTracking: () =>
+      set((state) => {
+        state.performance.isEnabled = !state.performance.isEnabled;
+      }),
+
+    clearMetrics: () =>
+      set((state) => {
+        state.performance.metrics = {};
+      }),
   }))
 );
 
-// Selectors optimisés
-export const useCurrentRoute = () => useAppStore((state) => state.currentRoute);
-export const useIsNavigating = () => useAppStore((state) => state.isNavigating);
-export const useSidebarState = () => useAppStore((state) => state.sidebarCollapsed);
-export const usePageLoadTimes = () => useAppStore((state) => state.pageLoadTimes);
+// Selectors for better performance
+export const useSidebarState = () => useAppStore((state) => state.navigation.sidebarCollapsed);
+export const useNavigationState = () => useAppStore((state) => state.navigation);
+export const usePerformanceMetrics = () => useAppStore((state) => state.performance.metrics);
+export const useCachedRoutes = () => useAppStore((state) => state.navigation.cachedRoutes);

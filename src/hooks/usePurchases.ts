@@ -1,18 +1,18 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { generateInvoiceNumber } from './invoices/invoiceNumberGenerator';
+import { generatePurchaseNumber } from './purchases/purchaseNumberGenerator';
 import type { Database } from '@/integrations/supabase/types';
 
-type Invoice = Database['public']['Tables']['invoices']['Row'];
-type InvoiceInsert = Database['public']['Tables']['invoices']['Insert'];
+type PurchaseOrder = Database['public']['Tables']['purchase_orders']['Row'];
+type PurchaseOrderInsert = Database['public']['Tables']['purchase_orders']['Insert'];
 
-export const useInvoices = () => {
+export const usePurchases = () => {
   return useQuery({
-    queryKey: ['invoices'],
+    queryKey: ['purchases'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('invoices')
+        .from('purchase_orders')
         .select(`
           *,
           contacts (name)
@@ -25,11 +25,11 @@ export const useInvoices = () => {
   });
 };
 
-export const useCreateInvoice = () => {
+export const useCreatePurchase = () => {
   const queryClient = useQueryClient();
   
   return useMutation({
-    mutationFn: async (invoice: Omit<InvoiceInsert, 'company_id' | 'invoice_number'>) => {
+    mutationFn: async (purchase: Omit<PurchaseOrderInsert, 'company_id' | 'order_number'>) => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('User not authenticated');
 
@@ -41,15 +41,15 @@ export const useCreateInvoice = () => {
 
       if (!profile?.company_id) throw new Error('No company associated with user');
 
-      // Génération automatique du numéro de facture
-      const invoiceNumber = await generateInvoiceNumber(profile.company_id);
+      // Génération automatique du numéro d'achat
+      const orderNumber = await generatePurchaseNumber(profile.company_id);
 
       const { data, error } = await supabase
-        .from('invoices')
+        .from('purchase_orders')
         .insert({ 
-          ...invoice, 
+          ...purchase, 
           company_id: profile.company_id,
-          invoice_number: invoiceNumber
+          order_number: orderNumber
         })
         .select()
         .single();
@@ -58,7 +58,7 @@ export const useCreateInvoice = () => {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['invoices'] });
+      queryClient.invalidateQueries({ queryKey: ['purchases'] });
     },
   });
 };

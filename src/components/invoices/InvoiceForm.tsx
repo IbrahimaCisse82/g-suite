@@ -24,7 +24,6 @@ interface InvoiceFormProps {
 export const InvoiceForm = ({ onSubmit, onCancel, loading, initialData }: InvoiceFormProps) => {
   const [formData, setFormData] = useState({
     contact_id: '',
-    invoice_number: '',
     invoice_date: new Date().toISOString().split('T')[0],
     due_date: '',
     notes: ''
@@ -46,7 +45,6 @@ export const InvoiceForm = ({ onSubmit, onCancel, loading, initialData }: Invoic
     if (initialData) {
       setFormData({
         contact_id: initialData.contact_id || '',
-        invoice_number: initialData.invoice_number || '',
         invoice_date: initialData.invoice_date ? new Date(initialData.invoice_date).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
         due_date: initialData.due_date ? new Date(initialData.due_date).toISOString().split('T')[0] : '',
         notes: initialData.notes || ''

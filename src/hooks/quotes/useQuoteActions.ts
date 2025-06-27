@@ -2,6 +2,7 @@
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { useQuoteValidation } from './useQuoteValidation';
+import { generateQuoteNumber } from './quoteNumberGenerator';
 
 export function useQuoteActions(refetch: () => void) {
   const { validateQuoteData } = useQuoteValidation();
@@ -23,14 +24,27 @@ export function useQuoteActions(refetch: () => void) {
         return;
       }
 
-      // Génération du numéro de devis
-      const quoteNumber = await generateQuoteNumber();
+      // Récupérer le profil utilisateur pour obtenir company_id
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('company_id')
+        .eq('id', user.id)
+        .single();
+
+      if (profileError || !profile?.company_id) {
+        console.error('No company associated with user:', profileError);
+        toast.error('Aucune entreprise associée à votre compte');
+        return;
+      }
+
+      // Génération automatique du numéro de devis
+      const quoteNumber = await generateQuoteNumber(profile.company_id);
 
       const { data: quote, error: quoteError } = await supabase
         .from('quotes')
         .insert({
           quote_number: quoteNumber,
-          company_id: user.id,
+          company_id: profile.company_id,
           contact_id: sanitizedData.contact_id,
           quote_date: sanitizedData.quote_date,
           validity_date: sanitizedData.validity_date,
@@ -97,31 +111,6 @@ export function useQuoteActions(refetch: () => void) {
       console.error('Erreur:', error);
       toast.error('Erreur lors de la suppression du devis');
     }
-  };
-
-  const generateQuoteNumber = async (): Promise<string> => {
-    const currentYear = new Date().getFullYear();
-    const prefix = `DEV-${currentYear}-`;
-    
-    const { data, error } = await supabase
-      .from('quotes')
-      .select('quote_number')
-      .like('quote_number', `${prefix}%`)
-      .order('quote_number', { ascending: false })
-      .limit(1);
-
-    if (error) {
-      console.error('Erreur lors de la génération du numéro:', error);
-      return `${prefix}001`;
-    }
-
-    if (data && data.length > 0) {
-      const lastNumber = data[0].quote_number.split('-').pop();
-      const nextNumber = parseInt(lastNumber || '0', 10) + 1;
-      return `${prefix}${nextNumber.toString().padStart(3, '0')}`;
-    }
-
-    return `${prefix}001`;
   };
 
   return {

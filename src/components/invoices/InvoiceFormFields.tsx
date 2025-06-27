@@ -9,7 +9,6 @@ import { useContacts } from '@/hooks/useContacts';
 interface InvoiceFormFieldsProps {
   formData: {
     contact_id: string;
-    invoice_number: string;
     invoice_date: string;
     due_date: string;
     notes: string;
@@ -40,14 +39,10 @@ export const InvoiceFormFields = ({ formData, onFormDataChange }: InvoiceFormFie
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="invoice_number">Numéro de facture</Label>
-          <Input
-            id="invoice_number"
-            value={formData.invoice_number}
-            onChange={(e) => onFormDataChange('invoice_number', e.target.value)}
-            placeholder="F-2024-001"
-            required
-          />
+          <Label>Numéro de facture</Label>
+          <div className="p-2 bg-gray-50 rounded border text-sm text-gray-600">
+            Généré automatiquement (FAC-{new Date().getFullYear()}-XXX)
+          </div>
         </div>
 
         <div className="space-y-2">

@@ -1,6 +1,7 @@
 
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { generateInvoiceNumber } from '../invoices/invoiceNumberGenerator';
 
 export function useQuoteConversion(refetch: () => void) {
   const convertQuoteToInvoice = async (quoteId: string) => {
@@ -9,6 +10,19 @@ export function useQuoteConversion(refetch: () => void) {
       
       if (!user) {
         toast.error('Utilisateur non connecté');
+        return;
+      }
+
+      // Récupérer le profil utilisateur pour obtenir company_id
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('company_id')
+        .eq('id', user.id)
+        .single();
+
+      if (profileError || !profile?.company_id) {
+        console.error('No company associated with user:', profileError);
+        toast.error('Aucune entreprise associée à votre compte');
         return;
       }
 
@@ -28,15 +42,15 @@ export function useQuoteConversion(refetch: () => void) {
         return;
       }
 
-      // Générer le numéro de facture
-      const invoiceNumber = await generateInvoiceNumber();
+      // Générer automatiquement le numéro de facture
+      const invoiceNumber = await generateInvoiceNumber(profile.company_id);
 
       // Créer la facture
       const { data: invoice, error: invoiceError } = await supabase
         .from('invoices')
         .insert({
           invoice_number: invoiceNumber,
-          company_id: user.id,
+          company_id: profile.company_id,
           contact_id: quote.contact_id,
           invoice_date: new Date().toISOString().split('T')[0],
           due_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
@@ -74,31 +88,6 @@ export function useQuoteConversion(refetch: () => void) {
       console.error('Erreur lors de la conversion:', error);
       toast.error('Erreur lors de la conversion du devis');
     }
-  };
-
-  const generateInvoiceNumber = async (): Promise<string> => {
-    const currentYear = new Date().getFullYear();
-    const prefix = `FAC-${currentYear}-`;
-    
-    const { data, error } = await supabase
-      .from('invoices')
-      .select('invoice_number')
-      .like('invoice_number', `${prefix}%`)
-      .order('invoice_number', { ascending: false })
-      .limit(1);
-
-    if (error) {
-      console.error('Erreur lors de la génération du numéro de facture:', error);
-      return `${prefix}001`;
-    }
-
-    if (data && data.length > 0) {
-      const lastNumber = data[0].invoice_number.split('-').pop();
-      const nextNumber = parseInt(lastNumber || '0', 10) + 1;
-      return `${prefix}${nextNumber.toString().padStart(3, '0')}`;
-    }
-
-    return `${prefix}001`;
   };
 
   return {

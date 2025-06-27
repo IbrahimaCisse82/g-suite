@@ -5,97 +5,123 @@ interface ImageCacheEntry {
   url: string;
   blob: Blob;
   timestamp: number;
+  accessCount: number;
+  lastAccessed: number;
 }
 
 class ImageCache {
   private cache = new Map<string, ImageCacheEntry>();
-  private readonly MAX_CACHE_SIZE = 50; // Maximum 50 images en cache
-  private readonly CACHE_DURATION = 30 * 60 * 1000; // 30 minutes
+  private maxSize = 50; // Maximum number of images to cache
+  private maxAge = 30 * 60 * 1000; // 30 minutes in milliseconds
 
   async get(url: string): Promise<string | null> {
     const entry = this.cache.get(url);
     
-    if (!entry) return null;
-    
-    // Vérifier l'expiration
-    if (Date.now() - entry.timestamp > this.CACHE_DURATION) {
-      this.cache.delete(url);
-      URL.revokeObjectURL(entry.url);
+    if (!entry) {
       return null;
     }
+
+    // Check if entry is expired
+    if (Date.now() - entry.timestamp > this.maxAge) {
+      this.cache.delete(url);
+      URL.revokeObjectURL(url);
+      return null;
+    }
+
+    // Update access statistics
+    entry.accessCount++;
+    entry.lastAccessed = Date.now();
     
-    return entry.url;
+    return URL.createObjectURL(entry.blob);
   }
 
-  async set(originalUrl: string, blob: Blob): Promise<string> {
-    // Nettoyer le cache si trop plein
-    if (this.cache.size >= this.MAX_CACHE_SIZE) {
+  async set(url: string, blob: Blob): Promise<void> {
+    // Clean up old entries if cache is full
+    if (this.cache.size >= this.maxSize) {
       this.cleanup();
     }
 
-    const objectUrl = URL.createObjectURL(blob);
-    this.cache.set(originalUrl, {
-      url: objectUrl,
+    const entry: ImageCacheEntry = {
+      url,
       blob,
-      timestamp: Date.now()
-    });
+      timestamp: Date.now(),
+      accessCount: 1,
+      lastAccessed: Date.now()
+    };
 
-    return objectUrl;
+    this.cache.set(url, entry);
   }
 
-  private cleanup() {
-    const entries = Array.from(this.cache.entries());
-    // Supprimer les entrées les plus anciennes
-    entries
-      .sort(([,a], [,b]) => a.timestamp - b.timestamp)
-      .slice(0, 10) // Supprimer les 10 plus anciennes
-      .forEach(([url, entry]) => {
-        this.cache.delete(url);
-        URL.revokeObjectURL(entry.url);
+  private cleanup(): void {
+    // Remove oldest and least accessed entries
+    const entries = Array.from(this.cache.entries())
+      .sort((a, b) => {
+        // First sort by access count (ascending), then by last accessed (ascending)
+        const accessDiff = a[1].accessCount - b[1].accessCount;
+        if (accessDiff !== 0) return accessDiff;
+        return a[1].lastAccessed - b[1].lastAccessed;
       });
+
+    // Remove 25% of entries
+    const toRemove = Math.floor(entries.length * 0.25);
+    for (let i = 0; i < toRemove; i++) {
+      const [url, entry] = entries[i];
+      this.cache.delete(url);
+      URL.revokeObjectURL(URL.createObjectURL(entry.blob));
+    }
   }
 
-  clear() {
-    this.cache.forEach(entry => URL.revokeObjectURL(entry.url));
+  clear(): void {
+    for (const [url, entry] of this.cache.entries()) {
+      URL.revokeObjectURL(URL.createObjectURL(entry.blob));
+    }
     this.cache.clear();
+  }
+
+  has(url: string): boolean {
+    return this.cache.has(url);
+  }
+
+  size(): number {
+    return this.cache.size;
   }
 }
 
 const imageCache = new ImageCache();
 
-export const useImageCache = (src: string) => {
+export function useImageCache(src: string) {
   const [cachedSrc, setCachedSrc] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
 
   const loadImage = useCallback(async (url: string) => {
     try {
-      setLoading(true);
+      setIsLoading(true);
       setError(null);
 
-      // Vérifier le cache d'abord
+      // Check cache first
       const cached = await imageCache.get(url);
       if (cached) {
         setCachedSrc(cached);
-        setLoading(false);
         return;
       }
 
-      // Charger l'image
+      // Fetch and cache the image
       const response = await fetch(url);
       if (!response.ok) {
-        throw new Error(`Failed to load image: ${response.status}`);
+        throw new Error(`Failed to fetch image: ${response.statusText}`);
       }
 
       const blob = await response.blob();
-      const objectUrl = await imageCache.set(url, blob);
+      await imageCache.set(url, blob);
       
+      const objectUrl = URL.createObjectURL(blob);
       setCachedSrc(objectUrl);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load image');
+      setError(err instanceof Error ? err : new Error('Unknown error'));
       setCachedSrc(null);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   }, []);
 
@@ -105,5 +131,19 @@ export const useImageCache = (src: string) => {
     }
   }, [src, loadImage]);
 
-  return { src: cachedSrc || src, loading, error };
-};
+  const refresh = useCallback(() => {
+    if (src) {
+      loadImage(src);
+    }
+  }, [src, loadImage]);
+
+  return {
+    src: cachedSrc || src,
+    isLoading,
+    error,
+    refresh,
+    isCached: imageCache.has(src)
+  };
+}
+
+export { imageCache };

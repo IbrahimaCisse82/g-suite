@@ -1,6 +1,7 @@
 
 import { useQuery, UseQueryOptions, QueryFunction } from '@tanstack/react-query';
 import { usePerformance } from './usePerformance';
+import { useAdvancedPerformance } from './useAdvancedPerformance';
 import { memoryCache, sessionCache } from '@/utils/cache';
 
 interface OptimizedQueryOptions<T> extends Omit<UseQueryOptions<T>, 'gcTime'> {
@@ -15,6 +16,9 @@ export function useOptimizedQuery<T>(
   options: OptimizedQueryOptions<T>
 ) {
   const { measureOperation } = usePerformance(options.context);
+  const { trackNetworkRequest, trackCacheHit, trackCacheMiss } = useAdvancedPerformance(
+    options.context || 'OptimizedQuery'
+  );
   
   const {
     enableMemoryCache = true,
@@ -38,6 +42,7 @@ export function useOptimizedQuery<T>(
         const cached = memoryCache.get<T>(cacheKey);
         if (cached) {
           console.log(`📦 Memory cache hit: ${cacheKey}`);
+          trackCacheHit();
           endMeasure();
           return cached;
         }
@@ -48,6 +53,7 @@ export function useOptimizedQuery<T>(
         const cached = sessionCache.get<T>(cacheKey);
         if (cached) {
           console.log(`💾 Session cache hit: ${cacheKey}`);
+          trackCacheHit();
           // Also update memory cache
           if (enableMemoryCache) {
             memoryCache.set(cacheKey, cached, cacheTTL);
@@ -56,6 +62,10 @@ export function useOptimizedQuery<T>(
           return cached;
         }
       }
+
+      // Track cache miss
+      trackCacheMiss();
+      trackNetworkRequest();
 
       // Fetch data - ensure queryFn is callable
       if (!queryFn || typeof queryFn !== 'function') {

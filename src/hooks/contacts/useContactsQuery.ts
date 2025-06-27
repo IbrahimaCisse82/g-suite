@@ -28,9 +28,7 @@ export const useContactsQuery = () => {
           {
             id: 'mock-1',
             contact_number: 'C000001',
-            company_name: 'Entreprise Demo',
-            first_name: 'Jean',
-            last_name: 'Dupont',
+            name: 'Entreprise Demo - Jean Dupont',
             email: 'jean.dupont@demo.fr',
             phone: '01 23 45 67 89',
             type: 'client',
@@ -39,27 +37,33 @@ export const useContactsQuery = () => {
             postal_code: '75001',
             country: 'France',
             company_id: 'mock-company',
+            category_id: null,
+            credit_limit: 5000,
+            payment_terms: 30,
+            siret: '12345678901234',
+            tax_number: 'FR12345678901',
             created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-            notes: 'Contact de démonstration'
+            updated_at: new Date().toISOString()
           } as Contact,
           {
             id: 'mock-2',
             contact_number: 'F000001',
-            company_name: 'Fournisseur Demo',
-            first_name: 'Marie',
-            last_name: 'Martin',
+            name: 'Fournisseur Demo - Marie Martin',
             email: 'marie.martin@fournisseur.fr',
             phone: '01 98 76 54 32',
-            type: 'fournisseur',
+            type: 'client',
             address: '456 Avenue du Test',
             city: 'Lyon',
             postal_code: '69000',
             country: 'France',
             company_id: 'mock-company',
+            category_id: null,
+            credit_limit: 10000,
+            payment_terms: 15,
+            siret: '98765432109876',
+            tax_number: 'FR98765432109',
             created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-            notes: 'Fournisseur de test'
+            updated_at: new Date().toISOString()
           } as Contact
         ];
       }

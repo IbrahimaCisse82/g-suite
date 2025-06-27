@@ -1,10 +1,10 @@
 
 import { createRoot } from 'react-dom/client'
+import { enableMapSet } from 'immer'
 import App from './App.tsx'
 import './index.css'
-import { enableMapSet } from 'immer'
 
-// Initialiser le plugin MapSet pour Immer après l'import de React
+// Activer le plugin MapSet pour Immer avant le rendu
 enableMapSet()
 
 createRoot(document.getElementById("root")!).render(<App />);

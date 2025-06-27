@@ -2,6 +2,7 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { Building } from 'lucide-react';
 
 const TrustedCompaniesSection = () => {
   const { data: trustedCompanies } = useQuery({
@@ -18,7 +19,28 @@ const TrustedCompaniesSection = () => {
     },
   });
 
-  if (!trustedCompanies || trustedCompanies.length === 0) {
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>, companyName: string) => {
+    const imgElement = e.currentTarget;
+    const fallbackElement = imgElement.nextElementSibling as HTMLElement;
+    imgElement.style.display = 'none';
+    if (fallbackElement && fallbackElement.classList.contains('company-fallback')) {
+      fallbackElement.style.display = 'flex';
+    }
+  };
+
+  // Données de fallback si pas de données Supabase
+  const fallbackCompanies = [
+    { name: 'Tech Innovate', logo_url: null },
+    { name: 'Green Solutions', logo_url: null },
+    { name: 'Digital Africa', logo_url: null },
+    { name: 'Smart Business', logo_url: null },
+    { name: 'Future Corp', logo_url: null },
+    { name: 'Modern Enterprise', logo_url: null },
+  ];
+
+  const companies = trustedCompanies && trustedCompanies.length > 0 ? trustedCompanies : fallbackCompanies;
+
+  if (!companies || companies.length === 0) {
     return null;
   }
 
@@ -35,26 +57,30 @@ const TrustedCompaniesSection = () => {
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-8 items-center">
-          {trustedCompanies.map((company, index) => (
+          {companies.map((company, index) => (
             <div
               key={index}
               className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow duration-300 group"
             >
               <div className="flex items-center justify-center h-16">
                 {company.logo_url ? (
-                  <img
-                    src={company.logo_url}
-                    alt={`Logo ${company.name}`}
-                    className="max-h-12 max-w-full object-contain filter grayscale group-hover:grayscale-0 transition-all duration-300"
-                    style={{ 
-                      width: 'auto',
-                      height: 'auto',
-                      maxWidth: '100%',
-                      maxHeight: '100%'
-                    }}
-                  />
+                  <>
+                    <img
+                      src={company.logo_url}
+                      alt={`Logo ${company.name}`}
+                      className="max-h-12 max-w-full object-contain filter grayscale group-hover:grayscale-0 transition-all duration-300"
+                      onError={(e) => handleImageError(e, company.name)}
+                    />
+                    <div className="company-fallback w-full h-12 bg-slate-200 rounded flex items-center justify-center hidden">
+                      <Building className="w-6 h-6 text-slate-600 mr-2" />
+                      <span className="text-slate-600 font-medium text-sm truncate">
+                        {company.name}
+                      </span>
+                    </div>
+                  </>
                 ) : (
                   <div className="w-full h-12 bg-slate-200 rounded flex items-center justify-center">
+                    <Building className="w-6 h-6 text-slate-600 mr-2" />
                     <span className="text-slate-600 font-medium text-sm truncate px-2">
                       {company.name}
                     </span>
@@ -67,7 +93,7 @@ const TrustedCompaniesSection = () => {
 
         <div className="text-center mt-8">
           <p className="text-sm text-slate-500">
-            + de {trustedCompanies.length} entreprises et bien d'autres...
+            + de {companies.length} entreprises et bien d'autres...
           </p>
         </div>
       </div>

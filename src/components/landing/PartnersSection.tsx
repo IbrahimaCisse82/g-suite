@@ -6,19 +6,31 @@ const PartnersSection = () => {
     {
       name: 'ADEPME',
       logo: '/logos/adepme-logo.png',
-      description: 'Agence de Développement et d\'Encadrement des Petites et Moyennes Entreprises'
+      description: 'Agence de Développement et d\'Encadrement des Petites et Moyennes Entreprises',
+      fallbackColor: 'bg-blue-100 text-blue-700'
     },
     {
       name: 'GIZ',
       logo: '/logos/giz-logo.png', 
-      description: 'Deutsche Gesellschaft für Internationale Zusammenarbeit'
+      description: 'Deutsche Gesellschaft für Internationale Zusammenarbeit',
+      fallbackColor: 'bg-green-100 text-green-700'
     },
     {
       name: 'INVEST FOR JOBS',
       logo: '/logos/invest-for-jobs-logo.png',
-      description: 'Initiative allemande pour l\'emploi et l\'investissement en Afrique'
+      description: 'Initiative allemande pour l\'emploi et l\'investissement en Afrique',
+      fallbackColor: 'bg-purple-100 text-purple-700'
     }
   ];
+
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>, partner: any) => {
+    const imgElement = e.currentTarget;
+    const fallbackElement = imgElement.nextElementSibling as HTMLElement;
+    imgElement.style.display = 'none';
+    if (fallbackElement && fallbackElement.classList.contains('partner-fallback')) {
+      fallbackElement.style.display = 'flex';
+    }
+  };
 
   return (
     <section className="py-16 bg-white">
@@ -43,19 +55,12 @@ const PartnersSection = () => {
                   src={partner.logo}
                   alt={`Logo ${partner.name}`}
                   className="max-h-16 max-w-full object-contain group-hover:scale-110 transition-transform duration-300"
-                  onError={(e) => {
-                    const imgElement = e.currentTarget;
-                    const fallbackElement = imgElement.nextElementSibling as HTMLElement;
-                    imgElement.style.display = 'none';
-                    if (fallbackElement) {
-                      fallbackElement.style.display = 'flex';
-                    }
-                  }}
+                  onError={(e) => handleImageError(e, partner)}
                 />
                 <div 
-                  className="w-full h-16 bg-emerald-100 rounded-lg items-center justify-center hidden"
+                  className={`partner-fallback w-full h-16 ${partner.fallbackColor} rounded-lg items-center justify-center hidden`}
                 >
-                  <span className="text-emerald-700 font-bold text-lg">
+                  <span className="font-bold text-lg">
                     {partner.name}
                   </span>
                 </div>

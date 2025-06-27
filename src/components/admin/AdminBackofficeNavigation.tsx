@@ -7,7 +7,7 @@ import { NavigationFooter } from './backoffice/navigation/NavigationFooter';
 
 export const AdminBackofficeNavigation = () => {
   return (
-    <div className="w-72 bg-white text-gray-900 flex flex-col border-r border-gray-200 shadow-sm">
+    <div className="w-72 bg-sidebar text-sidebar-foreground flex flex-col border-r border-sidebar-border shadow-sm">
       <NavigationHeader />
       <NavigationMenu />
       <SolutionsSection />

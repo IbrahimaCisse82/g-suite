@@ -1,120 +1,131 @@
 
 import React, { useState } from 'react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Checkbox } from '@/components/ui/checkbox';
+import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
 
 interface ChartOfAccount {
-  id: string;
   accountNumber: string;
   accountTitle: string;
   accountType: string;
   hasCarryForward: boolean;
-  isHidden: boolean;
 }
 
 interface AddAccountDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  onAddAccount: (account: Omit<ChartOfAccount, 'id' | 'isHidden'>) => void;
+  onAddAccount: (account: ChartOfAccount) => void;
 }
 
 const accountTypes = [
+  'Capitaux',
+  'Immobilisation',
+  'Stock',
   'Client',
   'Fournisseur',
-  'Salarie',
   'Banque',
-  'Amortis/Provision',
-  'Résultat-Bilan',
   'Charge',
   'Produit',
-  'Resulat-Gestion',
-  'Immobilisation',
-  'Capitaux',
-  'Stock',
-  'Titre'
+  'Salarie',
+  'Amortis/Provision',
+  'Titre',
+  'Résultat-Bilan',
+  'Resulat-Gestion'
 ];
 
 export const AddAccountDialog = ({ isOpen, onClose, onAddAccount }: AddAccountDialogProps) => {
-  const [newAccount, setNewAccount] = useState({
+  const [formData, setFormData] = useState<ChartOfAccount>({
     accountNumber: '',
     accountTitle: '',
     accountType: '',
     hasCarryForward: false
   });
 
-  const handleAddAccount = () => {
-    if (!newAccount.accountNumber || !newAccount.accountTitle || !newAccount.accountType) {
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!formData.accountNumber || !formData.accountTitle || !formData.accountType) {
       toast.error('Veuillez remplir tous les champs obligatoires');
       return;
     }
 
-    onAddAccount(newAccount);
-    setNewAccount({ accountNumber: '', accountTitle: '', accountType: '', hasCarryForward: false });
+    onAddAccount(formData);
+    setFormData({
+      accountNumber: '',
+      accountTitle: '',
+      accountType: '',
+      hasCarryForward: false
+    });
     onClose();
     toast.success('Compte ajouté avec succès');
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent>
+      <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>Nouveau compte comptable</DialogTitle>
+          <DialogTitle>Ajouter un nouveau compte</DialogTitle>
         </DialogHeader>
-        <div className="space-y-4 p-4">
+        
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-2">Numéro de compte *</label>
+            <Label htmlFor="accountNumber">Numéro de compte *</Label>
             <Input
-              value={newAccount.accountNumber}
-              onChange={(e) => setNewAccount({...newAccount, accountNumber: e.target.value})}
-              placeholder="ex: 411"
+              id="accountNumber"
+              value={formData.accountNumber}
+              onChange={(e) => setFormData({ ...formData, accountNumber: e.target.value })}
+              placeholder="Ex: 411"
+              required
             />
           </div>
+
           <div>
-            <label className="block text-sm font-medium mb-2">Intitulé *</label>
+            <Label htmlFor="accountTitle">Intitulé du compte *</Label>
             <Input
-              value={newAccount.accountTitle}
-              onChange={(e) => setNewAccount({...newAccount, accountTitle: e.target.value})}
-              placeholder="ex: Clients"
+              id="accountTitle"
+              value={formData.accountTitle}
+              onChange={(e) => setFormData({ ...formData, accountTitle: e.target.value })}
+              placeholder="Ex: Clients"
+              required
             />
           </div>
+
           <div>
-            <label className="block text-sm font-medium mb-2">Nature du compte *</label>
-            <Select value={newAccount.accountType} onValueChange={(value) => setNewAccount({...newAccount, accountType: value})}>
+            <Label htmlFor="accountType">Type de compte *</Label>
+            <Select value={formData.accountType} onValueChange={(value) => setFormData({ ...formData, accountType: value })}>
               <SelectTrigger>
-                <SelectValue placeholder="Sélectionnez la nature du compte" />
+                <SelectValue placeholder="Sélectionner un type" />
               </SelectTrigger>
-              <SelectContent className="bg-white z-50">
+              <SelectContent>
                 {accountTypes.map((type) => (
-                  <SelectItem key={type} value={type}>
-                    {type}
-                  </SelectItem>
+                  <SelectItem key={type} value={type}>{type}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
+
           <div className="flex items-center space-x-2">
-            <Checkbox
-              id="carryForward"
-              checked={newAccount.hasCarryForward}
-              onCheckedChange={(checked) => setNewAccount({...newAccount, hasCarryForward: checked as boolean})}
+            <Switch
+              id="hasCarryForward"
+              checked={formData.hasCarryForward}
+              onCheckedChange={(checked) => setFormData({ ...formData, hasCarryForward: checked })}
             />
-            <label htmlFor="carryForward" className="text-sm font-medium">
-              Ce compte fait l'objet d'un report à nouveau
-            </label>
+            <Label htmlFor="hasCarryForward">Report à nouveau</Label>
           </div>
-          <div className="flex justify-end space-x-3 pt-4">
-            <Button variant="outline" onClick={onClose}>
+
+          <div className="flex justify-end space-x-2 pt-4">
+            <Button type="button" variant="outline" onClick={onClose}>
               Annuler
             </Button>
-            <Button onClick={handleAddAccount} className="bg-green-600 hover:bg-green-700">
-              Ajouter le compte
+            <Button type="submit" className="bg-green-600 hover:bg-green-700">
+              Ajouter
             </Button>
           </div>
-        </div>
+        </form>
       </DialogContent>
     </Dialog>
   );

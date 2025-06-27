@@ -1,9 +1,9 @@
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Eye, EyeOff, Edit, Trash2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Eye, EyeOff } from 'lucide-react';
 
 interface ChartOfAccount {
   id: string;
@@ -20,68 +20,66 @@ interface AccountsTableProps {
 }
 
 export const AccountsTable = ({ accounts, onToggleVisibility }: AccountsTableProps) => {
+  const getTypeColor = (type: string) => {
+    const colors: Record<string, string> = {
+      'Capitaux': 'bg-blue-100 text-blue-800',
+      'Immobilisation': 'bg-green-100 text-green-800',
+      'Stock': 'bg-yellow-100 text-yellow-800',
+      'Client': 'bg-purple-100 text-purple-800',
+      'Fournisseur': 'bg-orange-100 text-orange-800',
+      'Banque': 'bg-cyan-100 text-cyan-800',
+      'Charge': 'bg-red-100 text-red-800',
+      'Produit': 'bg-emerald-100 text-emerald-800',
+      'Salarie': 'bg-pink-100 text-pink-800',
+      'Amortis/Provision': 'bg-gray-100 text-gray-800',
+      'Titre': 'bg-indigo-100 text-indigo-800',
+      'Résultat-Bilan': 'bg-violet-100 text-violet-800',
+      'Resulat-Gestion': 'bg-teal-100 text-teal-800'
+    };
+    return colors[type] || 'bg-gray-100 text-gray-800';
+  };
+
   return (
-    <div className="bg-card rounded-xl shadow-sm border border-border">
+    <div className="bg-white rounded-lg shadow">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Numéro de Compte</TableHead>
-            <TableHead>Intitulé</TableHead>
-            <TableHead>Nature du compte</TableHead>
-            <TableHead className="text-center">Report à nouveau</TableHead>
-            <TableHead>Statut</TableHead>
-            <TableHead className="text-center">Actions</TableHead>
+            <TableHead>N° Compte</TableHead>
+            <TableHead>Intitulé du compte</TableHead>
+            <TableHead>Type</TableHead>
+            <TableHead>Report à nouveau</TableHead>
+            <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {accounts.map((account) => (
             <TableRow key={account.id} className={account.isHidden ? 'opacity-50' : ''}>
-              <TableCell className="font-medium">{account.accountNumber}</TableCell>
+              <TableCell className="font-mono font-semibold">{account.accountNumber}</TableCell>
               <TableCell>{account.accountTitle}</TableCell>
-              <TableCell>{account.accountType}</TableCell>
-              <TableCell className="text-center">
-                <div className="flex justify-center">
-                  <Checkbox 
-                    checked={account.hasCarryForward} 
-                    disabled 
-                    className="pointer-events-none"
-                  />
-                </div>
+              <TableCell>
+                <Badge variant="secondary" className={getTypeColor(account.accountType)}>
+                  {account.accountType}
+                </Badge>
               </TableCell>
               <TableCell>
-                <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                  account.isHidden 
-                    ? 'bg-gray-100 text-gray-600' 
-                    : 'bg-green-100 text-green-700'
-                }`}>
-                  {account.isHidden ? 'Masqué' : 'Visible'}
-                </span>
+                {account.hasCarryForward ? (
+                  <Badge variant="default" className="bg-green-100 text-green-800">Oui</Badge>
+                ) : (
+                  <Badge variant="secondary" className="bg-gray-100 text-gray-800">Non</Badge>
+                )}
               </TableCell>
               <TableCell>
-                <div className="flex justify-center space-x-2">
-                  <Button 
-                    variant="ghost" 
-                    size="sm"
-                    onClick={() => onToggleVisibility(account.id)}
-                    className="text-blue-600 hover:text-blue-700"
-                  >
-                    {account.isHidden ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
-                  </Button>
-                  <Button 
-                    variant="ghost" 
-                    size="sm"
-                    className="text-green-600 hover:text-green-700"
-                  >
-                    <Edit className="w-4 h-4" />
-                  </Button>
-                  <Button 
-                    variant="ghost" 
-                    size="sm"
-                    className="text-red-600 hover:text-red-700"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
-                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => onToggleVisibility(account.id)}
+                >
+                  {account.isHidden ? (
+                    <Eye className="w-4 h-4" />
+                  ) : (
+                    <EyeOff className="w-4 h-4" />
+                  )}
+                </Button>
               </TableCell>
             </TableRow>
           ))}

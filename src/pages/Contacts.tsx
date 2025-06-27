@@ -16,11 +16,16 @@ import { LogIn } from 'lucide-react';
 
 export const Contacts = () => {
   const { user, loading: authLoading } = useAuth();
+  
+  // Mode développement - permettre l'accès sans authentification
+  const isDevelopmentMode = import.meta.env.DEV || window.location.hostname === 'localhost';
+  const mockUser = isDevelopmentMode && !user ? { email: 'dev@example.com', id: 'dev-user' } : user;
+  
   const { data: contacts = [], isLoading, error } = useContacts();
   const contactsHandlers = useContactsHandlers();
 
-  // Redirection vers la page de connexion si pas authentifié
-  if (!authLoading && !user) {
+  // Redirection vers la page de connexion si pas authentifié (sauf en mode dev)
+  if (!authLoading && !mockUser && !isDevelopmentMode) {
     return (
       <Layout>
         <div className="gradient-bg min-h-full">
@@ -97,7 +102,11 @@ export const Contacts = () => {
           {/* Info utilisateur connecté */}
           <div className="mb-4 p-4 bg-green-100 rounded-lg">
             <p className="text-sm text-green-800">
-              Connecté en tant que: {user?.email} | Contacts chargés: {contacts.length}
+              {isDevelopmentMode && !user ? (
+                <>Mode développement - Accès autorisé | Contacts chargés: {contacts.length}</>
+              ) : (
+                <>Connecté en tant que: {mockUser?.email} | Contacts chargés: {contacts.length}</>
+              )}
             </p>
           </div>
 

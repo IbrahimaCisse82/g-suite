@@ -5,7 +5,7 @@ import { immer } from 'zustand/middleware/immer';
 interface NavigationState {
   currentRoute: string;
   isNavigating: boolean;
-  cachedRoutes: Set<string>;
+  cachedRoutes: string[]; // Changé de Set à Array
   sidebarCollapsed: boolean;
 }
 
@@ -39,7 +39,7 @@ export const useAppStore = create<AppState & AppActions>()(
     navigation: {
       currentRoute: '/',
       isNavigating: false,
-      cachedRoutes: new Set(),
+      cachedRoutes: [], // Array au lieu de Set
       sidebarCollapsed: false,
     },
     performance: {
@@ -60,7 +60,9 @@ export const useAppStore = create<AppState & AppActions>()(
 
     addCachedRoute: (route) =>
       set((state) => {
-        state.navigation.cachedRoutes.add(route);
+        if (!state.navigation.cachedRoutes.includes(route)) {
+          state.navigation.cachedRoutes.push(route);
+        }
       }),
 
     toggleSidebar: () =>
@@ -107,9 +109,9 @@ export const useAppStore = create<AppState & AppActions>()(
   }))
 );
 
-// Selectors for better performance
+// Selectors adaptés pour le nouveau format
 export const useSidebarState = () => useAppStore((state) => state.navigation.sidebarCollapsed);
 export const useNavigationState = () => useAppStore((state) => state.navigation);
 export const useIsNavigating = () => useAppStore((state) => state.navigation.isNavigating);
 export const usePerformanceMetrics = () => useAppStore((state) => state.performance.metrics);
-export const useCachedRoutes = () => useAppStore((state) => state.navigation.cachedRoutes);
+export const useCachedRoutes = () => useAppStore((state) => new Set(state.navigation.cachedRoutes)); // Conversion en Set pour compatibilité

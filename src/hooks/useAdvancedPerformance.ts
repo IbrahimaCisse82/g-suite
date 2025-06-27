@@ -62,7 +62,8 @@ export const useAdvancedPerformance = (componentName: string) => {
       entries.forEach((entry) => {
         if (entry.entryType === 'navigation') {
           const navEntry = entry as PerformanceNavigationTiming;
-          const loadTime = navEntry.loadEventEnd - navEntry.navigationStart;
+          // Utiliser startTime et loadEventEnd au lieu de navigationStart
+          const loadTime = navEntry.loadEventEnd - navEntry.startTime;
           addPageLoadTime(componentName, loadTime);
         }
       });

@@ -39,7 +39,7 @@ import {
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { GSuiteLogo } from '@/components/ui/gsuite-logo';
-import { UltraFastLink } from '@/components/common/UltraFastLink';
+import { FastLink } from '@/components/common/FastLink';
 
 const menuItems = [
   { icon: Globe2, label: 'Tableau de bord', path: '/dashboard' },
@@ -98,10 +98,10 @@ export const EnterpriseHeader = () => {
                 return (
                   <SidebarMenuItem key={item.path}>
                     <SidebarMenuButton asChild isActive={isActive}>
-                      <UltraFastLink to={item.path}>
+                      <FastLink to={item.path}>
                         <Icon className="w-5 h-5" />
                         <span className="font-medium">{item.label}</span>
-                      </UltraFastLink>
+                      </FastLink>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 );

@@ -5,11 +5,10 @@ import { useAppStore } from '@/stores/appStore';
 interface PerformanceMetrics {
   renderTime: number;
   loadTime: number;
-  interactionTime: number;
   memoryUsage?: number;
 }
 
-export const useAdvancedPerformance = (componentName: string) => {
+export const usePerformance = (componentName: string) => {
   const startTime = useRef(performance.now());
   const renderCount = useRef(0);
   const { addPageLoadTime } = useAppStore();
@@ -20,7 +19,6 @@ export const useAdvancedPerformance = (componentName: string) => {
     const endTime = performance.now();
     const renderTime = endTime - startTime.current;
     renderCount.current += 1;
-
     return renderTime;
   }, []);
 
@@ -62,7 +60,6 @@ export const useAdvancedPerformance = (componentName: string) => {
       entries.forEach((entry) => {
         if (entry.entryType === 'navigation') {
           const navEntry = entry as PerformanceNavigationTiming;
-          // Utiliser startTime et loadEventEnd au lieu de navigationStart
           const loadTime = navEntry.loadEventEnd - navEntry.startTime;
           addPageLoadTime(componentName, loadTime);
         }
@@ -84,7 +81,6 @@ export const useAdvancedPerformance = (componentName: string) => {
       const finalMetrics: PerformanceMetrics = {
         renderTime: measureRender(),
         loadTime: performance.now() - startTime.current,
-        interactionTime: 0, // Sera calculé via les événements
         memoryUsage: measureMemory()?.used
       };
 
@@ -93,7 +89,7 @@ export const useAdvancedPerformance = (componentName: string) => {
       console.log(`📊 ${componentName} Performance Summary:`, finalMetrics);
       
       // Alertes de performance
-      if (finalMetrics.renderTime > 16) { // Plus de 16ms = moins de 60fps
+      if (finalMetrics.renderTime > 16) {
         console.warn(`🚨 ${componentName}: Render time too slow (${finalMetrics.renderTime.toFixed(2)}ms)`);
       }
       

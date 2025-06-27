@@ -13,13 +13,13 @@ import { OptimizedLayout } from '@/components/OptimizedLayout';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { LogIn } from 'lucide-react';
-import { UltraFastLink } from '@/components/common/UltraFastLink';
-import { useAdvancedPerformance } from '@/hooks/useAdvancedPerformance';
+import { FastLink } from '@/components/common/FastLink';
+import { usePerformance } from '@/hooks/usePerformance';
 import { PageLoader } from '@/components/common/PageLoader';
 
 export const Contacts = () => {
   const { user, loading: authLoading } = useAuth();
-  const { measureOperation } = useAdvancedPerformance('ContactsPage');
+  const { measureOperation } = usePerformance('ContactsPage');
   
   // Mode développement - permettre l'accès sans authentification
   const isDevelopmentMode = import.meta.env.DEV || window.location.hostname === 'localhost';
@@ -44,12 +44,12 @@ export const Contacts = () => {
               <p className="text-readable-secondary mb-6">
                 Vous devez être connecté pour accéder à la gestion des contacts.
               </p>
-              <UltraFastLink to="/user-login">
+              <FastLink to="/user-login">
                 <Button className="bg-blue-600 hover:bg-blue-700 text-white">
                   <LogIn className="w-4 h-4 mr-2" />
                   Se connecter
                 </Button>
-              </UltraFastLink>
+              </FastLink>
             </div>
           </div>
         </div>

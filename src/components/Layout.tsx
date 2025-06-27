@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, memo, useCallback } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
@@ -12,7 +12,7 @@ interface LayoutProps {
   children: React.ReactNode;
 }
 
-export const Layout = ({ children }: LayoutProps) => {
+export const Layout = memo(({ children }: LayoutProps) => {
   const { user } = useAuth();
   const { isAuthenticated: isAdmin } = useAdminAuthentication();
   const location = useLocation();
@@ -21,9 +21,9 @@ export const Layout = ({ children }: LayoutProps) => {
   const shouldShowSidebar = true;
   const isDashboard = location.pathname === '/dashboard';
 
-  const toggleSidebar = () => {
-    setIsSidebarCollapsed(!isSidebarCollapsed);
-  };
+  const toggleSidebar = useCallback(() => {
+    setIsSidebarCollapsed(prev => !prev);
+  }, []);
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -36,14 +36,14 @@ export const Layout = ({ children }: LayoutProps) => {
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header />
         
-        {/* Bouton retour au Dashboard (sauf si on est déjà sur le Dashboard) */}
+        {/* Bouton retour au Dashboard optimisé */}
         {!isDashboard && (
-          <div className="px-6 py-3 border-b border-gray-200 bg-white">
+          <div className="px-6 py-3 border-b border-gray-200 bg-white animate-fade-in">
             <Link to="/dashboard">
               <Button
                 variant="ghost"
                 size="sm"
-                className="flex items-center space-x-2 text-gray-600 hover:text-gray-900"
+                className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-all duration-200 hover:scale-105"
               >
                 <ArrowLeft className="w-4 h-4" />
                 <LayoutDashboard className="w-4 h-4" />
@@ -59,4 +59,6 @@ export const Layout = ({ children }: LayoutProps) => {
       </div>
     </div>
   );
-};
+});
+
+Layout.displayName = 'Layout';

@@ -9,13 +9,17 @@ import { ContactsErrorView } from '@/components/contacts/ContactsErrorView';
 import { ContactsDialogs } from '@/components/contacts/ContactsDialogs';
 import { useContacts } from '@/hooks/useContacts';
 import { useContactsHandlers } from '@/hooks/useContactsHandlers';
-import { Layout } from '@/components/Layout';
+import { OptimizedLayout } from '@/components/OptimizedLayout';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { LogIn } from 'lucide-react';
+import { OptimizedLink } from '@/components/common/OptimizedLink';
+import { useAdvancedPerformance } from '@/hooks/useAdvancedPerformance';
+import { PageLoader } from '@/components/common/PageLoader';
 
 export const Contacts = () => {
   const { user, loading: authLoading } = useAuth();
+  const { measureOperation } = useAdvancedPerformance('ContactsPage');
   
   // Mode développement - permettre l'accès sans authentification
   const isDevelopmentMode = import.meta.env.DEV || window.location.hostname === 'localhost';
@@ -27,7 +31,7 @@ export const Contacts = () => {
   // Redirection vers la page de connexion si pas authentifié (sauf en mode dev)
   if (!authLoading && !mockUser && !isDevelopmentMode) {
     return (
-      <Layout>
+      <OptimizedLayout>
         <div className="gradient-bg min-h-full">
           <div className="p-8">
             <div className="text-center">
@@ -40,17 +44,16 @@ export const Contacts = () => {
               <p className="text-readable-secondary mb-6">
                 Vous devez être connecté pour accéder à la gestion des contacts.
               </p>
-              <Button 
-                onClick={() => window.location.href = '/user-login'}
-                className="bg-blue-600 hover:bg-blue-700 text-white"
-              >
-                <LogIn className="w-4 h-4 mr-2" />
-                Se connecter
-              </Button>
+              <OptimizedLink to="/user-login">
+                <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                  <LogIn className="w-4 h-4 mr-2" />
+                  Se connecter
+                </Button>
+              </OptimizedLink>
             </div>
           </div>
         </div>
-      </Layout>
+      </OptimizedLayout>
     );
   }
 
@@ -58,7 +61,7 @@ export const Contacts = () => {
   if (error) {
     console.error('Error loading contacts:', error);
     return (
-      <Layout>
+      <OptimizedLayout>
         <div className="gradient-bg min-h-full">
           <div className="p-8">
             <div className="mb-4 p-4 bg-red-100 rounded-lg">
@@ -67,36 +70,27 @@ export const Contacts = () => {
             <ContactsErrorView />
           </div>
         </div>
-      </Layout>
+      </OptimizedLayout>
     );
   }
 
-  // Affichage du loading pendant le chargement
+  // Affichage du loading optimisé
   if (authLoading || isLoading) {
     return (
-      <Layout>
-        <div className="gradient-bg min-h-full">
-          <div className="p-8">
-            <div className="mb-4 p-4 bg-blue-100 rounded-lg">
-              <p className="text-sm text-blue-800">Chargement des contacts...</p>
-            </div>
-            <div className="animate-pulse space-y-6">
-              <div className="h-8 w-64 bg-gray-200 rounded"></div>
-              <div className="grid grid-cols-3 gap-6">
-                <div className="h-32 bg-gray-200 rounded"></div>
-                <div className="h-32 bg-gray-200 rounded"></div>
-                <div className="h-32 bg-gray-200 rounded"></div>
-              </div>
-              <div className="h-96 bg-gray-200 rounded"></div>
-            </div>
-          </div>
-        </div>
-      </Layout>
+      <OptimizedLayout>
+        <PageLoader type="skeleton" rows={4} text="Chargement des contacts..." />
+      </OptimizedLayout>
     );
   }
 
+  const handleCreateContact = () => {
+    const endMeasure = measureOperation('Open Create Dialog');
+    contactsHandlers.setIsCreateDialogOpen(true);
+    endMeasure();
+  };
+
   return (
-    <Layout>
+    <OptimizedLayout>
       <div className="gradient-bg min-h-full">
         <div className="p-8">
           {/* Info utilisateur connecté */}
@@ -110,7 +104,7 @@ export const Contacts = () => {
             </p>
           </div>
 
-          <ContactsHeader onCreateContact={() => contactsHandlers.setIsCreateDialogOpen(true)} />
+          <ContactsHeader onCreateContact={handleCreateContact} />
 
           <ContactsStats contacts={contacts} />
 
@@ -151,6 +145,6 @@ export const Contacts = () => {
           />
         </div>
       </div>
-    </Layout>
+    </OptimizedLayout>
   );
 };

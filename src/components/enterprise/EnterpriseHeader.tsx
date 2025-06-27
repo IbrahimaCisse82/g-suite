@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, 
   FileText, 
@@ -39,6 +39,7 @@ import {
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { GSuiteLogo } from '@/components/ui/gsuite-logo';
+import { OptimizedLink } from '@/components/common/OptimizedLink';
 
 const menuItems = [
   { icon: Globe2, label: 'Tableau de bord', path: '/dashboard' },
@@ -97,10 +98,10 @@ export const EnterpriseHeader = () => {
                 return (
                   <SidebarMenuItem key={item.path}>
                     <SidebarMenuButton asChild isActive={isActive}>
-                      <Link to={item.path}>
+                      <OptimizedLink to={item.path}>
                         <Icon className="w-5 h-5" />
                         <span className="font-medium">{item.label}</span>
-                      </Link>
+                      </OptimizedLink>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 );

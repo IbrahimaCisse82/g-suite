@@ -1,8 +1,6 @@
 
 import React, { memo, Suspense, lazy } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { usePerformance } from '@/hooks/usePerformance';
-import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
 
 interface OptimizedCardProps extends React.HTMLAttributes<HTMLDivElement> {
   trackRender?: boolean;
@@ -32,19 +30,7 @@ export const OptimizedCard = memo<OptimizedCardProps>(({
   preload = false,
   ...props 
 }) => {
-  const { trackRender: performanceTrackRender } = usePerformance();
-  const [ref, isIntersecting] = useIntersectionObserver({
-    threshold: 0.1,
-    rootMargin: preload ? '200px' : '50px'
-  });
-
-  React.useEffect(() => {
-    if (trackRender) {
-      performanceTrackRender(componentName);
-    }
-  }, [trackRender, componentName, performanceTrackRender]);
-
-  const shouldRender = !lazyLoad || isIntersecting;
+  const shouldRender = !lazyLoad; // Simplify for now to avoid intersection observer issues
 
   const cardContent = (
     <>
@@ -87,7 +73,6 @@ export const OptimizedCard = memo<OptimizedCardProps>(({
 
   return (
     <Card 
-      ref={ref} 
       className={`transition-all duration-300 ${
         priority === 'high' ? 'shadow-lg hover:shadow-xl' : 
         priority === 'medium' ? 'hover:shadow-md' : 

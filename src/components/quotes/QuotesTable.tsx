@@ -1,10 +1,9 @@
-
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { ArrowRight, Eye, Edit, Trash2 } from 'lucide-react';
+import { ArrowRight, Eye, Edit, Trash2, FileText } from 'lucide-react';
 
 interface QuotesTableProps {
   quotes: any[];

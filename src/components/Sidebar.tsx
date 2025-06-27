@@ -55,6 +55,7 @@ export const Sidebar = ({ isCollapsed = false, onToggle }: SidebarProps) => {
   const navigate = useNavigate();
   const { signOut } = useAuth();
   const { filterNavigationItems, isLoading } = useAccessControl();
+  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
 
   const handleSignOut = async () => {
     await signOut();
@@ -74,22 +75,26 @@ export const Sidebar = ({ isCollapsed = false, onToggle }: SidebarProps) => {
   const filteredMenuItems = filterNavigationItems(menuItems);
 
   return (
-    <div className={`${isCollapsed ? 'w-16' : 'w-64'} bg-sidebar text-sidebar-foreground flex flex-col border-r border-sidebar-border min-h-screen transition-all duration-300`}>
+    <div className={`${isCollapsed ? 'w-16' : 'w-64'} bg-sidebar text-sidebar-foreground flex flex-col border-r border-sidebar-border min-h-screen transition-all duration-500 ease-in-out`}>
       {/* Header avec toggle */}
       <div className="p-4 border-b border-sidebar-border flex-shrink-0">
         <div className="flex items-center justify-between">
           {!isCollapsed && (
-            <div className="flex items-center space-x-3">
-              <GSuiteLogo size={32} />
-              <div>
+            <div className="flex items-center space-x-3 animate-fade-in">
+              <div className="transform transition-transform duration-300 hover:scale-110">
+                <GSuiteLogo size={32} />
+              </div>
+              <div className="transition-opacity duration-300">
                 <h1 className="text-lg font-bold text-sidebar-foreground">G-Suite</h1>
                 <p className="text-xs text-sidebar-foreground/70">Gestion d'entreprise</p>
               </div>
             </div>
           )}
           {isCollapsed && (
-            <div className="flex justify-center">
-              <GSuiteLogo size={32} />
+            <div className="flex justify-center animate-fade-in">
+              <div className="transform transition-transform duration-300 hover:scale-110">
+                <GSuiteLogo size={32} />
+              </div>
             </div>
           )}
           {onToggle && (
@@ -97,9 +102,11 @@ export const Sidebar = ({ isCollapsed = false, onToggle }: SidebarProps) => {
               variant="ghost"
               size="sm"
               onClick={onToggle}
-              className="text-sidebar-foreground/80 hover:text-sidebar-foreground p-1"
+              className="text-sidebar-foreground/80 hover:text-sidebar-foreground p-1 transform transition-all duration-300 hover:scale-110 hover:bg-sidebar-accent rounded-lg"
             >
-              {isCollapsed ? <Menu className="w-4 h-4" /> : <X className="w-4 h-4" />}
+              <div className="transform transition-transform duration-300">
+                {isCollapsed ? <Menu className="w-4 h-4" /> : <X className="w-4 h-4" />}
+              </div>
             </Button>
           )}
         </div>
@@ -107,23 +114,52 @@ export const Sidebar = ({ isCollapsed = false, onToggle }: SidebarProps) => {
       
       {/* Navigation */}
       <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-        {filteredMenuItems.map((item) => {
+        {filteredMenuItems.map((item, index) => {
           const Icon = item.icon;
           const isActive = location.pathname === item.path;
+          const isHovered = hoveredItem === item.path;
+          
           return (
-            <Link
+            <div
               key={item.path}
-              to={item.path}
-              className={`flex items-center space-x-3 px-3 py-3 rounded-lg transition-all duration-200 text-sm font-medium w-full ${
-                isActive 
-                  ? 'bg-green-600 text-white shadow-lg' 
-                  : 'text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-foreground'
-              } ${isCollapsed ? 'justify-center' : ''}`}
-              title={isCollapsed ? item.label : undefined}
+              className="transform transition-all duration-200"
+              style={{
+                animationDelay: `${index * 50}ms`,
+              }}
             >
-              <Icon className="w-5 h-5 flex-shrink-0" />
-              {!isCollapsed && <span className="truncate">{item.label}</span>}
-            </Link>
+              <Link
+                to={item.path}
+                onMouseEnter={() => setHoveredItem(item.path)}
+                onMouseLeave={() => setHoveredItem(null)}
+                className={`flex items-center space-x-3 px-3 py-3 rounded-xl transition-all duration-300 text-sm font-medium w-full relative overflow-hidden group ${
+                  isActive 
+                    ? 'bg-gradient-to-r from-green-600 to-green-700 text-white shadow-lg transform scale-105' 
+                    : 'text-sidebar-foreground/80 hover:bg-gradient-to-r hover:from-sidebar-accent hover:to-sidebar-accent/80 hover:text-sidebar-foreground hover:shadow-md hover:scale-102'
+                } ${isCollapsed ? 'justify-center' : ''}`}
+                title={isCollapsed ? item.label : undefined}
+              >
+                {/* Effet de background animé */}
+                <div className={`absolute inset-0 bg-gradient-to-r from-green-500/20 to-green-600/20 opacity-0 transition-opacity duration-300 ${isHovered && !isActive ? 'opacity-100' : ''}`} />
+                
+                {/* Barre indicatrice à gauche pour l'élément actif */}
+                {isActive && (
+                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-white rounded-r-full animate-scale-in" />
+                )}
+                
+                <div className={`transform transition-all duration-300 ${isHovered ? 'scale-110' : ''} relative z-10`}>
+                  <Icon className="w-5 h-5 flex-shrink-0" />
+                </div>
+                
+                {!isCollapsed && (
+                  <span className={`truncate transition-all duration-300 relative z-10 ${isHovered ? 'translate-x-1' : ''}`}>
+                    {item.label}
+                  </span>
+                )}
+                
+                {/* Effet de shine au hover */}
+                <div className={`absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full transition-transform duration-1000 ${isHovered ? 'translate-x-full' : ''}`} />
+              </Link>
+            </div>
           );
         })}
       </nav>
@@ -133,17 +169,25 @@ export const Sidebar = ({ isCollapsed = false, onToggle }: SidebarProps) => {
         <Button
           variant="ghost"
           onClick={handleSignOut}
-          className={`w-full text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-foreground flex items-center ${
+          onMouseEnter={() => setHoveredItem('logout')}
+          onMouseLeave={() => setHoveredItem(null)}
+          className={`w-full text-sidebar-foreground/80 hover:bg-gradient-to-r hover:from-red-500/10 hover:to-red-600/10 hover:text-red-400 transition-all duration-300 hover:shadow-md hover:scale-105 rounded-xl group ${
             isCollapsed ? 'justify-center px-2' : 'justify-start space-x-2'
           }`}
           title={isCollapsed ? 'Déconnexion' : undefined}
         >
-          <LogOut className="w-4 h-4" />
-          {!isCollapsed && <span>Déconnexion</span>}
+          <div className={`transform transition-all duration-300 ${hoveredItem === 'logout' ? 'scale-110 rotate-12' : ''}`}>
+            <LogOut className="w-4 h-4" />
+          </div>
+          {!isCollapsed && (
+            <span className={`transition-all duration-300 ${hoveredItem === 'logout' ? 'translate-x-1' : ''}`}>
+              Déconnexion
+            </span>
+          )}
         </Button>
         
         {!isCollapsed && (
-          <div className="text-xs text-sidebar-foreground/50 mt-2 text-center">
+          <div className="text-xs text-sidebar-foreground/50 mt-2 text-center transition-opacity duration-300 opacity-70 hover:opacity-100">
             © 2024 G-Suite v1.0
           </div>
         )}

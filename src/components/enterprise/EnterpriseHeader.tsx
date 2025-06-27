@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
@@ -18,7 +19,10 @@ import {
   Globe2,
   FileBarChart,
   DollarSign,
-  BookOpen
+  BookOpen,
+  FileCheck,
+  Target,
+  UsersIcon
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { 
@@ -31,9 +35,6 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubItem,
-  SidebarMenuSubButton,
 } from '@/components/ui/sidebar';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -41,25 +42,23 @@ import { GSuiteLogo } from '@/components/ui/gsuite-logo';
 
 const menuItems = [
   { icon: Globe2, label: 'Tableau de bord', path: '/dashboard' },
-  { 
-    icon: FileBarChart, 
-    label: 'Comptabilité', 
-    path: '/accounting',
-    subItems: [
-      { label: 'Plan comptable', path: '/chart-of-accounts' },
-      { label: 'États financiers', path: '/financial-statements' },
-      { label: 'Écritures comptables', path: '/journal-entries' }
-    ]
-  },
+  { icon: FileBarChart, label: 'Comptabilité', path: '/accounting' },
+  { icon: BookOpen, label: 'Plan comptable', path: '/chart-of-accounts' },
+  { icon: FileText, label: 'États financiers', path: '/financial-statements' },
+  { icon: Calculator, label: 'Écritures comptables', path: '/journal-entries' },
   { icon: Users, label: 'Contacts', path: '/contacts' },
+  { icon: FileCheck, label: 'Devis', path: '/quotes' },
   { icon: FileText, label: 'Facturation', path: '/invoicing' },
   { icon: ShoppingCart, label: 'Achats', path: '/purchases' },
   { icon: Package, label: 'Produits', path: '/products' },
   { icon: Warehouse, label: 'Stock', path: '/stock' },
   { icon: CreditCard, label: 'Trésorerie', path: '/treasury' },
-  { icon: PieChart, label: 'Rapports', path: '/reports' },
-  { icon: TrendingUp, label: 'Analyse', path: '/analytics' },
   { icon: DollarSign, label: 'Budget', path: '/budget' },
+  { icon: PieChart, label: 'Rapports', path: '/reports' },
+  { icon: TrendingUp, label: 'Analyses', path: '/analytics' },
+  { icon: UsersIcon, label: 'Employés', path: '/employees' },
+  { icon: GraduationCap, label: 'Formation', path: '/training-support' },
+  { icon: Settings, label: 'Paramètres', path: '/settings' },
 ];
 
 export const EnterpriseHeader = () => {
@@ -74,9 +73,6 @@ export const EnterpriseHeader = () => {
       toast.error('Erreur lors de la déconnexion');
     }
   };
-
-  const isSettingsBase = location.pathname.startsWith('/settings');
-  const isAccountingBase = location.pathname.startsWith('/accounting') || location.pathname.startsWith('/chart-of-accounts');
 
   return (
     <Sidebar>
@@ -97,77 +93,18 @@ export const EnterpriseHeader = () => {
               {menuItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = location.pathname === item.path;
-                const hasSubItems = item.subItems && item.subItems.length > 0;
-                const isParentActive = item.path === '/accounting' && isAccountingBase;
                 
                 return (
                   <SidebarMenuItem key={item.path}>
-                    <SidebarMenuButton asChild isActive={isActive || isParentActive}>
+                    <SidebarMenuButton asChild isActive={isActive}>
                       <Link to={item.path}>
                         <Icon className="w-5 h-5" />
                         <span className="font-medium">{item.label}</span>
                       </Link>
                     </SidebarMenuButton>
-                    {hasSubItems && (
-                      <SidebarMenuSub>
-                        {item.subItems.map((subItem) => (
-                          <SidebarMenuSubItem key={subItem.path}>
-                            <SidebarMenuSubButton
-                              asChild
-                              isActive={location.pathname === subItem.path}
-                            >
-                              <Link to={subItem.path}>
-                                <BookOpen className="w-4 h-4" />
-                                {subItem.label}
-                              </Link>
-                            </SidebarMenuSubButton>
-                          </SidebarMenuSubItem>
-                        ))}
-                      </SidebarMenuSub>
-                    )}
                   </SidebarMenuItem>
                 );
               })}
-              
-              {/* Settings menu with sub-items */}
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  isActive={isSettingsBase}
-                  asChild={false}
-                  aria-expanded={isSettingsBase}
-                >
-                  <span className="flex items-center gap-2">
-                    <Settings className="w-5 h-5" />
-                    <span className="font-medium">Paramètres</span>
-                  </span>
-                </SidebarMenuButton>
-                <SidebarMenuSub>
-                  <SidebarMenuSubItem>
-                    <SidebarMenuSubButton
-                      asChild
-                      isActive={location.pathname === "/settings/profile"}
-                    >
-                      <Link to="/settings/profile">Profil de l'entreprise</Link>
-                    </SidebarMenuSubButton>
-                  </SidebarMenuSubItem>
-                  <SidebarMenuSubItem>
-                    <SidebarMenuSubButton
-                      asChild
-                      isActive={location.pathname === "/settings/users"}
-                    >
-                      <Link to="/settings/users">Utilisateurs</Link>
-                    </SidebarMenuSubButton>
-                  </SidebarMenuSubItem>
-                  <SidebarMenuSubItem>
-                    <SidebarMenuSubButton
-                      asChild
-                      isActive={location.pathname === "/settings/licenses"}
-                    >
-                      <Link to="/settings/licenses">Clés de licence</Link>
-                    </SidebarMenuSubButton>
-                  </SidebarMenuSubItem>
-                </SidebarMenuSub>
-              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

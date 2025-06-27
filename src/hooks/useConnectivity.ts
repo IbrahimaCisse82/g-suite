@@ -1,5 +1,6 @@
 
 import { useState, useEffect, useCallback } from 'react';
+import { offlineStorage } from '@/services/offlineStorage';
 
 interface ConnectivityState {
   isOnline: boolean;
@@ -23,7 +24,7 @@ export const useConnectivity = () => {
     return connectionType;
   }, []);
 
-  const handleOnline = useCallback(() => {
+  const handleOnline = useCallback(async () => {
     const connectionType = updateConnectionInfo();
     
     setConnectivity(prev => ({
@@ -33,6 +34,14 @@ export const useConnectivity = () => {
     }));
     
     setOfflineDuration(0);
+    
+    // Initialiser le stockage offline si ce n'est pas déjà fait
+    try {
+      await offlineStorage.init();
+      console.log('📱 Stockage offline initialisé');
+    } catch (error) {
+      console.error('Erreur lors de l\'initialisation du stockage offline:', error);
+    }
     
     // Déclencher un événement personnalisé pour la synchronisation
     window.dispatchEvent(new CustomEvent('connectivity-restored'));
@@ -64,6 +73,11 @@ export const useConnectivity = () => {
   }, []);
 
   useEffect(() => {
+    // Initialiser le stockage offline au démarrage
+    offlineStorage.init().catch(error => {
+      console.error('Erreur lors de l\'initialisation du stockage offline:', error);
+    });
+
     // Écouter les événements de connectivité
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
@@ -94,11 +108,21 @@ export const useConnectivity = () => {
       }
     }, 10000); // Vérification toutes les 10 secondes
 
+    // Nettoyage périodique du cache expiré
+    const cacheCleanup = setInterval(async () => {
+      try {
+        await offlineStorage.clearExpiredCache();
+      } catch (error) {
+        console.error('Erreur lors du nettoyage du cache:', error);
+      }
+    }, 5 * 60 * 1000); // Nettoyage toutes les 5 minutes
+
     return () => {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
       if (interval) clearInterval(interval);
       clearInterval(connectivityCheck);
+      clearInterval(cacheCleanup);
     };
   }, [connectivity.isOnline, connectivity.lastOnlineTime, handleOnline, handleOffline, fetchWithTimeout]);
 

@@ -4,6 +4,7 @@ import { OptimizedCard } from '@/components/common/OptimizedCard';
 import { SmartLoader } from '@/components/common/SmartLoader';
 import { FastSearch } from '@/components/common/FastSearch';
 import { ConnectivityStatus } from '@/components/common/ConnectivityStatus';
+import { SyncStatus } from '@/components/common/SyncStatus';
 import { DashboardHeader } from './DashboardHeader';
 import { StatsCards } from './StatsCards';
 import { QuickActions } from './QuickActions';
@@ -55,8 +56,14 @@ export const OptimizedDashboard = () => {
         </div>
       </div>
 
-      {/* Indicateur de connectivité détaillé */}
-      <ConnectivityStatus showDetails />
+      {/* Indicateurs de connectivité et synchronisation */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <ConnectivityStatus showDetails />
+        <SyncStatus 
+          pendingCount={0} 
+          onSync={() => console.log('Synchronisation manuelle')}
+        />
+      </div>
 
       <Suspense fallback={<SmartLoader isLoading={true} skeleton={true} rows={2} />}>
         <StatsCards />

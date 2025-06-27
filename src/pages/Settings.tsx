@@ -1,4 +1,3 @@
-
 import React, { useMemo, Suspense } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Settings as SettingsIcon, User, CreditCard, Bell, Globe } from 'lucide-react';
@@ -6,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { PageTransition } from '@/components/common/PageTransition';
 import { OptimizedCard } from '@/components/common/OptimizedCard';
 import { PageLoader } from '@/components/common/PageLoader';
-import { usePagePerformance } from '@/hooks/usePagePerformance';
+import { usePerformance } from '@/hooks/usePerformance';
 
 const settingsOptions = [
   {
@@ -47,7 +46,7 @@ const settingsOptions = [
 ];
 
 export const Settings = React.memo(() => {
-  const { measureOperation } = usePagePerformance('Settings');
+  const { measureOperation } = usePerformance('Settings');
   const memoizedOptions = useMemo(() => settingsOptions, []);
 
   const handleLinkClick = (path: string) => {

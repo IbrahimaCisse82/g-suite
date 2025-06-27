@@ -3,10 +3,10 @@ import React, { Suspense } from 'react';
 import { Layout } from '@/components/Layout';
 import { PageLoader } from '@/components/common/PageLoader';
 import { PageTransition } from '@/components/common/PageTransition';
-import { usePagePerformance } from '@/hooks/usePagePerformance';
+import { usePerformance } from '@/hooks/usePerformance';
 
 const Analytics = React.memo(() => {
-  const { measureOperation } = usePagePerformance('Analytics');
+  const { measureOperation } = usePerformance('Analytics');
 
   return (
     <Layout>

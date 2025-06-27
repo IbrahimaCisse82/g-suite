@@ -1,9 +1,8 @@
-
 import React, { useState, Suspense, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Layout } from '@/components/Layout';
 import { PageLoader } from '@/components/common/PageLoader';
-import { usePagePerformance } from '@/hooks/usePagePerformance';
+import { usePerformance } from '@/hooks/usePerformance';
 
 // Lazy load des composants lourds
 const FinancialChart = React.lazy(() => 
@@ -31,7 +30,7 @@ const ReportsAlertsSection = React.lazy(() =>
 export const Reports = React.memo(() => {
   const [selectedPeriod, setSelectedPeriod] = useState('month');
   const [selectedReport, setSelectedReport] = useState('revenue');
-  const { measureOperation } = usePagePerformance('Reports');
+  const { measureOperation } = usePerformance('Reports');
 
   const handleDownloadReport = useMemo(() => (reportType: string) => {
     const endMeasure = measureOperation('Download Report');

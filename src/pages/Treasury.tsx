@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo, Suspense } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -14,7 +13,7 @@ import { useTreasuryAccounts } from '@/hooks/useTreasuryAccounts';
 import { useTreasuryTransactions, useCreateTreasuryTransaction } from '@/hooks/useTreasuryTransactions';
 import { TreasuryAccountForm } from '@/components/treasury/TreasuryAccountForm';
 import { TreasuryAccountsTable } from '@/components/treasury/TreasuryAccountsTable';
-import { usePagePerformance } from '@/hooks/usePagePerformance';
+import { usePerformance } from '@/hooks/usePerformance';
 
 // Lazy load des composants lourds
 const TreasuryTable = React.lazy(() => 
@@ -29,7 +28,7 @@ export const Treasury = React.memo(() => {
   const [isAccountDialogOpen, setIsAccountDialogOpen] = useState(false);
   const [editingAccount, setEditingAccount] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const { measureOperation } = usePagePerformance('Treasury');
+  const { measureOperation } = usePerformance('Treasury');
 
   const { data: accounts = [] } = useTreasuryAccounts();
   const { data: transactions = [] } = useTreasuryTransactions();

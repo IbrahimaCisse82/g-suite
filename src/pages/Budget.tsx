@@ -1,11 +1,10 @@
-
 import React, { useState, Suspense } from 'react';
 import { Layout } from '@/components/Layout';
 import { Card, CardContent } from '@/components/ui/card';
 import { useBudgets } from '@/hooks/useBudgets';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { PageLoader } from '@/components/common/PageLoader';
-import { usePagePerformance } from '@/hooks/usePagePerformance';
+import { usePerformance } from '@/hooks/usePerformance';
 
 // Lazy load des composants
 const BudgetHeader = React.lazy(() => 
@@ -26,7 +25,7 @@ const Budget = React.memo(() => {
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [selectedBudget, setSelectedBudget] = useState<any>(null);
   const [showDetails, setShowDetails] = useState(false);
-  const { measureOperation } = usePagePerformance('Budget');
+  const { measureOperation } = usePerformance('Budget');
 
   const handleCreateBudget = async (budgetData: any) => {
     const endMeasure = measureOperation('Create Budget');

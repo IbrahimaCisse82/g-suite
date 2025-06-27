@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo, useCallback, Suspense } from 'react';
 import { Layout } from '@/components/Layout';
 import { EmployeeHeader } from '@/components/employees/EmployeeHeader';
@@ -6,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { useEmployees } from '@/hooks/useEmployees';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { PageLoader } from '@/components/common/PageLoader';
-import { usePagePerformance } from '@/hooks/usePagePerformance';
+import { usePerformance } from '@/hooks/usePerformance';
 import { OptimizedCard } from '@/components/common/OptimizedCard';
 
 // Lazy load des composants lourds
@@ -23,7 +22,7 @@ const EmployeeStats = React.lazy(() =>
 const Employees = React.memo(() => {
   const { employees, loading, createEmployee, deleteEmployee } = useEmployees();
   const [showCreateForm, setShowCreateForm] = useState(false);
-  const { measureOperation } = usePagePerformance('Employees');
+  const { measureOperation } = usePerformance('Employees');
 
   const handleCreateEmployee = useCallback(async (employeeData: any) => {
     const endMeasure = measureOperation('Create Employee');

@@ -1,7 +1,6 @@
-
 import React, { Suspense } from 'react';
 import { PageLoader } from '@/components/common/PageLoader';
-import { usePagePerformance } from '@/hooks/usePagePerformance';
+import { usePerformance } from '@/hooks/usePerformance';
 
 // Lazy load de tous les composants
 const LandingHeader = React.lazy(() => 
@@ -24,7 +23,7 @@ const FormationCTA = React.lazy(() =>
 );
 
 const Formation = React.memo(() => {
-  const { measureOperation } = usePagePerformance('Formation');
+  const { measureOperation } = usePerformance('Formation');
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50">

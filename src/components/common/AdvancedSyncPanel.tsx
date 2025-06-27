@@ -62,7 +62,7 @@ export const AdvancedSyncPanel: React.FC<AdvancedSyncPanelProps> = ({ compact = 
             <CardTitle className="text-lg flex items-center gap-2">
               <Zap className="w-5 h-5" />
               Sync Avancée
-            </div>
+            </CardTitle>
             <Badge variant={hasConflicts ? 'destructive' : 'default'}>
               {hasConflicts ? `${conflicts.length} conflits` : 'OK'}
             </Badge>

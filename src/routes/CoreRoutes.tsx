@@ -18,6 +18,12 @@ import TrainingSupport from '@/pages/TrainingSupport';
 import JournalComptablePage from '@/pages/JournalComptable';
 import GrandLivrePage from '@/pages/GrandLivre';
 import BalanceGeneralePage from '@/pages/BalanceGenerale';
+import JournalEntries from '@/pages/JournalEntries';
+import FinancialStatements from '@/pages/FinancialStatements';
+import ChartOfAccounts from '@/pages/ChartOfAccounts';
+import Ledger from '@/pages/Ledger';
+import Balance from '@/pages/Balance';
+import AccountingReports from '@/pages/AccountingReports';
 
 export const CoreRoutes = () => (
   <>
@@ -26,6 +32,12 @@ export const CoreRoutes = () => (
     <Route path="/journal-comptable" element={<JournalComptablePage />} />
     <Route path="/grand-livre" element={<GrandLivrePage />} />
     <Route path="/balance-generale" element={<BalanceGeneralePage />} />
+    <Route path="/chart-of-accounts" element={<ChartOfAccounts />} />
+    <Route path="/financial-statements" element={<FinancialStatements />} />
+    <Route path="/journal-entries" element={<JournalEntries />} />
+    <Route path="/ledger" element={<Ledger />} />
+    <Route path="/balance" element={<Balance />} />
+    <Route path="/accounting-reports" element={<AccountingReports />} />
     <Route path="/contacts" element={<Contacts />} />
     <Route path="/quotes" element={<Quotes />} />
     <Route path="/invoicing" element={<Invoicing />} />

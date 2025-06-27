@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'sonner';
@@ -31,6 +32,7 @@ import Budget from '@/pages/Budget';
 import Employees from '@/pages/Employees';
 import { Reports } from '@/pages/Reports';
 import { Analytics } from '@/pages/Analytics';
+import TrainingSupport from '@/pages/TrainingSupport';
 import NotFound from '@/pages/NotFound';
 
 // Import TPE-specific pages
@@ -174,6 +176,7 @@ function App() {
             <Route path="/employees" element={<Employees />} />
             <Route path="/reports" element={<Reports />} />
             <Route path="/analytics" element={<Analytics />} />
+            <Route path="/training-support" element={<TrainingSupport />} />
 
             {/* TPE-specific routes */}
             <Route path="/tpe-assistant" element={<TPEAssistant />} />

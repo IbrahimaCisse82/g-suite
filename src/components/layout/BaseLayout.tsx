@@ -10,7 +10,9 @@ import { LoadingSpinner } from '../common/LoadingSpinner';
 import { FastLink } from '../common/FastLink';
 import { ConnectivityStatus } from '../common/ConnectivityStatus';
 import { ConnectivityNotification } from '../common/ConnectivityNotification';
+import { ConflictResolutionDialog } from '../common/ConflictResolutionDialog';
 import { useFastNavigation } from '@/hooks/useFastNavigation';
+import { useAdvancedSync } from '@/hooks/useAdvancedSync';
 import { useSidebarState, useAppStore } from '@/stores/appStore';
 
 interface BaseLayoutProps {
@@ -37,12 +39,26 @@ export const BaseLayout = memo(({
   const isSidebarCollapsed = useSidebarState();
   const { toggleSidebar } = useAppStore();
   const { preloadedRoutes } = useFastNavigation();
+  const { conflicts, resolveConflict } = useAdvancedSync();
+
+  const [selectedConflict, setSelectedConflict] = useState<any>(null);
+  const [isConflictDialogOpen, setIsConflictDialogOpen] = useState(false);
 
   const isDashboard = location.pathname === '/dashboard';
 
   const handleSidebarToggle = useCallback(() => {
     toggleSidebar();
   }, [toggleSidebar]);
+
+  const handleConflictSelect = useCallback((conflict: any) => {
+    setSelectedConflict(conflict);
+    setIsConflictDialogOpen(true);
+  }, []);
+
+  const handleConflictDialogClose = useCallback(() => {
+    setIsConflictDialogOpen(false);
+    setSelectedConflict(null);
+  }, []);
 
   const BackToDashboardButton = memo(() => {
     if (isDashboard || !showBackButton) return null;
@@ -71,10 +87,23 @@ export const BaseLayout = memo(({
       {/* Notifications de connectivité */}
       <ConnectivityNotification />
       
+      {/* Dialog de résolution de conflits */}
+      <ConflictResolutionDialog
+        conflict={selectedConflict}
+        isOpen={isConflictDialogOpen}
+        onClose={handleConflictDialogClose}
+        onResolve={resolveConflict}
+      />
+      
       {/* Debug info pour voir les routes préchargées */}
       {process.env.NODE_ENV === 'development' && (
         <div className="fixed top-2 right-2 z-50 bg-green-100 p-2 rounded text-xs">
           Routes préchargées: {preloadedRoutes.length}
+          {conflicts.length > 0 && (
+            <div className="text-orange-600 font-medium">
+              Conflits: {conflicts.length}
+            </div>
+          )}
         </div>
       )}
       
@@ -90,6 +119,16 @@ export const BaseLayout = memo(({
             <Header />
             <div className="flex items-center space-x-3">
               <ConnectivityStatus compact />
+              {conflicts.length > 0 && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleConflictSelect(conflicts[0])}
+                  className="text-orange-600 border-orange-300"
+                >
+                  {conflicts.length} Conflit{conflicts.length > 1 ? 's' : ''}
+                </Button>
+              )}
             </div>
           </div>
         )}

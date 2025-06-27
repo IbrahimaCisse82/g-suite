@@ -5,6 +5,7 @@ import { SmartLoader } from '@/components/common/SmartLoader';
 import { FastSearch } from '@/components/common/FastSearch';
 import { ConnectivityStatus } from '@/components/common/ConnectivityStatus';
 import { SyncStatus } from '@/components/common/SyncStatus';
+import { AdvancedSyncPanel } from '@/components/common/AdvancedSyncPanel';
 import { DashboardHeader } from './DashboardHeader';
 import { StatsCards } from './StatsCards';
 import { QuickActions } from './QuickActions';
@@ -57,12 +58,13 @@ export const OptimizedDashboard = () => {
       </div>
 
       {/* Indicateurs de connectivité et synchronisation */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <ConnectivityStatus showDetails />
         <SyncStatus 
           pendingCount={0} 
           onSync={() => console.log('Synchronisation manuelle')}
         />
+        <AdvancedSyncPanel compact />
       </div>
 
       <Suspense fallback={<SmartLoader isLoading={true} skeleton={true} rows={2} />}>

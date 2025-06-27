@@ -29,7 +29,7 @@ export function useOptimizedQuery<T>(
   const cacheKey = Array.isArray(queryKey) ? queryKey.join('_') : String(queryKey);
 
   // Enhanced query function with caching
-  const enhancedQueryFn: QueryFunction<T> = async () => {
+  const enhancedQueryFn: QueryFunction<T> = async (context) => {
     const endMeasure = measureOperation(`query_${cacheKey}`);
 
     try {
@@ -62,7 +62,7 @@ export function useOptimizedQuery<T>(
         throw new Error('Query function is required and must be callable');
       }
       
-      const data = await queryFn();
+      const data = await queryFn(context);
 
       // Cache the result
       if (enableMemoryCache) {

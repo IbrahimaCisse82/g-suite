@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { Layout } from '@/components/Layout';
 import { EmployeeHeader } from '@/components/employees/EmployeeHeader';
 import { EmployeeForm } from '@/components/employees/EmployeeForm';
@@ -8,67 +8,73 @@ import { EmployeeStats } from '@/components/employees/EmployeeStats';
 import { Card, CardContent } from '@/components/ui/card';
 import { useEmployees } from '@/hooks/useEmployees';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { LoadingSpinner } from '@/components/common/LoadingSpinner';
 
 const Employees = () => {
   const { employees, loading, createEmployee, deleteEmployee } = useEmployees();
   const [showCreateForm, setShowCreateForm] = useState(false);
 
-  const handleCreateEmployee = async (employeeData: any) => {
+  const handleCreateEmployee = useCallback(async (employeeData: any) => {
     try {
       await createEmployee(employeeData);
       setShowCreateForm(false);
     } catch (error) {
       // Error already handled in hook
     }
-  };
+  }, [createEmployee]);
 
-  const handleViewEmployee = (employee: any) => {
+  const handleViewEmployee = useCallback((employee: any) => {
     console.log('Viewing employee:', employee);
     // TODO: Implement employee details view
-  };
+  }, []);
 
-  const handleEditEmployee = (employee: any) => {
+  const handleEditEmployee = useCallback((employee: any) => {
     console.log('Editing employee:', employee);
     // TODO: Implement employee editing
-  };
+  }, []);
 
-  const handleDeleteEmployee = async (employee: any) => {
+  const handleDeleteEmployee = useCallback(async (employee: any) => {
     if (confirm('Êtes-vous sûr de vouloir désactiver cet employé ?')) {
       await deleteEmployee(employee.id);
     }
-  };
+  }, [deleteEmployee]);
+
+  const handleOpenCreateForm = useCallback(() => {
+    setShowCreateForm(true);
+  }, []);
+
+  const handleCloseCreateForm = useCallback(() => {
+    setShowCreateForm(false);
+  }, []);
+
+  const employeeStats = useMemo(() => employees, [employees]);
 
   if (loading) {
     return (
       <Layout>
-        <div className="flex items-center justify-center h-64">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="mt-2 text-gray-600">Chargement des employés...</p>
-          </div>
-        </div>
+        <LoadingSpinner fullScreen text="Chargement des employés..." />
       </Layout>
     );
   }
 
   return (
     <Layout>
-      <div className="space-y-6">
+      <div className="space-y-6 p-6">
         <EmployeeHeader 
-          onCreateEmployee={() => setShowCreateForm(true)}
+          onCreateEmployee={handleOpenCreateForm}
           totalEmployees={employees.length}
         />
 
-        <EmployeeStats employees={employees} />
+        <EmployeeStats employees={employeeStats} />
 
-        <Card>
+        <Card className="shadow-sm">
           <CardContent className="p-6">
             {employees.length === 0 ? (
               <div className="text-center py-12">
                 <p className="text-gray-500 mb-4">Aucun employé enregistré pour le moment</p>
                 <button
-                  onClick={() => setShowCreateForm(true)}
-                  className="text-blue-600 hover:text-blue-800"
+                  onClick={handleOpenCreateForm}
+                  className="text-blue-600 hover:text-blue-800 transition-colors"
                 >
                   Ajouter votre premier employé
                 </button>
@@ -85,10 +91,10 @@ const Employees = () => {
         </Card>
 
         <Dialog open={showCreateForm} onOpenChange={setShowCreateForm}>
-          <DialogContent className="max-w-4xl">
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
             <EmployeeForm
               onSubmit={handleCreateEmployee}
-              onCancel={() => setShowCreateForm(false)}
+              onCancel={handleCloseCreateForm}
             />
           </DialogContent>
         </Dialog>

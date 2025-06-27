@@ -1,11 +1,18 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Layout } from '@/components/Layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { FileBarChart, Download, Calendar, Filter } from 'lucide-react';
+import { useAccountingReports } from '@/hooks/useAccountingReports';
+import { ReportOptionsDialog } from '@/components/accounting/ReportOptionsDialog';
+import { LoadingButton } from '@/components/common/LoadingButton';
 
 const AccountingReports = () => {
+  const { generateReport, isGenerating, reportOptions, setReportOptions } = useAccountingReports();
+  const [selectedReport, setSelectedReport] = useState<string | null>(null);
+  const [isOptionsDialogOpen, setIsOptionsDialogOpen] = useState(false);
+
   const reports = [
     {
       title: 'Journal Comptable',
@@ -46,7 +53,42 @@ const AccountingReports = () => {
   ];
 
   const handleGenerateReport = (reportTitle: string) => {
-    console.log(`Génération du rapport: ${reportTitle}`);
+    setSelectedReport(reportTitle);
+    setIsOptionsDialogOpen(true);
+  };
+
+  const handleQuickGenerate = (reportTitle: string) => {
+    generateReport(reportTitle);
+  };
+
+  const handleGenerateWithOptions = (options: any) => {
+    if (selectedReport) {
+      generateReport(selectedReport, options);
+    }
+  };
+
+  const handlePeriodSelection = () => {
+    // Ouvre une boîte de dialogue pour sélectionner la période
+    const startDate = prompt('Date de début (YYYY-MM-DD):', '2024-01-01');
+    const endDate = prompt('Date de fin (YYYY-MM-DD):', '2024-12-31');
+    
+    if (startDate && endDate) {
+      setReportOptions({
+        ...reportOptions,
+        startDate,
+        endDate
+      });
+    }
+  };
+
+  const handleFormatSelection = () => {
+    const format = prompt('Format (PDF ou Excel):', 'PDF');
+    if (format && ['PDF', 'Excel'].includes(format)) {
+      setReportOptions({
+        ...reportOptions,
+        format: format as 'PDF' | 'Excel'
+      });
+    }
   };
 
   return (
@@ -75,13 +117,26 @@ const AccountingReports = () => {
                   </CardHeader>
                   <CardContent>
                     <p className="text-gray-600 mb-4">{report.description}</p>
-                    <Button 
-                      onClick={() => handleGenerateReport(report.title)}
-                      className="w-full bg-green-600 hover:bg-green-700"
-                    >
-                      <Download className="w-4 h-4 mr-2" />
-                      Générer
-                    </Button>
+                    <div className="space-y-2">
+                      <LoadingButton 
+                        onClick={() => handleQuickGenerate(report.title)}
+                        loading={isGenerating}
+                        className="w-full bg-green-600 hover:bg-green-700"
+                        loadingText="Génération..."
+                      >
+                        <Download className="w-4 h-4 mr-2" />
+                        Génération rapide
+                      </LoadingButton>
+                      <Button 
+                        onClick={() => handleGenerateReport(report.title)}
+                        variant="outline"
+                        className="w-full"
+                        disabled={isGenerating}
+                      >
+                        <Filter className="w-4 h-4 mr-2" />
+                        Avec options
+                      </Button>
+                    </div>
                   </CardContent>
                 </Card>
               );
@@ -96,30 +151,53 @@ const AccountingReports = () => {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Période</label>
-                  <Button variant="outline" className="w-full justify-start">
+                  <Button 
+                    variant="outline" 
+                    className="w-full justify-start"
+                    onClick={handlePeriodSelection}
+                  >
                     <Calendar className="w-4 h-4 mr-2" />
-                    Sélectionner période
+                    {reportOptions.startDate && reportOptions.endDate 
+                      ? `${reportOptions.startDate} - ${reportOptions.endDate}`
+                      : 'Sélectionner période'
+                    }
                   </Button>
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Format</label>
-                  <Button variant="outline" className="w-full justify-start">
+                  <Button 
+                    variant="outline" 
+                    className="w-full justify-start"
+                    onClick={handleFormatSelection}
+                  >
                     <FileBarChart className="w-4 h-4 mr-2" />
-                    PDF / Excel
+                    {reportOptions.format}
                   </Button>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Filtres</label>
-                  <Button variant="outline" className="w-full justify-start">
-                    <Filter className="w-4 h-4 mr-2" />
-                    Options avancées
-                  </Button>
+                  <label className="text-sm font-medium">Action</label>
+                  <LoadingButton
+                    onClick={() => generateReport('Rapport personnalisé')}
+                    loading={isGenerating}
+                    className="w-full bg-blue-600 hover:bg-blue-700"
+                    loadingText="Génération..."
+                  >
+                    <Download className="w-4 h-4 mr-2" />
+                    Générer avec options
+                  </LoadingButton>
                 </div>
               </div>
             </CardContent>
           </Card>
         </div>
       </div>
+
+      <ReportOptionsDialog
+        isOpen={isOptionsDialogOpen}
+        onClose={() => setIsOptionsDialogOpen(false)}
+        onGenerate={handleGenerateWithOptions}
+        reportTitle={selectedReport || ''}
+      />
     </Layout>
   );
 };

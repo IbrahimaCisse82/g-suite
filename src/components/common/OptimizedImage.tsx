@@ -20,14 +20,14 @@ export const OptimizedImage = React.memo(({
   skeletonClassName,
   ...props 
 }: OptimizedImageProps) => {
-  const { src: cachedSrc, loading, error } = useImageCache(src);
+  const { src: cachedSrc, isLoading, error } = useImageCache(src);
   const [imageError, setImageError] = useState(false);
 
   const handleError = () => {
     setImageError(true);
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <Skeleton 
         className={cn('rounded-lg', skeletonClassName || className)} 
@@ -54,7 +54,7 @@ export const OptimizedImage = React.memo(({
       onError={handleError}
       className={cn(
         'transition-opacity duration-300',
-        loading ? 'opacity-0' : 'opacity-100',
+        isLoading ? 'opacity-0' : 'opacity-100',
         className
       )}
       {...props}

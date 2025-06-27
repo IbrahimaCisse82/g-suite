@@ -1,5 +1,5 @@
 
-import React, { useState, useMemo, lazy, Suspense } from 'react';
+import React, { useState, useMemo, Suspense } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -9,28 +9,36 @@ import { Layout } from '@/components/Layout';
 import { PageTransition } from '@/components/common/PageTransition';
 import { OptimizedCard } from '@/components/common/OptimizedCard';
 import { LoadingButton } from '@/components/common/LoadingButton';
-import { Skeleton } from '@/components/ui/skeleton';
+import { PageLoader } from '@/components/common/PageLoader';
 import { useTreasuryAccounts } from '@/hooks/useTreasuryAccounts';
 import { useTreasuryTransactions, useCreateTreasuryTransaction } from '@/hooks/useTreasuryTransactions';
 import { TreasuryAccountForm } from '@/components/treasury/TreasuryAccountForm';
 import { TreasuryAccountsTable } from '@/components/treasury/TreasuryAccountsTable';
+import { usePagePerformance } from '@/hooks/usePagePerformance';
 
 // Lazy load des composants lourds
-const TreasuryTable = lazy(() => import('@/components/treasury/TreasuryTable').then(module => ({ default: module.TreasuryTable })));
-const TreasuryForm = lazy(() => import('@/components/treasury/TreasuryForm').then(module => ({ default: module.TreasuryForm })));
+const TreasuryTable = React.lazy(() => 
+  import('@/components/treasury/TreasuryTable').then(module => ({ default: module.TreasuryTable }))
+);
+const TreasuryForm = React.lazy(() => 
+  import('@/components/treasury/TreasuryForm').then(module => ({ default: module.TreasuryForm }))
+);
 
-export const Treasury = () => {
+export const Treasury = React.memo(() => {
   const [isTransactionDialogOpen, setIsTransactionDialogOpen] = useState(false);
   const [isAccountDialogOpen, setIsAccountDialogOpen] = useState(false);
   const [editingAccount, setEditingAccount] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const { measureOperation } = usePagePerformance('Treasury');
 
   const { data: accounts = [] } = useTreasuryAccounts();
   const { data: transactions = [] } = useTreasuryTransactions();
   const createTransactionMutation = useCreateTreasuryTransaction();
 
-  // Mémoisation des données pour éviter les recalculs
+  // Mémoisation optimisée des statistiques
   const treasuryStats = useMemo(() => {
+    const endMeasure = measureOperation('Calculate Treasury Stats');
+    
     const totalBalance = accounts.reduce((sum, account) => sum + (account.current_balance || 0), 0);
     
     const currentMonth = new Date().getMonth();
@@ -49,15 +57,18 @@ export const Treasury = () => {
       .filter(t => t.transaction_type === 'expense')
       .reduce((sum, t) => sum + (t.amount || 0), 0);
 
+    endMeasure();
+    
     return {
       totalBalance,
       monthlyIncome,
       monthlyExpenses,
       monthlyResult: monthlyIncome - monthlyExpenses
     };
-  }, [accounts, transactions]);
+  }, [accounts, transactions, measureOperation]);
 
   const handleTransactionSubmit = async (transactionData: any) => {
+    const endMeasure = measureOperation('Submit Transaction');
     setIsLoading(true);
     try {
       await createTransactionMutation.mutateAsync(transactionData);
@@ -66,6 +77,7 @@ export const Treasury = () => {
       console.error('Error submitting transaction:', error);
     } finally {
       setIsLoading(false);
+      endMeasure();
     }
   };
 
@@ -94,6 +106,7 @@ export const Treasury = () => {
               <p className="text-xl text-readable-secondary">Suivez vos flux de trésorerie et gérez vos comptes</p>
             </div>
 
+            {/* KPI Cards optimisées */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
               <OptimizedCard className="animate-fade-in [animation-delay:0.1s]">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -159,7 +172,7 @@ export const Treasury = () => {
                       <DialogHeader>
                         <DialogTitle className="text-readable-primary">Ajouter une transaction</DialogTitle>
                       </DialogHeader>
-                      <Suspense fallback={<div className="space-y-4"><Skeleton className="h-10 w-full" /><Skeleton className="h-10 w-full" /></div>}>
+                      <Suspense fallback={<PageLoader type="spinner" />}>
                         <TreasuryForm 
                           onSubmit={handleTransactionSubmit}
                           onCancel={() => setIsTransactionDialogOpen(false)}
@@ -172,7 +185,7 @@ export const Treasury = () => {
 
                 <OptimizedCard className="animate-fade-in [animation-delay:0.6s]">
                   <CardContent className="p-0">
-                    <Suspense fallback={<div className="p-6 space-y-4">{Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-12 w-full" />)}</div>}>
+                    <Suspense fallback={<PageLoader type="skeleton" rows={5} />}>
                       <TreasuryTable 
                         transactions={transactions}
                         onEdit={() => {}}
@@ -220,4 +233,6 @@ export const Treasury = () => {
       </PageTransition>
     </Layout>
   );
-};
+});
+
+Treasury.displayName = 'Treasury';

@@ -1,26 +1,42 @@
 
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import { Layout } from '@/components/Layout';
-import { BudgetHeader } from '@/components/budget/BudgetHeader';
-import { BudgetForm } from '@/components/budget/BudgetForm';
-import { BudgetTable } from '@/components/budget/BudgetTable';
-import { BudgetDetailsView } from '@/components/budget/BudgetDetailsView';
 import { Card, CardContent } from '@/components/ui/card';
 import { useBudgets } from '@/hooks/useBudgets';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { PageLoader } from '@/components/common/PageLoader';
+import { usePagePerformance } from '@/hooks/usePagePerformance';
 
-const Budget = () => {
+// Lazy load des composants
+const BudgetHeader = React.lazy(() => 
+  import('@/components/budget/BudgetHeader').then(module => ({ default: module.BudgetHeader }))
+);
+const BudgetForm = React.lazy(() => 
+  import('@/components/budget/BudgetForm').then(module => ({ default: module.BudgetForm }))
+);
+const BudgetTable = React.lazy(() => 
+  import('@/components/budget/BudgetTable').then(module => ({ default: module.BudgetTable }))
+);
+const BudgetDetailsView = React.lazy(() => 
+  import('@/components/budget/BudgetDetailsView').then(module => ({ default: module.BudgetDetailsView }))
+);
+
+const Budget = React.memo(() => {
   const { budgets, loading, createBudget, deleteBudget } = useBudgets();
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [selectedBudget, setSelectedBudget] = useState<any>(null);
   const [showDetails, setShowDetails] = useState(false);
+  const { measureOperation } = usePagePerformance('Budget');
 
   const handleCreateBudget = async (budgetData: any) => {
+    const endMeasure = measureOperation('Create Budget');
     try {
       await createBudget(budgetData);
       setShowCreateForm(false);
     } catch (error) {
       // Error already handled in hook
+    } finally {
+      endMeasure();
     }
   };
 
@@ -31,7 +47,6 @@ const Budget = () => {
 
   const handleEditBudget = (budget: any) => {
     console.log('Editing budget:', budget);
-    // TODO: Implement budget editing
   };
 
   const handleDeleteBudget = async (budget: any) => {
@@ -43,12 +58,7 @@ const Budget = () => {
   if (loading) {
     return (
       <Layout>
-        <div className="flex items-center justify-center h-64">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="mt-2 text-gray-600">Chargement des budgets...</p>
-          </div>
-        </div>
+        <PageLoader text="Chargement des budgets..." rows={4} />
       </Layout>
     );
   }
@@ -57,13 +67,15 @@ const Budget = () => {
     return (
       <Layout>
         <div className="p-8">
-          <BudgetDetailsView
-            budget={selectedBudget}
-            onClose={() => {
-              setShowDetails(false);
-              setSelectedBudget(null);
-            }}
-          />
+          <Suspense fallback={<PageLoader type="spinner" />}>
+            <BudgetDetailsView
+              budget={selectedBudget}
+              onClose={() => {
+                setShowDetails(false);
+                setSelectedBudget(null);
+              }}
+            />
+          </Suspense>
         </div>
       </Layout>
     );
@@ -72,7 +84,9 @@ const Budget = () => {
   return (
     <Layout>
       <div className="space-y-6">
-        <BudgetHeader onCreateBudget={() => setShowCreateForm(true)} />
+        <Suspense fallback={<PageLoader type="skeleton" rows={1} />}>
+          <BudgetHeader onCreateBudget={() => setShowCreateForm(true)} />
+        </Suspense>
 
         <Card>
           <CardContent className="p-6">
@@ -87,27 +101,32 @@ const Budget = () => {
                 </button>
               </div>
             ) : (
-              <BudgetTable
-                budgets={budgets}
-                onView={handleViewBudget}
-                onEdit={handleEditBudget}
-                onDelete={handleDeleteBudget}
-              />
+              <Suspense fallback={<PageLoader type="skeleton" rows={5} />}>
+                <BudgetTable
+                  budgets={budgets}
+                  onView={handleViewBudget}
+                  onEdit={handleEditBudget}
+                  onDelete={handleDeleteBudget}
+                />
+              </Suspense>
             )}
           </CardContent>
         </Card>
 
         <Dialog open={showCreateForm} onOpenChange={setShowCreateForm}>
           <DialogContent className="max-w-2xl">
-            <BudgetForm
-              onSubmit={handleCreateBudget}
-              onCancel={() => setShowCreateForm(false)}
-            />
+            <Suspense fallback={<PageLoader type="spinner" />}>
+              <BudgetForm
+                onSubmit={handleCreateBudget}
+                onCancel={() => setShowCreateForm(false)}
+              />
+            </Suspense>
           </DialogContent>
         </Dialog>
       </div>
     </Layout>
   );
-};
+});
 
+Budget.displayName = 'Budget';
 export default Budget;

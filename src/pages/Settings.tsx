@@ -1,10 +1,12 @@
 
-import React, { useMemo } from 'react';
+import React, { useMemo, Suspense } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Settings as SettingsIcon, User, CreditCard, Bell, Globe } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { PageTransition } from '@/components/common/PageTransition';
 import { OptimizedCard } from '@/components/common/OptimizedCard';
+import { PageLoader } from '@/components/common/PageLoader';
+import { usePagePerformance } from '@/hooks/usePagePerformance';
 
 const settingsOptions = [
   {
@@ -45,7 +47,13 @@ const settingsOptions = [
 ];
 
 export const Settings = React.memo(() => {
+  const { measureOperation } = usePagePerformance('Settings');
   const memoizedOptions = useMemo(() => settingsOptions, []);
+
+  const handleLinkClick = (path: string) => {
+    const endMeasure = measureOperation(`Navigate to ${path}`);
+    endMeasure();
+  };
 
   return (
     <PageTransition>
@@ -60,37 +68,40 @@ export const Settings = React.memo(() => {
           <p className="text-xl text-readable-secondary">Configurez votre application selon vos besoins</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {memoizedOptions.map((option, index) => {
-            const Icon = option.icon;
-            return (
-              <Link 
-                key={option.path} 
-                to={option.path}
-                className="group transform transition-all duration-300 hover:scale-105"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <OptimizedCard className="h-full animate-fade-in group-hover:shadow-2xl">
-                  <CardHeader className="pb-3">
-                    <div className="flex items-center space-x-3">
-                      <div className={`w-10 h-10 bg-gradient-to-r ${option.color} rounded-lg flex items-center justify-center transform transition-transform group-hover:rotate-6`}>
-                        <Icon className="w-5 h-5 text-white" />
+        <Suspense fallback={<PageLoader type="skeleton" rows={3} />}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {memoizedOptions.map((option, index) => {
+              const Icon = option.icon;
+              return (
+                <Link 
+                  key={option.path} 
+                  to={option.path}
+                  onClick={() => handleLinkClick(option.path)}
+                  className="group transform transition-all duration-300 hover:scale-105"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <OptimizedCard className="h-full animate-fade-in group-hover:shadow-2xl">
+                    <CardHeader className="pb-3">
+                      <div className="flex items-center space-x-3">
+                        <div className={`w-10 h-10 bg-gradient-to-r ${option.color} rounded-lg flex items-center justify-center transform transition-transform group-hover:rotate-6`}>
+                          <Icon className="w-5 h-5 text-white" />
+                        </div>
+                        <CardTitle className="text-lg text-readable-primary group-hover:text-green-600 transition-colors">
+                          {option.title}
+                        </CardTitle>
                       </div>
-                      <CardTitle className="text-lg text-readable-primary group-hover:text-green-600 transition-colors">
-                        {option.title}
-                      </CardTitle>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-readable-secondary group-hover:text-readable-primary transition-colors">
-                      {option.description}
-                    </p>
-                  </CardContent>
-                </OptimizedCard>
-              </Link>
-            );
-          })}
-        </div>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-readable-secondary group-hover:text-readable-primary transition-colors">
+                        {option.description}
+                      </p>
+                    </CardContent>
+                  </OptimizedCard>
+                </Link>
+              );
+            })}
+          </div>
+        </Suspense>
       </div>
     </PageTransition>
   );

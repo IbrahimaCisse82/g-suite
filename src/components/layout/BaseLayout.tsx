@@ -1,4 +1,3 @@
-
 import React, { useState, memo, useCallback, Suspense } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Sidebar } from '../Sidebar';
@@ -60,6 +59,12 @@ export const BaseLayout = memo(({
     setSelectedConflict(null);
   }, []);
 
+  const handleConflictResolve = useCallback(async (resolution: 'local' | 'server' | 'merge' | any) => {
+    if (selectedConflict) {
+      await resolveConflict(selectedConflict, resolution);
+    }
+  }, [selectedConflict, resolveConflict]);
+
   const BackToDashboardButton = memo(() => {
     if (isDashboard || !showBackButton) return null;
     
@@ -92,7 +97,7 @@ export const BaseLayout = memo(({
         conflict={selectedConflict}
         isOpen={isConflictDialogOpen}
         onClose={handleConflictDialogClose}
-        onResolve={resolveConflict}
+        onResolve={handleConflictResolve}
       />
       
       {/* Debug info pour voir les routes préchargées */}

@@ -1,4 +1,3 @@
-
 import { useState, useCallback, useEffect } from 'react';
 import { syncManager, SyncResult, SyncConflict, SyncStrategy } from '@/services/syncManager';
 import { useConnectivity } from './useConnectivity';
@@ -77,7 +76,7 @@ export function useAdvancedSync(options: UseAdvancedSyncOptions = {}) {
       const syncOptions = {
         strategy: customOptions.strategy || defaultStrategy,
         batchSize: customOptions.batchSize || 50,
-        conflictResolution: autoResolveConflicts ? 'auto' : 'manual',
+        conflictResolution: (autoResolveConflicts ? 'auto' : 'manual') as 'auto' | 'manual',
         ...customOptions
       };
 

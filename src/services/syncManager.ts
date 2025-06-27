@@ -26,6 +26,16 @@ export interface SyncStrategy {
   resolve: (conflict: SyncConflict) => any;
 }
 
+// Mapping des types vers les noms de tables Supabase
+const TABLE_MAPPING = {
+  contact: 'contacts',
+  invoice: 'invoices',
+  product: 'products',
+  employee: 'employees',
+  budget: 'budgets',
+  treasury: 'treasury_transactions'
+} as const;
+
 class AdvancedSyncManager {
   private syncStrategies: Map<string, SyncStrategy> = new Map();
   private syncInProgress = false;
@@ -185,8 +195,9 @@ class AdvancedSyncManager {
 
   private async getServerChangesSince(type: string, timestamp: number): Promise<any[]> {
     try {
+      const tableName = TABLE_MAPPING[type as keyof typeof TABLE_MAPPING];
       const { data, error } = await supabase
-        .from(type + 's') // Assumer que les tables sont au pluriel
+        .from(tableName)
         .select('*')
         .gte('updated_at', new Date(timestamp).toISOString());
 
@@ -247,9 +258,9 @@ class AdvancedSyncManager {
   }
 
   private async applyResolvedConflict(conflict: SyncConflict, resolvedData: any): Promise<void> {
-    // Appliquer la résolution côté serveur
+    const tableName = TABLE_MAPPING[conflict.type as keyof typeof TABLE_MAPPING];
     const { error } = await supabase
-      .from(conflict.type + 's')
+      .from(tableName)
       .update(resolvedData)
       .eq('id', conflict.id);
 
@@ -261,18 +272,19 @@ class AdvancedSyncManager {
 
   private async syncSingleItem(change: any): Promise<void> {
     const { data, action, type } = change;
+    const tableName = TABLE_MAPPING[type as keyof typeof TABLE_MAPPING];
 
     switch (action) {
       case 'create':
         const { error: createError } = await supabase
-          .from(type + 's')
+          .from(tableName)
           .insert(data);
         if (createError) throw createError;
         break;
 
       case 'update':
         const { error: updateError } = await supabase
-          .from(type + 's')
+          .from(tableName)
           .update(data)
           .eq('id', data.id);
         if (updateError) throw updateError;
@@ -280,7 +292,7 @@ class AdvancedSyncManager {
 
       case 'delete':
         const { error: deleteError } = await supabase
-          .from(type + 's')
+          .from(tableName)
           .delete()
           .eq('id', data.id);
         if (deleteError) throw deleteError;

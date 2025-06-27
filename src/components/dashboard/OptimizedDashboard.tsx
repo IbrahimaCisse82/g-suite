@@ -3,6 +3,7 @@ import React, { Suspense } from 'react';
 import { OptimizedCard } from '@/components/common/OptimizedCard';
 import { SmartLoader } from '@/components/common/SmartLoader';
 import { FastSearch } from '@/components/common/FastSearch';
+import { ConnectivityStatus } from '@/components/common/ConnectivityStatus';
 import { DashboardHeader } from './DashboardHeader';
 import { StatsCards } from './StatsCards';
 import { QuickActions } from './QuickActions';
@@ -53,6 +54,9 @@ export const OptimizedDashboard = () => {
           />
         </div>
       </div>
+
+      {/* Indicateur de connectivité détaillé */}
+      <ConnectivityStatus showDetails />
 
       <Suspense fallback={<SmartLoader isLoading={true} skeleton={true} rows={2} />}>
         <StatsCards />
